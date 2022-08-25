@@ -1,15 +1,15 @@
 package com.project.MyDuo.entity;
 
 import com.project.MyDuo.dto.MemberJoinRequestDto;
+import com.project.MyDuo.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Entity
@@ -35,5 +35,17 @@ public class Member {
         this.name = name;
         this.password = password;
     }
+/*
+    public Member(UserDto user){
+        this.userId = user.getUserId();
+        this.userName = user.getUserName();
+        this.userEmail = user.getUserEmail();
+        this.userPwd = user.getUserPwd();
+        this.userHeart = user.getUserHeart();
+    }
+*/
+    @OneToMany(fetch = FetchType.LAZY )
+    @JoinColumn(name = "user_id",updatable = false,insertable = false)
+    private List<Board> boardList;
 
 }

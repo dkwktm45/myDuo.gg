@@ -13,6 +13,9 @@ spring:
   redis:
     port: 6379
     host: localhost
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 jwt:
   secret: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 logging:

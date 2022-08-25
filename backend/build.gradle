@@ -29,10 +29,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
-
+	implementation 'it.ozimov:embedded-redis:0.7.2'
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+	implementation 'org.apache.commons:commons-lang3:3.8'
+	implementation 'io.swagger.parser.v3:swagger-parser-v3:2.0.24'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+	implementation "io.springfox:springfox-boot-starter:3.0.0"
 
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

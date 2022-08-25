@@ -64,12 +64,10 @@ public class LoLAccountController {
 
             if (accountDto.getWins() + accountDto.getLosses() != 0)
                 reflectMatchResults(accountDto);
-
         } catch (Exception e) {
             log.info("여기서 예외 잡았음");
             e.printStackTrace();
         }
-
         Map<String, ChampionInfoDto> championInfoDtoMap = new ConcurrentHashMap<>();
         for (ChampionDto dto : accountDto.getChampionDtoMap().values()) {
             championInfoDtoMap.put(dto.getChampionName(), new ChampionInfoDto(

@@ -16,7 +16,7 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-
+/backend/src/main/java/com/project/MyDuo/config/DatasourceConfig.java
 ### IntelliJ IDEA ###
 .idea
 *.iws
