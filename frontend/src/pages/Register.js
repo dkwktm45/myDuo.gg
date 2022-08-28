@@ -1,11 +1,8 @@
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faGoogle,
-  faGithub,
-  faFacebookF,
-} from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { LoginState } from "atoms";
+import { useForm } from "react-hook-form";
 
 const Container = styled.div`
   display: flex;
@@ -41,6 +38,7 @@ const OverView = styled.div`
   &:nth-child(2) {
     border: 4px solid ${(props) => props.theme.lolTextColor};
   }
+
   span {
     width: 100%;
   }
@@ -81,6 +79,10 @@ const Input = styled.input`
   outline: none;
   margin: 10px 0;
   border-bottom: 2px solid ${(props) => props.theme.lolTextColor};
+  &:nth-child(1),
+  &:nth-child(2) {
+    margin-bottom: 20px;
+  }
   &:hover {
     border-bottom: 5px solid ${(props) => props.theme.lolTextColor};
   }
@@ -114,45 +116,12 @@ const Submit = styled.input`
 const Text = styled.div`
   text-align: center;
   font-size: 16px;
-`;
-
-const SocialIcons = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0;
-`;
-
-const SocialIcon = styled.button`
-  width: 40px;
-  height: 40px;
-  font-size: 24px;
-  text-align: center;
-  background-color: ${(props) => props.theme.lolBgColor};
-  color: ${(props) => props.theme.lolTextColor};
-  border: 1px solid ${(props) => props.theme.lolTextColor};
-  border-radius: 5px;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-  margin: 0 5px;
-
-  &:nth-child(1):hover {
-    background-color: white;
-    color: #4d80ed;
-    border: 1px solid white;
-  }
-  &:nth-child(2):hover {
-    background-color: white;
-    color: black;
-    border: 1px solid white;
-  }
-  &:nth-child(3):hover {
-    background-color: #526ea4;
-    color: white;
-    border: 1px solid #526ea4;
+  &:first-child {
+    font-size: 24px;
+    margin-bottom: 10px;
   }
 `;
+
 const Label = styled.label`
   font-size: 16px;
   color: ${(props) => props.theme.lolAccentColor};
@@ -163,26 +132,31 @@ const Label = styled.label`
   }
 `;
 
-function LogIn({ setIsLoggedIn }) {
+const ErrorMsg = styled.label`
+  font-size: 14px;
+  color: ${(props) => props.theme.lolAccentColor1};
+`;
+
+function Register() {
+  const setIsLoggedIn = useRecoilState(LoginState)[1];
   const navigate = useNavigate();
-  const onSubmit = (event) => {
-    event.preventDefault();
-    try {
-      console.log("로그인");
-      setIsLoggedIn(true);
-      navigate("/");
-    } catch (error) {
-      console.log(error);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm();
+
+  const onValid = async (data) => {
+    if (data.password !== data.passwordCheck) {
+      setError("passwordCheck", { message: "비밀번호를 다시 확인해주세요." });
     }
-  };
+    setIsLoggedIn(true);
+    navigate("/");
 
-  const onClickSocial = (event) => {
-    const {
-      target: { name },
-    } = event;
-    console.log(name);
+    //성공하면 해당 user 아이디 패스워드값 셋팅
+    //JWT
   };
-
   return (
     <>
       <Container>
@@ -193,27 +167,57 @@ function LogIn({ setIsLoggedIn }) {
           </OverView>
           <OverView>
             <OverViewItem>
-              <Form onSubmit={onSubmit}>
-                <Input type="email" placeholder="이메일 입력" required />
-                <Input type="password" placeholder="비밀번호 입력" required />
-                <Submit type="submit" value="로그인" />
+              <Text>회원 가입</Text>
+              <Form onSubmit={handleSubmit(onValid)}>
+                <Input
+                  placeholder="이메일 입력"
+                  {...register("email", {
+                    required: "이메일 입력은 필수입니다.",
+                    pattern: {
+                      value: /^[A-Za-z0-9._%+-]+@gmail.com$/,
+                      message: "구글 이메일 형식만 가능합니다.",
+                    },
+                  })}
+                />
+                <ErrorMsg>{errors?.email?.message}</ErrorMsg>
+                <Input
+                  type="text"
+                  placeholder="닉네임 입력"
+                  {...register("nickname", {
+                    required: "닉네임을 입력해주세요",
+                    minLength: {
+                      value: 2,
+                      message: "닉네임은 최소 2자리 이상 입력해주세요.",
+                    },
+                  })}
+                />
+                <ErrorMsg>{errors?.nickname?.message}</ErrorMsg>
+                <Input
+                  type="password"
+                  placeholder="비밀번호 입력"
+                  {...register("password", {
+                    required: "비밀번호를 입력해주세요.",
+                    minLength: {
+                      value: 8,
+                      message: "비밀번호는 최소 8자리 이상 입력해주세요.",
+                    },
+                  })}
+                />
+                <ErrorMsg>{errors?.password?.message}</ErrorMsg>
+                <Input
+                  type="password"
+                  placeholder="비밀번호 확인"
+                  {...register("passwordCheck", {
+                    required: "비밀번호를 입력해주세요.",
+                  })}
+                />
+                <ErrorMsg>{errors?.passwordCheck?.message}</ErrorMsg>
+                <Submit type="submit" value="회원 가입" />
               </Form>
-              <Text>또는</Text>
-              <SocialIcons>
-                <SocialIcon name="google" onClick={onClickSocial}>
-                  <FontAwesomeIcon icon={faGoogle} />
-                </SocialIcon>
-                <SocialIcon name="github" onClick={onClickSocial}>
-                  <FontAwesomeIcon icon={faGithub} />
-                </SocialIcon>
-                <SocialIcon name="facebook" onClick={onClickSocial}>
-                  <FontAwesomeIcon icon={faFacebookF} />
-                </SocialIcon>
-              </SocialIcons>
               <Text>
                 아직 계정이 없으신가요?
                 <Label>
-                  <Link to="/register">회원 가입</Link>
+                  <Link to="/login">로그인</Link>
                 </Label>
               </Text>
             </OverViewItem>
@@ -224,4 +228,4 @@ function LogIn({ setIsLoggedIn }) {
   );
 }
 
-export default LogIn;
+export default Register;

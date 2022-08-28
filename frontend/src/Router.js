@@ -1,23 +1,26 @@
-import { Routes, Route } from "react-router-dom";
-import LogIn from "routes/LogIn";
-import Register from "routes/Register";
-import IsLoogedIn from "routes/IsLoggedIn";
-import LolHome from "routes/LolHome";
-import Chat from "routes/Chat";
-import Profile from "routes/Profile";
+import { Routes, Route, Navigate } from "react-router-dom";
+import LogIn from "pages/LogIn";
+import Register from "pages/Register";
+import Home from "pages/Home";
+import Chat from "pages/Chat";
+import Profile from "pages/Profile";
+import { useRecoilValue } from "recoil";
+import { LoginState } from "atoms";
 
-function Router({ isLoggedIn, setIsLoggedIn }) {
+function Router() {
+  const isLoggedIn = useRecoilValue(LoginState);
   return (
     <Routes>
-      <Route path="/" element={<IsLoogedIn isLoggedIn={isLoggedIn} />} />
-      <Route path="/login" element={<LogIn setIsLoggedIn={setIsLoggedIn} />} />
+      {!isLoggedIn ? (
+        <Route path="/" element={<Navigate replace to="/login" />} />
+      ) : (
+        <Route path="/" element={<Home />} />
+      )}
+      <Route path="/login" element={<LogIn />} />
       <Route path="/register" element={<Register />} />
-      <Route
-        path="/lol/home"
-        element={<LolHome setIsLoggedIn={setIsLoggedIn} />}
-      />
       <Route path="/chat" element={<Chat />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/*" element={<Navigate replace to="/" />} />
     </Routes>
   );
 }

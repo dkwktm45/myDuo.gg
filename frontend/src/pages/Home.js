@@ -13,6 +13,8 @@ import {
   faMicrophone,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
+import { useResetRecoilState } from "recoil";
+import { LoginState } from "atoms";
 
 const Container = styled.div`
   display: flex;
@@ -188,12 +190,14 @@ const PostDetailButtons = styled.div`
   background-color: yellow;
 `;
 
-function LolHome({ setIsLoggedIn }) {
+function Home() {
   const navigate = useNavigate();
   const onClickLogOut = () => {
-    setIsLoggedIn(false);
-    navigate("/");
+    logOut();
+    navigate("/login");
   };
+
+  const logOut = useResetRecoilState(LoginState);
 
   const dataJSON = {
     post: {
@@ -420,4 +424,4 @@ function LolHome({ setIsLoggedIn }) {
   );
 }
 
-export default LolHome;
+export default Home;

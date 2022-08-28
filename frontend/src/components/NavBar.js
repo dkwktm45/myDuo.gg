@@ -69,7 +69,7 @@ function NavBar() {
       <Wrapper>
         <Icons>
           <Icon>
-            <Link to="/lol/home">
+            <Link to="/">
               <FontAwesomeIcon icon={faHouse} />
             </Link>
           </Icon>
