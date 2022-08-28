@@ -1,0 +1,155 @@
+{
+  "users": [
+    {
+      "email": "jin@gmail.com",
+      "password": "12345678",
+      "name": "훈훈한훈이"
+    }
+  ],
+  "posts": [
+    {
+      "status": 1,
+      "nickName": "방황하는 프로도",
+      "tier": "Silver",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "11초 전"
+    },
+    {
+      "status": 1,
+      "nickName": "청소하는 튜브",
+      "tier": "Gold",
+      "myline": ["All", "Jungle"],
+      "yourline": ["All", "Top"],
+      "memo": "듀오하실 탑 구합니다",
+      "date": "20초 전"
+    },
+    {
+      "status": 1,
+      "nickName": "기침하는 해삼",
+      "tier": "Bronze",
+      "myline": ["All", "Top"],
+      "yourline": ["All", "Mid"],
+      "memo": "듀오하실분",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Silver",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Bot"],
+      "memo": "탑 구해요 탑 구해요 ",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Grandmaster",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Platinum",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Master",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Iron",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Challenger",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Diamond",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Silver",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Silver",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Silver",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Silver",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Silver",
+      "myline": ["All", "Mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    },
+    {
+      "status": 0,
+      "nickName": "노트북",
+      "tier": "Silver",
+      "myline": ["All", "mid"],
+      "yourline": ["All", "Top"],
+      "memo": "탑 구해요",
+      "date": "2분 전"
+    }
+  ]
+}

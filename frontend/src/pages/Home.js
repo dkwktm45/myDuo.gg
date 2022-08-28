@@ -15,6 +15,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useResetRecoilState } from "recoil";
 import { LoginState } from "atoms";
+import { loadPosts } from "services/loadPost";
+import { useEffect } from "react";
 
 const Container = styled.div`
   display: flex;
@@ -190,8 +192,27 @@ const PostDetailButtons = styled.div`
   background-color: yellow;
 `;
 
+const LoadingMsg = styled.label`
+  font-size: 18px;
+  color: ${(props) => props.theme.lolTextColor};
+  padding: 20px 0;
+`;
+
 function Home() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [popup, setPopup] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetch("http://localhost:8000/posts");
+      const json = await response.json();
+      setPosts(json);
+      setLoading(false);
+    })();
+  }, []);
+
   const onClickLogOut = () => {
     logOut();
     navigate("/login");
@@ -348,10 +369,10 @@ function Home() {
     },
   };
 
-  const [popup, setPopup] = useState(0);
   const onOverlayClicked = () => {
     setPopup(0);
   };
+
   return (
     <>
       <NavBar />
@@ -360,11 +381,15 @@ function Home() {
           <MainHeader />
           <Main>
             <PostHeader />
-            <Posts>
-              {Object.entries(dataJSON.post).map(([key, value]) => (
-                <Post key={key} postId={key} data={value} setPopup={setPopup} />
-              ))}
-            </Posts>
+            {loading ? (
+              <LoadingMsg>Loading...</LoadingMsg>
+            ) : (
+              <Posts>
+                {posts.map((v, i) => (
+                  <Post key={i} postId={i} data={v} setPopup={setPopup} />
+                ))}
+              </Posts>
+            )}
           </Main>
           <TestButton onClick={onClickLogOut}>로그아웃 (임시)</TestButton>
         </Wrapper>
