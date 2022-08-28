@@ -178,13 +178,9 @@ function LogIn() {
     register,
     handleSubmit,
     formState: { errors },
-    //setError,
   } = useForm();
 
   const onValid = async (data) => {
-    //setError("extraError", { message: "Hello" });
-    //const user = await fetchLogin(data);
-    console.log("로그인 성공 :");
     setIsLoggedIn(true);
     navigate("/");
     //성공하면 해당 user 아이디 패스워드값 셋팅
