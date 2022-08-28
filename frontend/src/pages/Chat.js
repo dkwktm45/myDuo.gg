@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import NavBar from "components/NavBar";
-import io from "socket.io-client";
+//import io from "socket.io-client";
 
 const Container = styled.div`
   width: 100%;
@@ -23,8 +23,7 @@ const Wrapper = styled.div`
 `;
 
 function Chat() {
-  const socket = io("http://localhost:3000");
-  console.log(socket);
+  //const socket = io("http://localhost:3000");
   return (
     <>
       <NavBar />
