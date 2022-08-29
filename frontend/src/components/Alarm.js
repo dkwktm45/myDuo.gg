@@ -1,24 +1,25 @@
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 const Container = styled.div`
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 100px;
-  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 30px;
 `;
 
-const Wrapper = styled.div`
+const WrapperClosed = styled.div`
   width: 70px;
   height: 70px;
   border: 2px solid ${(props) => props.theme.lolBgColorLight};
   font-size: 40px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: ${(props) => props.theme.lolTextColor};
@@ -26,12 +27,52 @@ const Wrapper = styled.div`
   cursor: pointer;
 `;
 
+const WrapperOpened = styled.div`
+  width: 350px;
+  height: 600px;
+  border: none;
+  border-radius: 35px;
+  background-color: ${(props) => props.theme.lolTextColor};
+`;
+
+const Header = styled.div`
+  width: 95%;
+  height: 30px;
+  display: flex;
+  justify-content: right;
+  flex-direction: row-reverse;
+  margin: 20px 0;
+  label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 20px;
+  }
+`;
+
 function Alarm() {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleAlarmWindow = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Container>
-      <Wrapper>
-        <FontAwesomeIcon icon={faBell} />
-      </Wrapper>
+      {!isOpen ? (
+        <WrapperClosed onClick={handleAlarmWindow}>
+          <FontAwesomeIcon icon={faBell} />
+        </WrapperClosed>
+      ) : (
+        <WrapperOpened>
+          <Header>
+            <label onClick={handleAlarmWindow}>
+              <FontAwesomeIcon icon={faXmark} />
+            </label>
+          </Header>
+        </WrapperOpened>
+      )}
     </Container>
   );
 }
