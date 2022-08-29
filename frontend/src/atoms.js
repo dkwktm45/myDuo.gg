@@ -13,3 +13,8 @@ export const LineFilterState = atom({
   key: "LineFilterState",
   default: "All",
 });
+
+export const TierFilterState = atom({
+  key: "TierFilterState",
+  default: "All",
+});

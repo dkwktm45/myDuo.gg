@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
-import { LineFilterState } from "atoms";
+import { LineFilterState, TierFilterState } from "atoms";
 
 const Upper = styled.div`
   width: 100%;
@@ -28,7 +28,7 @@ const Positions = styled.div`
 `;
 
 const Tier = styled.div`
-  width: 100px;
+  width: 120px;
   height: 40px;
   font-size: 16px;
   line-height: 40px;
@@ -36,9 +36,14 @@ const Tier = styled.div`
   background-color: ${(props) => props.theme.lolTextColor};
   color: ${(props) => props.theme.lolBgColor};
   margin: 0 20px;
-  span {
-    margin: 0 5px;
-  }
+`;
+
+const Select = styled.select`
+  background-color: ${(props) => props.theme.lolTextColor};
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  font-weight: 600;
 `;
 
 const UpLoadButton = styled.button`
@@ -99,8 +104,15 @@ const RadioButton = styled.input`
 function MainHeader() {
   const lineTypes = ["All", "Top", "Jungle", "Mid", "Bot", "Support"];
   const [lineFilter, setLineFilter] = useRecoilState(LineFilterState);
+
+  const [tierFilter, setTierFilter] = useRecoilState(TierFilterState);
+
   const handleLineFilter = (e) => {
     setLineFilter(e.target.value);
+  };
+
+  const handleTierFilter = (e) => {
+    setTierFilter(e.target.value);
   };
 
   return (
@@ -131,10 +143,18 @@ function MainHeader() {
           ))}
         </Positions>
         <Tier>
-          <span>티어 전체</span>
-          <span>
-            <FontAwesomeIcon icon={faCaretDown} />
-          </span>
+          <Select onChange={handleTierFilter}>
+            <option value="All">전체</option>
+            <option value="Iron">아이언</option>
+            <option value="Bronze">브론즈</option>
+            <option value="Silver">실버</option>
+            <option value="Gold">골드</option>
+            <option value="Platinum">플래티넘</option>
+            <option value="Diamond">다이아몬드</option>
+            <option value="Master">마스터</option>
+            <option value="GrandMaster">그랜드 마스터</option>
+            <option value="Challenger">챌린저</option>
+          </Select>
         </Tier>
       </UpperContents>
       <UpperContents>

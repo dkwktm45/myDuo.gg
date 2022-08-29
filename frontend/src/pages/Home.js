@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import NavBar from "components/NavBar";
 import MainHeader from "components/MainHeader";
@@ -13,10 +12,9 @@ import {
   faMicrophone,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
-import { useResetRecoilState, useRecoilValue } from "recoil";
-import { LoginState } from "atoms";
 import { useEffect } from "react";
-import { LineFilterState } from "atoms";
+import { LineFilterState, TierFilterState } from "atoms";
+import { useRecoilValue } from "recoil";
 
 const Container = styled.div`
   display: flex;
@@ -48,16 +46,6 @@ const Posts = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 10px;
-`;
-
-const TestButton = styled.button`
-  border: none;
-  width: 200px;
-  height: 50px;
-  color: white;
-  background-color: ${(props) => props.theme.lolTextColor};
-  margin: 30px 0;
-  cursor: pointer;
 `;
 
 const Overlay = styled.div`
@@ -202,7 +190,6 @@ function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [popup, setPopup] = useState(0);
-  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -212,13 +199,6 @@ function Home() {
       setLoading(false);
     })();
   }, []);
-
-  const onClickLogOut = () => {
-    logOut();
-    navigate("/login");
-  };
-
-  const logOut = useResetRecoilState(LoginState);
 
   const dataJSON = {
     post: {
@@ -374,6 +354,7 @@ function Home() {
   };
 
   const lineFilter = useRecoilValue(LineFilterState);
+  const tierFilter = useRecoilValue(TierFilterState);
   return (
     <>
       <NavBar />
@@ -386,25 +367,29 @@ function Home() {
               <LoadingMsg>Loading...</LoadingMsg>
             ) : (
               <Posts>
-                {posts.map((v, i) => {
-                  if (lineFilter === "All") {
-                    return (
-                      <Post key={i} postId={i} data={v} setPopup={setPopup} />
-                    );
-                  } else {
-                    if (v.myline[1] === lineFilter) {
-                      return (
-                        <Post key={i} postId={i} data={v} setPopup={setPopup} />
-                      );
-                    } else {
+                {posts.map((v) => {
+                  if (lineFilter !== "All") {
+                    if (v.myline[1] !== lineFilter) {
                       return "";
                     }
                   }
+                  if (tierFilter !== "All") {
+                    if (v.tier !== tierFilter) {
+                      return "";
+                    }
+                  }
+                  return (
+                    <Post
+                      key={v.id}
+                      postId={v.id}
+                      data={v}
+                      setPopup={setPopup}
+                    />
+                  );
                 })}
               </Posts>
             )}
           </Main>
-          <TestButton onClick={onClickLogOut}>로그아웃 (임시)</TestButton>
         </Wrapper>
       </Container>
       <Alarm />

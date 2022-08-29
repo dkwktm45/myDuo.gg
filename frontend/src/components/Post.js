@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import LinePosition from "components/LinePosition";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -61,6 +62,41 @@ const PostContentPositions = styled.div`
   margin: 10px;
 `;
 
+const Item = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 20px;
+  color: ${(props) => props.theme.lolTextColor};
+  img,
+  span {
+    cursor: pointer;
+    position: absolute;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
+const RadioButtonLabel = styled.label`
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: blue;
+  cursor: pointer;
+  color: ${(props) => props.theme.lolTextColor};
+  border: 2px solid ${(props) => props.theme.lolBgColorLight};
+  background-color: ${(props) => props.theme.lolBgColorNormal};
+`;
+
+const RadioButton = styled.input`
+  cursor: pointer;
+  display: none;
+  transition: all 0.2s ease-in-out;
+`;
+
 function Post({ postId, data, setPopup }) {
   const onClick = () => {
     setPopup(postId);
@@ -78,14 +114,48 @@ function Post({ postId, data, setPopup }) {
       <PostContent>
         <PostContentPositions>
           {data.myline.map((v) => (
-            <LinePosition key={v} line={v} isHeader={false} />
+            <Item key={v}>
+              <RadioButton
+                type="radio"
+                name="selectedLine"
+                id={v}
+                value={v}
+                line={v}
+                isHeader={true}
+              />
+              <RadioButtonLabel htmlFor={v} />
+              {v === "All" ? (
+                <span>
+                  <FontAwesomeIcon icon={faStarOfLife} />
+                </span>
+              ) : (
+                <img src={`../img/positions/Position_Gold-${v}.png`} alt="" />
+              )}
+            </Item>
           ))}
         </PostContentPositions>
       </PostContent>
       <PostContent>
         <PostContentPositions>
           {data.yourline.map((v) => (
-            <LinePosition key={v} line={v} isHeader={false} />
+            <Item key={v}>
+              <RadioButton
+                type="radio"
+                name="selectedLine"
+                id={v}
+                value={v}
+                line={v}
+                isHeader={true}
+              />
+              <RadioButtonLabel htmlFor={v} />
+              {v === "All" ? (
+                <span>
+                  <FontAwesomeIcon icon={faStarOfLife} />
+                </span>
+              ) : (
+                <img src={`../img/positions/Position_Gold-${v}.png`} alt="" />
+              )}
+            </Item>
           ))}
         </PostContentPositions>
       </PostContent>
