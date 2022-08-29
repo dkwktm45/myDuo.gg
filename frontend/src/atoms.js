@@ -8,3 +8,8 @@ export const LoginState = atom({
   default: false,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const LineFilterState = atom({
+  key: "LineFilterState",
+  default: "All",
+});

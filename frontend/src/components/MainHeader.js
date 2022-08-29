@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
-import LinePosition from "components/LinePosition";
+import { faStarOfLife } from "@fortawesome/free-solid-svg-icons";
+import { useRecoilState } from "recoil";
+import { LineFilterState } from "atoms";
 
 const Upper = styled.div`
   width: 100%;
@@ -51,25 +53,82 @@ const UpLoadButton = styled.button`
   cursor: pointer;
 `;
 
+const Item = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 20px;
+  color: ${(props) => props.theme.lolTextColor};
+  img,
+  span {
+    cursor: pointer;
+    position: absolute;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
+const RadioButtonLabel = styled.label`
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: blue;
+  cursor: pointer;
+  color: ${(props) => props.theme.lolTextColor};
+  border: 2px solid ${(props) => props.theme.lolBgColorLight};
+  background-color: ${(props) => props.theme.lolBgColorNormal};
+`;
+
+const RadioButton = styled.input`
+  cursor: pointer;
+  display: none;
+  transition: all 0.2s ease-in-out;
+  &:checked + ${RadioButtonLabel}, &:hover + ${RadioButtonLabel} {
+    background-color: ${(props) => props.theme.lolBgColorLight};
+  }
+  &:hover {
+    span {
+      display: block;
+    }
+  }
+`;
+
 function MainHeader() {
+  const lineTypes = ["All", "Top", "Jungle", "Mid", "Bot", "Support"];
+  const [lineFilter, setLineFilter] = useRecoilState(LineFilterState);
+  const handleLineFilter = (e) => {
+    setLineFilter(e.target.value);
+  };
+
   return (
     <Upper>
       <UpperContents>
         <Positions>
-          <LinePosition key={"All"} line={"All"} isHeader={true}></LinePosition>
-          <LinePosition key={"Top"} line={"Top"} isHeader={true}></LinePosition>
-          <LinePosition
-            key={"Jungle"}
-            line={"Jungle"}
-            isHeader={true}
-          ></LinePosition>
-          <LinePosition key={"Mid"} line={"Mid"} isHeader={true}></LinePosition>
-          <LinePosition key={"Bot"} line={"Bot"} isHeader={true}></LinePosition>
-          <LinePosition
-            key={"Support"}
-            line={"Support"}
-            isHeader={true}
-          ></LinePosition>
+          {lineTypes.map((v, i) => (
+            <Item key={i}>
+              <RadioButton
+                type="radio"
+                name="selectedLine"
+                id={v}
+                value={v}
+                line={v}
+                isHeader={true}
+                onChange={handleLineFilter}
+                checked={lineFilter === v}
+              />
+              <RadioButtonLabel htmlFor={v} />
+              {i === 0 ? (
+                <span>
+                  <FontAwesomeIcon icon={faStarOfLife} />
+                </span>
+              ) : (
+                <img src={`../img/positions/Position_Gold-${v}.png`} alt="" />
+              )}
+            </Item>
+          ))}
         </Positions>
         <Tier>
           <span>티어 전체</span>

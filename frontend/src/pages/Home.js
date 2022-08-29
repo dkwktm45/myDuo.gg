@@ -13,10 +13,10 @@ import {
   faMicrophone,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
-import { useResetRecoilState } from "recoil";
+import { useResetRecoilState, useRecoilValue } from "recoil";
 import { LoginState } from "atoms";
-import { loadPosts } from "services/loadPost";
 import { useEffect } from "react";
+import { LineFilterState } from "atoms";
 
 const Container = styled.div`
   display: flex;
@@ -373,6 +373,7 @@ function Home() {
     setPopup(0);
   };
 
+  const lineFilter = useRecoilValue(LineFilterState);
   return (
     <>
       <NavBar />
@@ -385,9 +386,21 @@ function Home() {
               <LoadingMsg>Loading...</LoadingMsg>
             ) : (
               <Posts>
-                {posts.map((v, i) => (
-                  <Post key={i} postId={i} data={v} setPopup={setPopup} />
-                ))}
+                {posts.map((v, i) => {
+                  if (lineFilter === "All") {
+                    return (
+                      <Post key={i} postId={i} data={v} setPopup={setPopup} />
+                    );
+                  } else {
+                    if (v.myline[1] === lineFilter) {
+                      return (
+                        <Post key={i} postId={i} data={v} setPopup={setPopup} />
+                      );
+                    } else {
+                      return "";
+                    }
+                  }
+                })}
               </Posts>
             )}
           </Main>

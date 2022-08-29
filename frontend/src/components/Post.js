@@ -78,14 +78,14 @@ function Post({ postId, data, setPopup }) {
       <PostContent>
         <PostContentPositions>
           {data.myline.map((v) => (
-            <LinePosition key={v} line={v} isHeader={false}></LinePosition>
+            <LinePosition key={v} line={v} isHeader={false} />
           ))}
         </PostContentPositions>
       </PostContent>
       <PostContent>
         <PostContentPositions>
           {data.yourline.map((v) => (
-            <LinePosition key={v} line={v} isHeader={false}></LinePosition>
+            <LinePosition key={v} line={v} isHeader={false} />
           ))}
         </PostContentPositions>
       </PostContent>
