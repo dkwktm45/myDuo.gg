@@ -1,9 +1,9 @@
 package com.project.MyDuo.controller;
 
 import com.project.MyDuo.dto.JwtResponseDto;
-import com.project.MyDuo.dto.MemberJoinRequestDto;
-import com.project.MyDuo.dto.MemberLoginRequestDto;
-import com.project.MyDuo.service.MemberAccountService;
+import com.project.MyDuo.dto.UserJoinRequestDto;
+import com.project.MyDuo.dto.UserLoginRequestDto;
+import com.project.MyDuo.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,32 +13,32 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/account")
 @RequiredArgsConstructor
-public class MemberAccountController {
+public class UserAccountController {
 
-    private final MemberAccountService memberAccountService;
+    private final UserAccountService userAccountService;
 
     @PostMapping("/join")
-    public String join(@RequestBody MemberJoinRequestDto requestDto) throws Exception {
-        return memberAccountService.join(requestDto);
+    public String join(@RequestBody UserJoinRequestDto requestDto) throws Exception {
+        return userAccountService.join(requestDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDto> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) throws Exception {
-        return ResponseEntity.ok(memberAccountService.login(memberLoginRequestDto));
+    public ResponseEntity<JwtResponseDto> login(@RequestBody UserLoginRequestDto userLoginRequestDto) throws Exception {
+        return ResponseEntity.ok(userAccountService.login(userLoginRequestDto));
     }
 
     @GetMapping("/re-issue")
     public ResponseEntity<JwtResponseDto> reIssue(HttpServletRequest httpServletRequest) {
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
         String refreshToken = authorizationHeader.split(" ")[1];
-        return ResponseEntity.ok(memberAccountService.reIssueAccessToken(refreshToken));
+        return ResponseEntity.ok(userAccountService.reIssueAccessToken(refreshToken));
     }
 
     @GetMapping("/logout")
     public void logout(HttpServletRequest httpServletRequest) {
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
         String refreshToken = authorizationHeader.split(" ")[1];
-        memberAccountService.logout(refreshToken);
+        userAccountService.logout(refreshToken);
     }
 
 
@@ -46,7 +46,7 @@ public class MemberAccountController {
     public void withdrawal(HttpServletRequest httpServletRequest) {
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
         String refreshToken = authorizationHeader.split(" ")[1];
-        memberAccountService.Withdrawal(refreshToken);
+        userAccountService.Withdrawal(refreshToken);
     }
 }
 
