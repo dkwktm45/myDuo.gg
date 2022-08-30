@@ -133,8 +133,7 @@ const PostDetailUserInfo = styled.div`
       width: 50px;
       height: 50px;
       padding: 3px;
-      background-color: transparent;
-      border: 1px solid ${(props) => props.theme.lolTextColor};
+      background-color: ${(props) => props.theme.lolBgColorLight};
       border-radius: 50%;
     }
   }
