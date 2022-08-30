@@ -1,5 +1,5 @@
 {
-  "users": [
+  "auth": [
     {
       "email": "jin@gmail.com",
       "password": "12345678",
@@ -166,6 +166,572 @@
       "memo": "탑 구해요",
       "date": "2분 전",
       "id": 16
+    }
+  ],
+
+  "boards": [
+    {
+      "boardId": 3,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 4,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 5,
+      "boardName": "angrydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": [
+        {
+          "participantId": 30,
+          "userName": "happydaddy",
+          "userId": 1,
+          "roomId": "8ab6b548-53dc-4e86-9e20-ad7a503473ca"
+        }
+      ]
+    },
+    {
+      "boardId": 6,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 7,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 8,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 9,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 10,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 11,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 12,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 13,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 14,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 15,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 16,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 17,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 18,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 19,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 20,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 21,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 22,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 23,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": 24,
+      "boardName": "happydaddy",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["JUNGLE", "TOP"],
+      "otherPositions": ["JUNGLE", "TOP"],
+      "boardParticipantsList": []
+    }
+  ],
+  "user": [
+    {
+      "name": "헬롬가스",
+      "tier": "BRONZE",
+      "rank": "III",
+      "wins": 18,
+      "losses": 27,
+      "leaguePoints": 46,
+      "winningRate": 40.0,
+      "laneInfo": [0, 1],
+      "championInfo": [
+        {
+          "championName": "Ezreal",
+          "totalPlayedCount": 2,
+          "kills": 13.0,
+          "deaths": 2.5,
+          "assists": 9.5,
+          "csPerGame": 244.5,
+          "grade": 9.0,
+          "winningRate": 100.0
+        },
+        {
+          "championName": "Kaisa",
+          "totalPlayedCount": 1,
+          "kills": 13.0,
+          "deaths": 1.0,
+          "assists": 3.0,
+          "csPerGame": 231.0,
+          "grade": 16.0,
+          "winningRate": 100.0
+        },
+        {
+          "championName": "Kindred",
+          "totalPlayedCount": 11,
+          "kills": 9.363636363636363,
+          "deaths": 7.818181818181818,
+          "assists": 9.727272727272727,
+          "csPerGame": 154.1818181818182,
+          "grade": 2.441860465116279,
+          "winningRate": 54.54545454545454
+        },
+        {
+          "championName": "Urgot",
+          "totalPlayedCount": 2,
+          "kills": 11.5,
+          "deaths": 7.0,
+          "assists": 12.5,
+          "csPerGame": 195.5,
+          "grade": 3.4285714285714284,
+          "winningRate": 50.0
+        },
+        {
+          "championName": "FiddleSticks",
+          "totalPlayedCount": 2,
+          "kills": 3.0,
+          "deaths": 5.5,
+          "assists": 4.5,
+          "csPerGame": 135.0,
+          "grade": 1.3636363636363635,
+          "winningRate": 0.0
+        },
+        {
+          "championName": "Shaco",
+          "totalPlayedCount": 1,
+          "kills": 7.0,
+          "deaths": 8.0,
+          "assists": 2.0,
+          "csPerGame": 125.0,
+          "grade": 1.125,
+          "winningRate": 0.0
+        },
+        {
+          "championName": "Nunu",
+          "totalPlayedCount": 1,
+          "kills": 0.0,
+          "deaths": 3.0,
+          "assists": 1.0,
+          "csPerGame": 64.0,
+          "grade": 0.3333333333333333,
+          "winningRate": 0.0
+        }
+      ],
+      "resultRecentGameDto": {
+        "result": "LLWWWLWWWW",
+        "wins": 7,
+        "losses": 3,
+        "winningRate": 70.0
+      }
+    },
+    {
+      "name": "늑대고기 양고기",
+      "tier": "SILVER",
+      "rank": "IV",
+      "wins": 136,
+      "losses": 136,
+      "leaguePoints": 36,
+      "winningRate": 50.0,
+      "laneInfo": [0, 1],
+      "championInfo": [
+        {
+          "championName": "Senna",
+          "totalPlayedCount": 1,
+          "kills": 6.0,
+          "deaths": 7.0,
+          "assists": 11.0,
+          "csPerGame": 78.0,
+          "grade": 2.4285714285714284,
+          "winningRate": 100.0
+        },
+        {
+          "championName": "Kindred",
+          "totalPlayedCount": 18,
+          "kills": 5.444444444444445,
+          "deaths": 7.444444444444445,
+          "assists": 8.11111111111111,
+          "csPerGame": 120.44444444444444,
+          "grade": 1.8208955223880596,
+          "winningRate": 38.88888888888889
+        },
+        {
+          "championName": "Nocturne",
+          "totalPlayedCount": 1,
+          "kills": 8.0,
+          "deaths": 10.0,
+          "assists": 11.0,
+          "csPerGame": 136.0,
+          "grade": 1.9,
+          "winningRate": 0.0
+        }
+      ],
+      "resultRecentGameDto": {
+        "result": "LWWWWLWLLL",
+        "wins": 5,
+        "losses": 5,
+        "winningRate": 50.0
+      }
+    },
+    {
+      "name": "골없칸왕",
+      "tier": "SILVER",
+      "rank": "II",
+      "wins": 218,
+      "losses": 222,
+      "leaguePoints": 69,
+      "winningRate": 49.54545454545455,
+      "laneInfo": [0, 1],
+      "championInfo": [
+        {
+          "championName": "Jayce",
+          "totalPlayedCount": 1,
+          "kills": 11.0,
+          "deaths": 5.0,
+          "assists": 8.0,
+          "csPerGame": 205.0,
+          "grade": 3.8,
+          "winningRate": 100.0
+        },
+        {
+          "championName": "Mordekaiser",
+          "totalPlayedCount": 5,
+          "kills": 3.6,
+          "deaths": 1.8,
+          "assists": 2.2,
+          "csPerGame": 164.2,
+          "grade": 3.2222222222222223,
+          "winningRate": 80.0
+        },
+        {
+          "championName": "Sett",
+          "totalPlayedCount": 5,
+          "kills": 2.0,
+          "deaths": 3.2,
+          "assists": 4.4,
+          "csPerGame": 150.2,
+          "grade": 2.0,
+          "winningRate": 60.0
+        },
+        {
+          "championName": "MonkeyKing",
+          "totalPlayedCount": 6,
+          "kills": 6.0,
+          "deaths": 3.3333333333333335,
+          "assists": 3.1666666666666665,
+          "csPerGame": 181.66666666666666,
+          "grade": 2.7499999999999996,
+          "winningRate": 33.33333333333333
+        },
+        {
+          "championName": "Malphite",
+          "totalPlayedCount": 1,
+          "kills": 6.0,
+          "deaths": 2.0,
+          "assists": 5.0,
+          "csPerGame": 165.0,
+          "grade": 5.5,
+          "winningRate": 0.0
+        },
+        {
+          "championName": "Galio",
+          "totalPlayedCount": 2,
+          "kills": 5.5,
+          "deaths": 4.0,
+          "assists": 5.0,
+          "csPerGame": 223.5,
+          "grade": 2.625,
+          "winningRate": 0.0
+        }
+      ],
+      "resultRecentGameDto": {
+        "result": "LWWWLLWLWW",
+        "wins": 6,
+        "losses": 4,
+        "winningRate": 60.0
+      }
+    },
+    {
+      "name": "삼식이라 미안요",
+      "tier": "PLATINUM",
+      "rank": "II",
+      "wins": 248,
+      "losses": 217,
+      "leaguePoints": 0,
+      "winningRate": 53.333333333333336,
+      "laneInfo": [0, 1],
+      "championInfo": [
+        {
+          "championName": "MonkeyKing",
+          "totalPlayedCount": 3,
+          "kills": 7.333333333333333,
+          "deaths": 4.0,
+          "assists": 7.666666666666667,
+          "csPerGame": 164.66666666666666,
+          "grade": 3.75,
+          "winningRate": 66.66666666666666
+        },
+        {
+          "championName": "Udyr",
+          "totalPlayedCount": 6,
+          "kills": 5.0,
+          "deaths": 3.6666666666666665,
+          "assists": 11.666666666666666,
+          "csPerGame": 188.33333333333334,
+          "grade": 4.545454545454545,
+          "winningRate": 50.0
+        },
+        {
+          "championName": "Viego",
+          "totalPlayedCount": 4,
+          "kills": 2.75,
+          "deaths": 3.5,
+          "assists": 5.75,
+          "csPerGame": 150.75,
+          "grade": 2.4285714285714284,
+          "winningRate": 50.0
+        },
+        {
+          "championName": "Elise",
+          "totalPlayedCount": 2,
+          "kills": 6.5,
+          "deaths": 4.0,
+          "assists": 8.5,
+          "csPerGame": 143.5,
+          "grade": 3.75,
+          "winningRate": 50.0
+        },
+        {
+          "championName": "Diana",
+          "totalPlayedCount": 2,
+          "kills": 9.5,
+          "deaths": 9.0,
+          "assists": 10.0,
+          "csPerGame": 275.0,
+          "grade": 2.1666666666666665,
+          "winningRate": 0.0
+        },
+        {
+          "championName": "Ashe",
+          "totalPlayedCount": 1,
+          "kills": 2.0,
+          "deaths": 6.0,
+          "assists": 11.0,
+          "csPerGame": 43.0,
+          "grade": 2.1666666666666665,
+          "winningRate": 0.0
+        },
+        {
+          "championName": "Vi",
+          "totalPlayedCount": 1,
+          "kills": 2.0,
+          "deaths": 5.0,
+          "assists": 6.0,
+          "csPerGame": 115.0,
+          "grade": 1.6,
+          "winningRate": 0.0
+        },
+        {
+          "championName": "Sejuani",
+          "totalPlayedCount": 1,
+          "kills": 3.0,
+          "deaths": 7.0,
+          "assists": 5.0,
+          "csPerGame": 166.0,
+          "grade": 1.1428571428571428,
+          "winningRate": 0.0
+        }
+      ],
+      "resultRecentGameDto": {
+        "result": "LWWLLLLLLL",
+        "wins": 2,
+        "losses": 8,
+        "winningRate": 20.0
+      }
     }
   ]
 }
