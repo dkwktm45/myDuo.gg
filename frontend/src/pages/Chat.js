@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import NavBar from "components/NavBar";
 import { useState } from "react";
+import Alarm from "components/Alarm";
 //import io from "socket.io-client";
 
 const Container = styled.div`
@@ -131,6 +132,7 @@ function Chat() {
         </Wrapper>
         <Wrapper>{chatRoom === "" ? "" : <div>채팅</div>}</Wrapper>
       </Container>
+      <Alarm />
     </>
   );
 }

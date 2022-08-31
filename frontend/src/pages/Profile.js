@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useResetRecoilState } from "recoil";
 import { LoginState } from "atoms";
 import { useNavigate } from "react-router-dom";
+import Alarm from "components/Alarm";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -38,6 +39,7 @@ function Profile() {
       <Wrapper>
         <TestButton onClick={onClickLogOut}>로그아웃</TestButton>
       </Wrapper>
+      <Alarm />
     </>
   );
 }
