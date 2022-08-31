@@ -99,21 +99,30 @@ const RadioButton = styled.input`
 
 function Post({ postId, data, setPopup }) {
   const onClick = () => {
+    console.log(postId, "에 해당하는 유저 정보 및 게시물 데이터 요청");
     setPopup(postId);
   };
   return (
     <Wrapper onClick={onClick}>
-      <PostContent>{data.status === 1 ? "모집 중" : "마감"}</PostContent>
-      <PostContent>{data.nickName}</PostContent>
+      <PostContent>
+        {data.boardRecruitmentYn === 1 ? "모집 중" : "마감"}
+      </PostContent>
+      <PostContent>{data.boardName}</PostContent>
       <PostContent>
         <PostContentTier>
-          <img src={`../img/emblems/Emblem_${data.tier}.png`} alt="lolLogo" />
-          {data.tier}
+          <img
+            src={`../img/emblems/Emblem_${data.boardUserTier.replace(
+              /\b[a-z]/g,
+              (char) => char.toUpperCase()
+            )}.png`}
+            alt="lolLogo"
+          />
+          {data.boardUserTier.replace(/\b[a-z]/g, (char) => char.toUpperCase())}
         </PostContentTier>
       </PostContent>
       <PostContent>
         <PostContentPositions>
-          {data.myline.map((v) => (
+          {data.myPositions.map((v) => (
             <Item key={v}>
               <RadioButton
                 type="radio"
@@ -124,7 +133,7 @@ function Post({ postId, data, setPopup }) {
                 isHeader={true}
               />
               <RadioButtonLabel htmlFor={v} />
-              {v === "All" ? (
+              {v === "ALL" ? (
                 <span>
                   <FontAwesomeIcon icon={faStarOfLife} />
                 </span>
@@ -137,7 +146,7 @@ function Post({ postId, data, setPopup }) {
       </PostContent>
       <PostContent>
         <PostContentPositions>
-          {data.yourline.map((v) => (
+          {data.otherPositions.map((v) => (
             <Item key={v}>
               <RadioButton
                 type="radio"
@@ -148,7 +157,7 @@ function Post({ postId, data, setPopup }) {
                 isHeader={true}
               />
               <RadioButtonLabel htmlFor={v} />
-              {v === "All" ? (
+              {v === "ALL" ? (
                 <span>
                   <FontAwesomeIcon icon={faStarOfLife} />
                 </span>
@@ -159,8 +168,8 @@ function Post({ postId, data, setPopup }) {
           ))}
         </PostContentPositions>
       </PostContent>
-      <PostContent>{data.memo}</PostContent>
-      <PostContent>{data.date}</PostContent>
+      <PostContent>{data.boardContent}</PostContent>
+      <PostContent>{data.boardRegDt}</PostContent>
     </Wrapper>
   );
 }
