@@ -6,201 +6,41 @@
       "name": "훈훈한훈이"
     }
   ],
-  "posts": [
-    {
-      "status": 1,
-      "nickName": "방황하는 프로도",
-      "tier": "Silver",
-      "myline": ["All", "Mid"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "11초 전",
-      "id": 1
-    },
-    {
-      "status": 1,
-      "nickName": "청소하는 튜브",
-      "tier": "Gold",
-      "myline": ["All", "Jungle"],
-      "yourline": ["All", "Top"],
-      "memo": "듀오하실 탑 구합니다",
-      "date": "20초 전",
-      "id": 2
-    },
-    {
-      "status": 1,
-      "nickName": "기침하는 해삼",
-      "tier": "Bronze",
-      "myline": ["All", "Top"],
-      "yourline": ["All", "Mid"],
-      "memo": "듀오하실분",
-      "date": "2분 전",
-      "id": 3
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Silver",
-      "myline": ["All", "Mid"],
-      "yourline": ["All", "Bot"],
-      "memo": "탑 구해요 탑 구해요 ",
-      "date": "2분 전",
-      "id": 4
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Grandmaster",
-      "myline": ["All", "Mid"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 5
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Platinum",
-      "myline": ["All", "Mid"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 6
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Master",
-      "myline": ["All", "Mid"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 7
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Iron",
-      "myline": ["All", "Support"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 8
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Challenger",
-      "myline": ["All", "Bot"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 9
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Diamond",
-      "myline": ["All", "Bot"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 10
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Silver",
-      "myline": ["All", "Mid"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 11
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Silver",
-      "myline": ["All", "Top"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 12
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Silver",
-      "myline": ["All", "Jungle"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 13
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Silver",
-      "myline": ["All", "Jungle"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 14
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Silver",
-      "myline": ["All", "Bot"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 15
-    },
-    {
-      "status": 0,
-      "nickName": "노트북",
-      "tier": "Silver",
-      "myline": ["All", "Bot"],
-      "yourline": ["All", "Top"],
-      "memo": "탑 구해요",
-      "date": "2분 전",
-      "id": 16
-    }
-  ],
-
   "boards": [
     {
-      "boardId": 3,
-      "boardName": "happydaddy",
+      "boardId": "0021",
+      "boardName": "헬롬가스",
+      "boardUserTier": "BRONZE",
+      "boardContent": "헬롬!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 1,
+      "myPositions": ["ALL", "TOP"],
+      "otherPositions": ["ALL", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": "0020",
+      "boardName": "삼식이라 미안요",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
       "boardMicYn": 0,
-      "myPositions": ["JUNGLE", "TOP"],
+      "myPositions": ["ALL", "TOP"],
       "otherPositions": ["JUNGLE", "TOP"],
       "boardParticipantsList": []
     },
     {
-      "boardId": 4,
-      "boardName": "happydaddy",
+      "boardId": "0019",
+      "boardName": "늑대고기 양고기",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
       "boardMicYn": 0,
-      "myPositions": ["JUNGLE", "TOP"],
-      "otherPositions": ["JUNGLE", "TOP"],
-      "boardParticipantsList": []
-    },
-    {
-      "boardId": 5,
-      "boardName": "angrydaddy",
-      "boardContent": "안녕하세요!",
-      "boardRecruitmentYn": 0,
-      "boardRegDt": "2022-08-26",
-      "boardMicYn": 0,
-      "myPositions": ["JUNGLE", "TOP"],
-      "otherPositions": ["JUNGLE", "TOP"],
+      "myPositions": ["ALL", "TOP"],
+      "otherPositions": ["MID", "TOP"],
       "boardParticipantsList": [
         {
           "participantId": 30,
@@ -211,8 +51,21 @@
       ]
     },
     {
-      "boardId": 6,
+      "boardId": "0018",
+      "boardName": "골없칸왕",
+      "boardUserTier": "PLATINUM",
+      "boardContent": "안녕하세요!",
+      "boardRecruitmentYn": 0,
+      "boardRegDt": "2022-08-26",
+      "boardMicYn": 0,
+      "myPositions": ["ALL", "TOP"],
+      "otherPositions": ["ALL", "TOP"],
+      "boardParticipantsList": []
+    },
+    {
+      "boardId": "0017",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -222,8 +75,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 7,
+      "boardId": "0016",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -233,8 +87,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 8,
+      "boardId": "0015",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -244,8 +99,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 9,
+      "boardId": "0014",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -255,8 +111,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 10,
+      "boardId": "0013",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -266,8 +123,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 11,
+      "boardId": "0012",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -277,8 +135,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 12,
+      "boardId": "0011",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -288,8 +147,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 13,
+      "boardId": "0010",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -299,8 +159,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 14,
+      "boardId": "0009",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -310,8 +171,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 15,
+      "boardId": "0008",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -321,8 +183,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 16,
+      "boardId": "0007",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -332,8 +195,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 17,
+      "boardId": "0006",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -343,8 +207,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 18,
+      "boardId": "0005",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -354,8 +219,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 19,
+      "boardId": "0004",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -365,8 +231,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 20,
+      "boardId": "0003",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -376,8 +243,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 21,
+      "boardId": "0002",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -387,8 +255,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 22,
+      "boardId": "0001",
       "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
@@ -398,19 +267,9 @@
       "boardParticipantsList": []
     },
     {
-      "boardId": 23,
+      "boardId": "0000",
       "boardName": "happydaddy",
-      "boardContent": "안녕하세요!",
-      "boardRecruitmentYn": 0,
-      "boardRegDt": "2022-08-26",
-      "boardMicYn": 0,
-      "myPositions": ["JUNGLE", "TOP"],
-      "otherPositions": ["JUNGLE", "TOP"],
-      "boardParticipantsList": []
-    },
-    {
-      "boardId": 24,
-      "boardName": "happydaddy",
+      "boardUserTier": "SILVER",
       "boardContent": "안녕하세요!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
