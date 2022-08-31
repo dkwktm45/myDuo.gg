@@ -1,6 +1,6 @@
 package com.project.MyDuo.dto;
 
-import com.project.MyDuo.entity.Member;
+import com.project.MyDuo.entity.User;
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
-public class MemberJoinRequestDto {
+public class UserJoinRequestDto {
 
     @Email
     @NotNull
@@ -24,8 +24,8 @@ public class MemberJoinRequestDto {
     @Size(min=1, max=200)
     private String password;
 
-    public Member toEntity(PasswordEncoder passwordEncoder) {
-        return Member.builder()
+    public User toEntity(PasswordEncoder passwordEncoder) {
+        return User.builder()
                 .email(email)
                 .name(name)
                 .password(passwordEncoder.encode(password))

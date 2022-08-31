@@ -1,10 +1,9 @@
 package com.project.MyDuo.service;
 
 import com.project.MyDuo.dto.JwtResponseDto;
-import com.project.MyDuo.dto.MemberJoinRequestDto;
-import com.project.MyDuo.dto.MemberLoginRequestDto;
-import com.project.MyDuo.entity.Member;
-import com.project.MyDuo.entity.RefreshToken;
+import com.project.MyDuo.dto.UserJoinRequestDto;
+import com.project.MyDuo.dto.UserLoginRequestDto;
+import com.project.MyDuo.entity.User;
 import com.project.MyDuo.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,36 +16,36 @@ import static com.project.MyDuo.jwt.JwtExpirationEnums.REISSUE_EXPIRATION_TIME;
 
 @Service
 @RequiredArgsConstructor
-public class MemberAccountService {
+public class UserAccountService {
 
-    private final MemberRepositoryService memberRepositoryService;
+    private final UserRepositoryService userRepositoryService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final RefreshTokenService refreshTokenService;
 
-    public String join(MemberJoinRequestDto requestDto) throws Exception {
+    public String join(UserJoinRequestDto requestDto) throws Exception {
 
-        if (memberRepositoryService.findMember(requestDto.getEmail()).isPresent()){
+        if (userRepositoryService.findMember(requestDto.getEmail()).isPresent()){
             throw new Exception("이미 해당 이메일로 된 계정이 존재");
         }
 
-        Member member = requestDto.toEntity(passwordEncoder);
-        memberRepositoryService.saveMember(member);
+        User user = requestDto.toEntity(passwordEncoder);
+        userRepositoryService.saveMember(user);
 
-        return member.getEmail();
+        return user.getEmail();
     }
 
-    public JwtResponseDto login(MemberLoginRequestDto requestDto) throws Exception {
+    public JwtResponseDto login(UserLoginRequestDto requestDto) throws Exception {
 
-        Member member = memberRepositoryService.findMember(requestDto.getEmail())
+        User user = userRepositoryService.findMember(requestDto.getEmail())
                 .orElseThrow(()->new NoSuchElementException("해당 이메일이 존재하지 않음"));
 
         //비밀번호가 일치하는지
-        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 틀림");
         }
 
-        String email = member.getEmail();
+        String email = user.getEmail();
         String accessToken = jwtTokenUtil.generateAccessToken(email);
         String refreshToken = refreshTokenService.saveRefreshToken(email, jwtTokenUtil.generateRefreshToken(email),
                 REFRESH_TOKEN_EXPIRATION_TIME.getValue());
@@ -69,7 +68,7 @@ public class MemberAccountService {
             throw new NoSuchElementException("토큰이 불일치");
         }
 
-        memberRepositoryService.deleteMember(email);
+        userRepositoryService.deleteMember(email);
 
     }
 

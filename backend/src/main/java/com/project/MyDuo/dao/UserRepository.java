@@ -1,14 +1,14 @@
 package com.project.MyDuo.dao;
 
-import com.project.MyDuo.entity.Member;
+import com.project.MyDuo.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member,Long> {
+public interface UserRepository extends JpaRepository<User,Long> {
 
-    Optional<Member> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     @Transactional
     void deleteByEmail(String email);
