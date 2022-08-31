@@ -104,7 +104,7 @@ function MainHeader() {
   const lineTypes = ["ALL", "TOP", "JUNGLE", "MID", "BOT", "SUPPORT"];
   const [lineFilter, setLineFilter] = useRecoilState(LineFilterState);
 
-  const [tierFilter, setTierFilter] = useRecoilState(TierFilterState);
+  const setTierFilter = useRecoilState(TierFilterState)[1];
 
   const handleLineFilter = (e) => {
     setLineFilter(e.target.value);

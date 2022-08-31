@@ -99,9 +99,9 @@ const RadioButton = styled.input`
 
 function Post({ postId, data, setPopup }) {
   const onClick = () => {
-    console.log(postId, "에 해당하는 유저 정보 및 게시물 데이터 요청");
     setPopup(postId);
   };
+
   return (
     <Wrapper onClick={onClick}>
       <PostContent>

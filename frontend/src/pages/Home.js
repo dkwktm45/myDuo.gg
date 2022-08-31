@@ -5,7 +5,6 @@ import Post from "components/Post";
 import PostHeader from "components/PostHeader";
 import Alarm from "components/Alarm";
 import { useState } from "react";
-
 import { useEffect } from "react";
 import { LineFilterState, TierFilterState } from "atoms";
 import { useRecoilValue } from "recoil";
@@ -66,6 +65,7 @@ function Home() {
 
   const lineFilter = useRecoilValue(LineFilterState);
   const tierFilter = useRecoilValue(TierFilterState);
+
   return (
     <>
       <NavBar />
@@ -93,6 +93,8 @@ function Home() {
                         setPopup={setPopup}
                       />
                     );
+                  } else {
+                    return "";
                   }
                 })}
               </Posts>
@@ -101,7 +103,14 @@ function Home() {
         </Wrapper>
       </Container>
       <Alarm />
-      {popup !== "" ? <DetailBoard postId={popup} setPopup={setPopup} /> : ""}
+      {popup !== "" ? (
+        <DetailBoard
+          data={posts.filter((data) => data.boardId === popup)[0]}
+          setPopup={setPopup}
+        />
+      ) : (
+        ""
+      )}
     </>
   );
 }
