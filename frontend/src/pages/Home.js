@@ -79,24 +79,21 @@ function Home() {
             ) : (
               <Posts>
                 {posts.map((data) => {
-                  if (lineFilter !== "ALL") {
-                    if (data.myPositions[1] !== lineFilter) {
-                      return "";
-                    }
+                  if (
+                    (lineFilter === "ALL" ||
+                      data.myPositions.includes("ALL") ||
+                      data.myPositions.includes(lineFilter)) &&
+                    (tierFilter === "ALL" || data.boardUserTier === tierFilter)
+                  ) {
+                    return (
+                      <Post
+                        key={data.boardId}
+                        postId={data.boardId}
+                        data={data}
+                        setPopup={setPopup}
+                      />
+                    );
                   }
-                  if (tierFilter !== "ALL") {
-                    if (data.boardUserTier !== tierFilter) {
-                      return "";
-                    }
-                  }
-                  return (
-                    <Post
-                      key={data.boardId}
-                      postId={data.boardId}
-                      data={data}
-                      setPopup={setPopup}
-                    />
-                  );
                 })}
               </Posts>
             )}
