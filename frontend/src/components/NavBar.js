@@ -5,7 +5,7 @@ import {
   faHouse,
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Container = styled.div`
   position: fixed;
@@ -46,18 +46,25 @@ const Icons = styled.div`
 const Icon = styled.div`
   font-size: 25px;
   font-weight: 100;
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: ${(props) => props.theme.lolTextColor};
+  border-radius: 10px;
+  margin: 0 2px;
   &:nth-child(3) {
-    font-size: 28px;
+    font-size: 30px;
+  }
+  &.active {
+    color: ${(props) => props.theme.lolBgColorNormal};
+    background-color: ${(props) => props.theme.lolTextColor};
   }
 `;
 
 function NavBar() {
+  const location = useLocation().pathname;
   return (
     <Container>
       <Wrapper>
@@ -68,17 +75,17 @@ function NavBar() {
       </Wrapper>
       <Wrapper>
         <Icons>
-          <Icon>
+          <Icon className={location === "/" ? "active" : ""}>
             <Link to="/">
               <FontAwesomeIcon icon={faHouse} />
             </Link>
           </Icon>
-          <Icon>
+          <Icon className={location === "/chat" ? "active" : ""}>
             <Link to="/chat">
               <FontAwesomeIcon icon={faMessage} />
             </Link>
           </Icon>
-          <Icon>
+          <Icon className={location === "/profile" ? "active" : ""}>
             <Link to="/profile">
               <FontAwesomeIcon icon={faCircleUser} />
             </Link>
