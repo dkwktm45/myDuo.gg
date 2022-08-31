@@ -37,16 +37,16 @@ public class UserAccountController {
     @GetMapping("/logout")
     public void logout(HttpServletRequest httpServletRequest) {
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
-        String refreshToken = authorizationHeader.split(" ")[1];
-        userAccountService.logout(refreshToken);
+        String accessToken = authorizationHeader.split(" ")[1];
+        userAccountService.logout(accessToken);
     }
 
 
     @GetMapping("/withdrawal")
     public void withdrawal(HttpServletRequest httpServletRequest) {
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
-        String refreshToken = authorizationHeader.split(" ")[1];
-        userAccountService.Withdrawal(refreshToken);
+        String accessToken = authorizationHeader.split(" ")[1];
+        userAccountService.Withdrawal(accessToken);
     }
 }
 

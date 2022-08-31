@@ -53,20 +53,20 @@ public class UserAccountService {
         return JwtResponseDto.of(accessToken, refreshToken);
     }
 
-    public void logout(String refreshToken) {
+    public void logout(String accessToken) {
         //refreshToken 삭제
-        String email = jwtTokenUtil.getEmail(refreshToken);
+        String email = jwtTokenUtil.getEmail(accessToken);
         refreshTokenService.deleteRefreshToken(email);
 
     }
 
-    public void Withdrawal(String refreshToken) {
-        String email = jwtTokenUtil.getEmail(refreshToken);
+    public void Withdrawal(String accessToken) {
+        String email = jwtTokenUtil.getEmail(accessToken);
 
-        String token = refreshTokenService.findRefreshToken(email);
-        if (!refreshToken.equals(token)) {
+        /*String token = refreshTokenService.findRefreshToken(email);
+        if (!accessToken.equals(token)) {
             throw new NoSuchElementException("토큰이 불일치");
-        }
+        }*/
 
         userRepositoryService.deleteMember(email);
 

@@ -18,10 +18,10 @@ public class UserRepositoryService {
     }
 
     public Optional<User> findMember(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findUserByEmail(email);
     }
 
     public void deleteMember(String email) {
-        userRepository.deleteByEmail(email);
+        userRepository.deleteUserByEmail(email);
     }
 }
