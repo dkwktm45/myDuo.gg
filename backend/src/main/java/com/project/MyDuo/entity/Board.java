@@ -52,5 +52,5 @@ public class Board {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference
 	@JoinColumn(name = "user_id")
-	private Member member;
+	private User user;
 }
