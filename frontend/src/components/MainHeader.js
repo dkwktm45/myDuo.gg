@@ -143,16 +143,16 @@ function MainHeader() {
         </Positions>
         <Tier>
           <Select onChange={handleTierFilter}>
-            <option value="All">전체</option>
-            <option value="Iron">아이언</option>
-            <option value="Bronze">브론즈</option>
-            <option value="Silver">실버</option>
-            <option value="Gold">골드</option>
-            <option value="Platinum">플래티넘</option>
-            <option value="Diamond">다이아몬드</option>
-            <option value="Master">마스터</option>
-            <option value="GrandMaster">그랜드 마스터</option>
-            <option value="Challenger">챌린저</option>
+            <option value="ALL">전체</option>
+            <option value="IRON">아이언</option>
+            <option value="BRONZE">브론즈</option>
+            <option value="SILVER">실버</option>
+            <option value="GOLD">골드</option>
+            <option value="PLATINUM">플래티넘</option>
+            <option value="DIAMOND">다이아몬드</option>
+            <option value="MASTER">마스터</option>
+            <option value="GRANDMASTER">그랜드 마스터</option>
+            <option value="CHALLENGER">챌린저</option>
           </Select>
         </Tier>
       </UpperContents>
