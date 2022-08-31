@@ -4,8 +4,11 @@ import {
   faCircleUser,
   faXmark,
   faMicrophone,
+  faMicrophoneSlash,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const Overlay = styled.div`
   position: fixed;
@@ -138,56 +141,88 @@ const PostDetailButtons = styled.div`
   background-color: yellow;
 `;
 
-function DetailBoard({ setPopup, postId }) {
-  const dataTest = "test";
+function DetailBoard({ setPopup, data }) {
+  const [boardUserData, setBoardUserData] = useState();
+  const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(0);
   const overlayClose = () => {
+    setLoading(true);
     setPopup("");
+  };
+  useEffect(() => {
+    (async () => {
+      const response = await fetch("http://localhost:8000/user");
+      const json = await response.json();
+      const userData = json.filter((v) => v.name === data.boardName)[0];
+      setBoardUserData(userData);
+      setLoading(false);
+      setRefresh(1);
+    })();
+  }, [data, refresh]);
+  const refreshBoard = () => {
+    setRefresh(0);
+    console.log("전적 갱신", data);
   };
   return (
     <>
       <Overlay onClick={overlayClose}></Overlay>
       <PostDetail>
-        <PostDetailHeader>
-          <div>
-            <span>
-              <FontAwesomeIcon icon={faCircleUser} />
-            </span>
-            <span>{dataTest}</span>
-          </div>
-          <span onClick={overlayClose}>
-            <FontAwesomeIcon icon={faXmark} />
-          </span>
-        </PostDetailHeader>
-        <PostDetailUserInfo>
-          <div>
-            <span>
-              <img
-                src={`../img/emblems/Emblem_${dataTest}.png`}
-                alt="lolLogo"
-              />
-            </span>
-            <span>롤 아이디</span>
-          </div>
-          <div>
-            162 138패
-            <br />
-            승률 54.0%
-          </div>
-          <div>
-            <div>
-              <FontAwesomeIcon icon={faMicrophone} />
-            </div>
-
-            <div>
-              <FontAwesomeIcon icon={faHeart} />
-              18
-            </div>
-          </div>
-        </PostDetailUserInfo>
-        <PostDetailLineInfo>라인 및 챔피언별 승률</PostDetailLineInfo>
-        <PostDetailLatestGame>최근 경기 결과</PostDetailLatestGame>
-        <PostDetailMemo>게시물 메모</PostDetailMemo>
-        <PostDetailButtons>버튼</PostDetailButtons>
+        {loading ? (
+          "loading"
+        ) : (
+          <>
+            <PostDetailHeader>
+              <div>
+                <span>
+                  <FontAwesomeIcon icon={faCircleUser} />
+                </span>
+                <span>{boardUserData.name}</span>
+              </div>
+              <span onClick={overlayClose}>
+                <FontAwesomeIcon icon={faXmark} />
+              </span>
+            </PostDetailHeader>
+            <PostDetailUserInfo>
+              <div>
+                <span>
+                  <img
+                    src={`../img/emblems/Emblem_${boardUserData.tier.replace(
+                      /\b[a-z]/g,
+                      (char) => char.toUpperCase()
+                    )}.png`}
+                    alt="lolLogo"
+                  />
+                </span>
+                <span>{boardUserData.name}</span>
+              </div>
+              <div>
+                {`${boardUserData.wins}승 ${boardUserData.losses}패`}
+                <br />
+                {`승률 ${boardUserData.winningRate.toFixed(1)}%`}
+              </div>
+              <div>
+                <div>
+                  {data.boardMicYn ? (
+                    <FontAwesomeIcon icon={faMicrophone} />
+                  ) : (
+                    <FontAwesomeIcon icon={faMicrophoneSlash} />
+                  )}
+                </div>
+                <div>
+                  <FontAwesomeIcon icon={faHeart} />
+                  18
+                </div>
+              </div>
+            </PostDetailUserInfo>
+            <PostDetailLineInfo>라인 및 챔피언별 승률</PostDetailLineInfo>
+            <PostDetailLatestGame>최근 경기 결과</PostDetailLatestGame>
+            <PostDetailMemo>게시물 메모</PostDetailMemo>
+            <PostDetailButtons>
+              <button onClick={refreshBoard}>전적 갱신</button>
+              <button>참가 신청</button>
+            </PostDetailButtons>
+          </>
+        )}
       </PostDetail>
     </>
   );
