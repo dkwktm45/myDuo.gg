@@ -101,7 +101,7 @@ const RadioButton = styled.input`
 `;
 
 function MainHeader() {
-  const lineTypes = ["All", "Top", "Jungle", "Mid", "Bot", "Support"];
+  const lineTypes = ["ALL", "TOP", "JUNGLE", "MID", "BOT", "SUPPORT"];
   const [lineFilter, setLineFilter] = useRecoilState(LineFilterState);
 
   const [tierFilter, setTierFilter] = useRecoilState(TierFilterState);
