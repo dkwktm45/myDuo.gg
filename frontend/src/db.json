@@ -23,7 +23,7 @@
       "boardId": "0020",
       "boardName": "삼식이라 미안요",
       "boardUserTier": "PLATINUM",
-      "boardContent": "안녕하세요!",
+      "boardContent": "듀오 구합니다~~",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
       "boardMicYn": 0,
@@ -35,7 +35,7 @@
       "boardId": "0019",
       "boardName": "늑대고기 양고기",
       "boardUserTier": "SILVER",
-      "boardContent": "안녕하세요!",
+      "boardContent": "즐겜하실분?!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
       "boardMicYn": 0,
@@ -54,7 +54,7 @@
       "boardId": "0018",
       "boardName": "골없칸왕",
       "boardUserTier": "SILVER",
-      "boardContent": "안녕하세요!",
+      "boardContent": "아무나!",
       "boardRecruitmentYn": 0,
       "boardRegDt": "2022-08-26",
       "boardMicYn": 0,
@@ -288,7 +288,7 @@
       "losses": 27,
       "leaguePoints": 46,
       "winningRate": 40.0,
-      "laneInfo": [0, 1],
+      "laneInfo": [0, 3],
       "championInfo": [
         {
           "championName": "Ezreal",
@@ -376,7 +376,7 @@
       "losses": 136,
       "leaguePoints": 36,
       "winningRate": 50.0,
-      "laneInfo": [0, 1],
+      "laneInfo": [1, 2],
       "championInfo": [
         {
           "championName": "Senna",
@@ -502,7 +502,7 @@
       "losses": 217,
       "leaguePoints": 0,
       "winningRate": 53.333333333333336,
-      "laneInfo": [0, 1],
+      "laneInfo": [3, 4],
       "championInfo": [
         {
           "championName": "MonkeyKing",
