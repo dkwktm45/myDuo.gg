@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Alarm from "components/Alarm";
 
 const Container = styled.div`
-  width: 100vw;
+  width: 50vw;
   height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
