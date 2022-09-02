@@ -176,6 +176,7 @@ const PostDetailLineInfo = styled.div`
       width: 70px;
       height: 70px;
       border: 1px solid ${(props) => props.theme.lolTextColor};
+      background-color: ${(props) => props.theme.lolBgColorLight};
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -226,7 +227,7 @@ const PostDetailLineInfo = styled.div`
       position: relative;
       width: 100%;
       background-color: ${(props) => props.theme.lolBgColorNormal};
-      margin-bottom: 5px;
+      margin: 3px 0;
       display: grid;
       grid-template-columns: 1fr 3fr 3fr 3fr;
       div {
@@ -308,6 +309,7 @@ const PostDetailMemo = styled.div`
       justify-content: center;
       p {
         border: 1px solid ${(props) => props.theme.lolTextColor};
+        background-color: ${(props) => props.theme.lolBgColorLight};
         width: 90%;
         height: 75px;
         max-width: calc(100%);
@@ -346,7 +348,7 @@ const PostDetailButtons = styled.div`
     font-size: 16px;
     font-weight: 600;
     width: 110px;
-    height: 40px;
+    height: 35px;
     margin-right: 20px;
     border: none;
     background-color: ${(props) => props.theme.lolTextColor};
