@@ -1,7 +1,7 @@
 package com.project.MyDuo.service;
 
 import com.project.MyDuo.dao.UserRepository;
-import com.project.MyDuo.entity.User;
+import com.project.MyDuo.entity.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ public class UserRepositoryService {
 
     private final UserRepository userRepository;
 
-    public void saveMember(User user) {
-        userRepository.save(user);
+    public void saveMember(Account account) {
+        userRepository.save(account);
     }
 
-    public Optional<User> findMember(String email) {
+    public Optional<Account> findMember(String email) {
         return userRepository.findUserByEmail(email);
     }
 

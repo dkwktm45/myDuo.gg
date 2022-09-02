@@ -1,6 +1,6 @@
 package com.project.MyDuo.dto;
 
-import com.project.MyDuo.entity.User;
+import com.project.MyDuo.entity.Account;
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -24,8 +24,8 @@ public class UserJoinRequestDto {
     @Size(min=1, max=200)
     private String password;
 
-    public User toEntity(PasswordEncoder passwordEncoder) {
-        return User.builder()
+    public Account toEntity(PasswordEncoder passwordEncoder) {
+        return Account.builder()
                 .email(email)
                 .name(name)
                 .password(passwordEncoder.encode(password))

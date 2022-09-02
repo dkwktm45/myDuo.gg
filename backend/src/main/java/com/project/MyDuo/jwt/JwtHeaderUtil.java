@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum JwtHeaderUtilEnums {
+public enum JwtHeaderUtil {
 
     GRANT_TYPE("JWT 타입 / Bearer ", "Bearer ");
 

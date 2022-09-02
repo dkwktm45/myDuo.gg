@@ -1,6 +1,9 @@
 package com.project.MyDuo.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.MyDuo.jwt.JwtTokenUtil;
+import com.project.MyDuo.security.filter.ExceptionHandlerFilter;
+import com.project.MyDuo.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,19 +20,16 @@ import static org.springframework.security.config.http.SessionCreationPolicy.*;
 public class SecurityConfig{
 
     //private final JwtEntryPoint jwtEntryPoint;
-   //private final LogoutAccessTokenRedisRepository logoutAccessTokenRepository;
-   // private final JwtTokenUtil jwtTokenUtil;
-    //private final CustomUserDetailService customUserDetailService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final CustomUserDetailService customUserDetailService;
 
     private final ObjectMapper objectMapper;
 
-    //정적 파일에 대한 요청들
-    private static final String[] AUTH_WHITELLIST = {
-            "/auth/", "/auth/signup", "/auth/login",
+    private final String[] AUTH_WHITELLIST = {
+            "/account/", "/account/join", "/account/login",
             "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**"
     };
 
-    //configure
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -38,19 +38,19 @@ public class SecurityConfig{
                 .antMatchers(AUTH_WHITELLIST).permitAll()
                 .anyRequest().authenticated()
 
-               // .and()
-               // .exceptionHandling()
-               // .authenticationEntryPoint(jwtEntryPoint)
+                //.and()
+                //.exceptionHandling()
+                //.authenticationEntryPoint(jwtEntryPoint)
 
                 .and()
                 .logout().disable()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
 
                 .and()
-                //.addFilterBefore(
-                //        new JwtAuthenticationFilter(jwtTokenUtil, customUserDetailService),
-               //         UsernamePasswordAuthenticationFilter.class)
-               // .addFilterBefore(new ExceptionHandlerFilter(objectMapper), JwtAuthenticationFilter.class)
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtTokenUtil, customUserDetailService),
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(objectMapper), JwtAuthenticationFilter.class)
                 .csrf().disable()
                 .httpBasic();
         return httpSecurity.build();
