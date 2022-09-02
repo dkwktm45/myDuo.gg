@@ -203,8 +203,9 @@ function LogIn() {
                   {...register("email", {
                     required: "이메일 입력은 필수입니다.",
                     pattern: {
-                      value: /^[A-Za-z0-9._%+-]+@gmail.com$/,
-                      message: "구글 이메일 형식만 가능합니다.",
+                      value:
+                        /^[A-Za-z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                      message: "이메일 형식만 가능합니다.",
                     },
                   })}
                 />

@@ -174,7 +174,9 @@ function Register() {
                   {...register("email", {
                     required: "이메일 입력은 필수입니다.",
                     pattern: {
-                      value: /^[A-Za-z0-9._%+-]+@gmail.com$/,
+                      value:
+                        /^[A-Za-z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+
                       message: "구글 이메일 형식만 가능합니다.",
                     },
                   })}
