@@ -17,7 +17,8 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 jwt:
-  secret: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  secret: aaaaaaaaaaaaaaaaaaaiiiiiiiiiiiiiiiaaaaaaaaaaaaaaaaaadddddddddddddddddeeeeeeeeeeexxxxxxxxxxxssssssskkkkkkkkkkkk
+
 logging:
   level:
     com.tutorial: debug
