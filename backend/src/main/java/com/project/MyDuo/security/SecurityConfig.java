@@ -1,5 +1,6 @@
 package com.project.MyDuo.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,32 +8,49 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig{
 
+    //private final JwtEntryPoint jwtEntryPoint;
+   //private final LogoutAccessTokenRedisRepository logoutAccessTokenRepository;
+   // private final JwtTokenUtil jwtTokenUtil;
+    //private final CustomUserDetailService customUserDetailService;
+
+    private final ObjectMapper objectMapper;
+
+    //정적 파일에 대한 요청들
     private static final String[] AUTH_WHITELLIST = {
+            "/auth/", "/auth/signup", "/auth/login",
+            "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**"
     };
 
+    //configure
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+
         httpSecurity
                 .authorizeHttpRequests()
-                .antMatchers("/**").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers(AUTH_WHITELLIST).permitAll()
                 .anyRequest().authenticated()
 
-                //.exceptionHandling()
-                //.authenticationEntryPoint(jwtEntryPoint)
+               // .and()
+               // .exceptionHandling()
+               // .authenticationEntryPoint(jwtEntryPoint)
 
                 .and()
                 .logout().disable()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
 
                 .and()
+                //.addFilterBefore(
+                //        new JwtAuthenticationFilter(jwtTokenUtil, customUserDetailService),
+               //         UsernamePasswordAuthenticationFilter.class)
+               // .addFilterBefore(new ExceptionHandlerFilter(objectMapper), JwtAuthenticationFilter.class)
                 .csrf().disable()
                 .httpBasic();
         return httpSecurity.build();
@@ -47,4 +65,5 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    //2개부족
 }
