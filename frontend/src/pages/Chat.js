@@ -115,7 +115,7 @@ function Chat() {
                 <span>내가 모집하는 듀오</span>
                 <DuoChatWrapper>
                   <DuoChatRoom />
-                  <DuoChatRoom />
+            
                 </DuoChatWrapper>
                 <span>내가 지원한 듀오</span>
                 <DuoChatWrapper></DuoChatWrapper>
