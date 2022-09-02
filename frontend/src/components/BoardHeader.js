@@ -38,7 +38,7 @@ const PostTitle = styled.span`
   }
 `;
 
-function PostHeader() {
+function BoardHeader() {
   return (
     <PostTitleWrapper>
       <PostTitle>마감 여부</PostTitle>
@@ -52,4 +52,4 @@ function PostHeader() {
   );
 }
 
-export default PostHeader;
+export default BoardHeader;

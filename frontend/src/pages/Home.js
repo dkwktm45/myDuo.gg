@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import NavBar from "components/NavBar";
 import MainHeader from "components/MainHeader";
-import Post from "components/Post";
-import PostHeader from "components/PostHeader";
+import Board from "components/Board";
+import BoardHeader from "components/BoardHeader";
 import Alarm from "components/Alarm";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -33,7 +33,7 @@ const Main = styled.div`
   background-color: ${(props) => props.theme.lolBgColorLight};
 `;
 
-const Posts = styled.div`
+const Boards = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -49,7 +49,7 @@ const LoadingMsg = styled.label`
 `;
 
 function Home() {
-  const [posts, setPosts] = useState([]);
+  const [boards, setBoards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [popup, setPopup] = useState("");
 
@@ -58,7 +58,7 @@ function Home() {
       const response = await fetch("http://localhost:8000/boards");
       const json = await response.json();
       //json.forEach((v) => console.log(v, lineFilter));
-      setPosts(json);
+      setBoards(json);
       setLoading(false);
     })();
   }, []);
@@ -73,12 +73,12 @@ function Home() {
         <Wrapper>
           <MainHeader />
           <Main>
-            <PostHeader />
+            <BoardHeader />
             {loading ? (
               <LoadingMsg>Loading...</LoadingMsg>
             ) : (
-              <Posts>
-                {posts.map((data) => {
+              <Boards>
+                {boards.map((data) => {
                   if (
                     (lineFilter === "ALL" ||
                       data.myPositions.includes("ALL") ||
@@ -86,7 +86,7 @@ function Home() {
                     (tierFilter === "ALL" || data.boardUserTier === tierFilter)
                   ) {
                     return (
-                      <Post
+                      <Board
                         key={data.boardId}
                         postId={data.boardId}
                         data={data}
@@ -97,7 +97,7 @@ function Home() {
                     return "";
                   }
                 })}
-              </Posts>
+              </Boards>
             )}
           </Main>
         </Wrapper>
@@ -105,7 +105,7 @@ function Home() {
       <Alarm />
       {popup !== "" ? (
         <DetailBoard
-          data={posts.filter((data) => data.boardId === popup)[0]}
+          data={boards.filter((data) => data.boardId === popup)[0]}
           setPopup={setPopup}
         />
       ) : (

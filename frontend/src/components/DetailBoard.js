@@ -176,7 +176,6 @@ const PostDetailLineInfo = styled.div`
       width: 70px;
       height: 70px;
       border: 1px solid ${(props) => props.theme.lolTextColor};
-      background-color: ${(props) => props.theme.lolBgColorLight};
       display: flex;
       flex-direction: column;
       align-items: center;
