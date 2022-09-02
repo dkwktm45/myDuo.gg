@@ -1,4 +1,4 @@
-package com.project.MyDuo.entity.chat;
+package com.project.MyDuo.entity.redis;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

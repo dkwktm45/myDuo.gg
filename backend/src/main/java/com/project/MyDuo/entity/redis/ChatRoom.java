@@ -1,4 +1,4 @@
-package com.project.MyDuo.entity.chat;
+package com.project.MyDuo.entity.redis;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -14,21 +14,18 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "board_participants")
 public class BoardParticipants {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long participantId; // 방번호
 	private String userName; // 메시지 name
 	private Long userId;
 	private String roomId;
-	@OneToOne(fetch = FetchType.LAZY)
+
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference
 	@JoinColumn(name = "board_id")
 	private Board board;
-
-	@ElementCollection@CollectionTable(name = "userParticipant",joinColumns = @JoinColumn(name="room_id"))
-	@Column(name="user_list")
-	private Set<String> userList = new HashSet<>();
-
 }
+
 
