@@ -1,6 +1,6 @@
 package com.project.MyDuo.dto;
 
-import com.project.MyDuo.jwt.JwtHeaderUtilEnums;
+import com.project.MyDuo.jwt.JwtHeaderUtil;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -22,7 +22,7 @@ public class JwtResponseDto {
 
     public static JwtResponseDto of(String accessToken, String refreshToken) {
         return JwtResponseDto.builder()
-                .grantType(JwtHeaderUtilEnums.GRANT_TYPE.getValue())
+                .grantType(JwtHeaderUtil.GRANT_TYPE.getValue())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

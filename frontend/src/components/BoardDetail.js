@@ -15,7 +15,6 @@ const Overlay = styled.div`
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -355,7 +354,7 @@ const PostDetailButtons = styled.div`
   }
 `;
 
-function DetailBoard({ setPopup, data }) {
+function DetailBoard({ setPopupBoard, data }) {
   const lane = ["TOP", "JUNGLE", "MID", "BOT", "SUPPORT"];
   const championNameToKorean = {
     Garen: "가렌",
@@ -512,8 +511,9 @@ function DetailBoard({ setPopup, data }) {
   const [refresh, setRefresh] = useState(0);
   const overlayClose = () => {
     setLoading(true);
-    setPopup("");
+    setPopupBoard("");
   };
+
   useEffect(() => {
     (async () => {
       const response = await fetch("http://localhost:8000/user");
@@ -524,10 +524,12 @@ function DetailBoard({ setPopup, data }) {
       setRefresh(1);
     })();
   }, [data, refresh]);
+
   const refreshBoard = () => {
     setRefresh(0);
     console.log("전적 갱신", data);
   };
+
   return (
     <>
       <Overlay onClick={overlayClose}></Overlay>

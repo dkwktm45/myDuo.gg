@@ -8,7 +8,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { LineFilterState, TierFilterState } from "atoms";
 import { useRecoilValue } from "recoil";
-import DetailBoard from "components/DetailBoard";
+import BoardDetail from "components/BoardDetail";
+import BoardCreate from "components/BoardCreate";
 
 const Container = styled.div`
   display: flex;
@@ -51,7 +52,8 @@ const LoadingMsg = styled.label`
 function Home() {
   const [boards, setBoards] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [popup, setPopup] = useState("");
+  const [popupBoard, setPopupBoard] = useState("");
+  const [popupCreate, setPopupCreate] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -71,7 +73,7 @@ function Home() {
       <NavBar />
       <Container>
         <Wrapper>
-          <MainHeader />
+          <MainHeader setPopupCreate={setPopupCreate} />
           <Main>
             <BoardHeader />
             {loading ? (
@@ -90,7 +92,7 @@ function Home() {
                         key={data.boardId}
                         postId={data.boardId}
                         data={data}
-                        setPopup={setPopup}
+                        setPopupBoard={setPopupBoard}
                       />
                     );
                   } else {
@@ -103,11 +105,16 @@ function Home() {
         </Wrapper>
       </Container>
       <Alarm />
-      {popup !== "" ? (
-        <DetailBoard
-          data={boards.filter((data) => data.boardId === popup)[0]}
-          setPopup={setPopup}
+      {popupBoard !== "" ? (
+        <BoardDetail
+          data={boards.filter((data) => data.boardId === popupBoard)[0]}
+          setPopupBoard={setPopupBoard}
         />
+      ) : (
+        ""
+      )}
+      {popupCreate === true ? (
+        <BoardCreate setPopupCreate={setPopupCreate} />
       ) : (
         ""
       )}

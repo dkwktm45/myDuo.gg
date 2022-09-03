@@ -3,6 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+`;
+
 const Container = styled.div`
   position: fixed;
   bottom: 0;
@@ -11,6 +22,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   margin: 30px;
+  z-index: 3;
 `;
 
 const WrapperClosed = styled.div`
@@ -59,21 +71,24 @@ function Alarm() {
   };
 
   return (
-    <Container>
-      {!isOpen ? (
-        <WrapperClosed onClick={handleAlarmWindow}>
-          <FontAwesomeIcon icon={faBell} />
-        </WrapperClosed>
-      ) : (
-        <WrapperOpened>
-          <Header>
-            <label onClick={handleAlarmWindow}>
-              <FontAwesomeIcon icon={faXmark} />
-            </label>
-          </Header>
-        </WrapperOpened>
-      )}
-    </Container>
+    <>
+      {isOpen ? <Overlay onClick={handleAlarmWindow} /> : ""}
+      <Container>
+        {!isOpen ? (
+          <WrapperClosed onClick={handleAlarmWindow}>
+            <FontAwesomeIcon icon={faBell} />
+          </WrapperClosed>
+        ) : (
+          <WrapperOpened>
+            <Header>
+              <label onClick={handleAlarmWindow}>
+                <FontAwesomeIcon icon={faXmark} />
+              </label>
+            </Header>
+          </WrapperOpened>
+        )}
+      </Container>
+    </>
   );
 }
 

@@ -97,9 +97,9 @@ const RadioButton = styled.input`
   transition: all 0.2s ease-in-out;
 `;
 
-function Board({ postId, data, setPopup }) {
+function Board({ postId, data, setPopupBoard }) {
   const onClick = () => {
-    setPopup(postId);
+    setPopupBoard(postId);
   };
 
   return (

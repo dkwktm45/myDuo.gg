@@ -3,16 +3,14 @@ package com.project.MyDuo.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class User {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,13 +38,15 @@ public class User {
     @Column(name = "user_valid")
     private Boolean valid;
 
+    private Role role;
     @Builder
-    public User(String email, String name, String password) {
+    public Account(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;
         heart=0;
         valid=true;
+        role=Role.USER;
     }
 
 /*
