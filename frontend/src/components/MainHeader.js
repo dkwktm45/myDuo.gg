@@ -100,7 +100,7 @@ const RadioButton = styled.input`
   }
 `;
 
-function MainHeader() {
+function MainHeader({ setPopupCreate }) {
   const lineTypes = ["ALL", "TOP", "JUNGLE", "MID", "BOT", "SUPPORT"];
   const [lineFilter, setLineFilter] = useRecoilState(LineFilterState);
 
@@ -112,6 +112,10 @@ function MainHeader() {
 
   const handleTierFilter = (e) => {
     setTierFilter(e.target.value);
+  };
+
+  const openCreateBoard = () => {
+    setPopupCreate(true);
   };
 
   return (
@@ -157,7 +161,7 @@ function MainHeader() {
         </Tier>
       </UpperContents>
       <UpperContents>
-        <UpLoadButton>등록하기</UpLoadButton>
+        <UpLoadButton onClick={openCreateBoard}>등록하기</UpLoadButton>
       </UpperContents>
     </Upper>
   );
