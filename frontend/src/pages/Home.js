@@ -59,7 +59,6 @@ function Home() {
     (async () => {
       const response = await fetch("http://localhost:8000/boards");
       const json = await response.json();
-      //json.forEach((v) => console.log(v, lineFilter));
       setBoards(json);
       setLoading(false);
     })();

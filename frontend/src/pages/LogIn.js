@@ -9,7 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { LoginState } from "atoms";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { accountService } from "services/apiServices";
 
 const Container = styled.div`
   display: flex;
@@ -21,40 +21,30 @@ const Container = styled.div`
 
 const OverViewContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 `;
 
 const OverView = styled.div`
-  color: ${(props) => props.theme.lolTextColor};
-  background-color: rgba(0, 0, 0, 0);
+  width: 25vw;
+  min-width: 360px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-width: 360px;
-  margin: 0 10px;
-  width: 25vw;
-  &:first-child {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-  }
-
+  color: ${(props) => props.theme.lolTextColor};
+  background-color: transparent;
+  margin: 0 5vw;
   &:nth-child(2) {
     border: 4px solid ${(props) => props.theme.lolTextColor};
   }
   span {
     width: 100%;
-  }
-  span:first-child {
-    font-size: 25px;
-    text-align: right;
-  }
-
-  span:nth-child(2) {
     font-size: 120px;
+    &:first-child {
+      font-size: 25px;
+      text-align: right;
+    }
   }
 `;
 
@@ -179,44 +169,33 @@ function LogIn() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm();
 
   const onValid = async (data) => {
-    //setIsLoggedIn(true);
-    //navigate("/");
-    //성공하면 해당 user 아이디 패스워드값 셋팅
-
     const json = JSON.stringify({
       email: data.email,
       password: data.password,
     });
 
-    await axios
-      .post("http://localhost:8080/account/login", json, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .catch(function (error) {
-        console.log("Error", error);
-        if (error.response) {
-          console.log("Error", error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
-      })
+    accountService("login", json)
       .then(function (response) {
-        console.log("OK ", response);
         setLogInState({
           token: response.data.grantType + response.data.accessToken,
           refreshToken: response.data.refreshToken,
         });
         navigate("/");
+      })
+      .catch(function (error) {
+        if (error.response.status === 400) {
+          setError("email", {
+            message: "이메일을 다시 확인해주세요",
+          });
+        } else if (error.response.status === 500) {
+          setError("password", {
+            message: "비밀번호를 다시 확인해주세요",
+          });
+        }
       });
   };
 

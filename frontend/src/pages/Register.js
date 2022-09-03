@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { LoginState } from "atoms";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { accountService } from "services/apiServices";
 
 const Container = styled.div`
   display: flex;
@@ -20,36 +20,25 @@ const OverViewContainer = styled.div`
 `;
 
 const OverView = styled.div`
-  color: ${(props) => props.theme.lolTextColor};
-  background-color: rgba(0, 0, 0, 0);
+  width: 25vw;
+  min-width: 360px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-width: 360px;
-  margin: 0 10px;
-  width: 25vw;
-  &:first-child {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-  }
-
+  color: ${(props) => props.theme.lolTextColor};
+  background-color: transparent;
+  margin: 0 5vw;
   &:nth-child(2) {
     border: 4px solid ${(props) => props.theme.lolTextColor};
   }
-
   span {
     width: 100%;
-  }
-  span:first-child {
-    font-size: 25px;
-    text-align: right;
-  }
-
-  span:nth-child(2) {
     font-size: 120px;
+    &:first-child {
+      font-size: 25px;
+      text-align: right;
+    }
   }
 `;
 
@@ -139,7 +128,7 @@ const ErrorMsg = styled.label`
 `;
 
 function Register() {
-  const setIsLoggedIn = useRecoilState(LoginState)[1];
+  const setLogInState = useRecoilState(LoginState)[1];
   const navigate = useNavigate();
   const {
     register,
@@ -149,42 +138,34 @@ function Register() {
   } = useForm();
 
   const onValid = async (data) => {
+    //비밀번호 확인이 올바른지 않을 경우
     if (data.password !== data.passwordCheck) {
       setError("passwordCheck", { message: "비밀번호를 다시 확인해주세요." });
     }
-    //setIsLoggedIn(true);
 
+    //입력 받은 form 양식 데이터
     const json = JSON.stringify({
       email: data.email,
       name: data.nickname,
       password: data.password,
     });
 
-    await axios
-      .post("http://localhost:8080/account/join", json, {
-        headers: {
-          // Overwrite Axios's automatically set Content-Type
-          "Content-Type": "application/json",
-        },
+    //회원가입 API 요청
+    accountService("join", json)
+      .then(function (response) {
+        //회원가입 성공 시 자동 로그인
+        accountService("login", json).then(function (res) {
+          setLogInState({
+            token: res.data.grantType + res.data.accessToken,
+            refreshToken: res.data.refreshToken,
+          });
+          navigate("/");
+        });
       })
       .catch(function (error) {
-        console.log("EEE", error);
-        if (error.response) {
-          console.log("Error", error.response.data);
-          setError("email", {
-            message: error.response.data.errorMessages + "합니다.",
-          });
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
-      })
-      .then(function (response) {
-        console.log("OK ", response);
+        setError("email", {
+          message: "이미 계정이 존재합니다",
+        });
       });
   };
   return (
