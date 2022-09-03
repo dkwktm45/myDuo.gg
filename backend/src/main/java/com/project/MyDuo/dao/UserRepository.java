@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("update User u set u.valid = 0 where u.email = :email and u.valid = 1")
     void deleteUserByEmail(@Param("email") String email);
+
+    Optional<User> findById(Long aLong);
 }

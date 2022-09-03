@@ -1,7 +1,7 @@
 package com.project.MyDuo.config.pub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.MyDuo.entity.chat.ChatMessage;
+import com.project.MyDuo.entity.redis.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;

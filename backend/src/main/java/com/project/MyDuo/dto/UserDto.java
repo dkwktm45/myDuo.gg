@@ -21,7 +21,5 @@ public class UserDto {
 	@OneToMany(fetch = FetchType.LAZY )
 	@JoinColumn(name = "user_id",updatable = false,insertable = false)
 	private List<BoardDto> boardDtoList;
-
-
 }
 

@@ -49,8 +49,6 @@ public class User {
         valid=true;
     }
 
-
-
 /*
     public Member(UserDto user){
         this.userId = user.getUserId();
