@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { LoginState } from "atoms";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -151,11 +152,40 @@ function Register() {
     if (data.password !== data.passwordCheck) {
       setError("passwordCheck", { message: "비밀번호를 다시 확인해주세요." });
     }
-    setIsLoggedIn(true);
-    navigate("/");
+    //setIsLoggedIn(true);
 
-    //성공하면 해당 user 아이디 패스워드값 셋팅
-    //JWT
+    const json = JSON.stringify({
+      email: data.email,
+      name: data.nickname,
+      password: data.password,
+    });
+
+    await axios
+      .post("http://localhost:8080/account/join", json, {
+        headers: {
+          // Overwrite Axios's automatically set Content-Type
+          "Content-Type": "application/json",
+        },
+      })
+      .catch(function (error) {
+        console.log("EEE", error);
+        if (error.response) {
+          console.log("Error", error.response.data);
+          setError("email", {
+            message: error.response.data.errorMessages + "합니다.",
+          });
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+        console.log(error.config);
+      })
+      .then(function (response) {
+        console.log("OK ", response);
+      });
   };
   return (
     <>
@@ -176,8 +206,15 @@ function Register() {
                     pattern: {
                       value:
                         /^[A-Za-z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-
-                      message: "구글 이메일 형식만 가능합니다.",
+                      message: "이메일 형식에 맞지 않습니다",
+                    },
+                    minLength: {
+                      value: 1,
+                      message: "이메일 형식에 맞지 않습니다",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "이메일은 20자 이하만 가능합니다",
                     },
                   })}
                 />
@@ -188,8 +225,12 @@ function Register() {
                   {...register("nickname", {
                     required: "닉네임을 입력해주세요",
                     minLength: {
-                      value: 2,
-                      message: "닉네임은 최소 2자리 이상 입력해주세요.",
+                      value: 1,
+                      message: "닉네임은 최소 1자리 이상 입력해주세요",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "닉네임은 최대 20자 입니다",
                     },
                   })}
                 />
@@ -200,8 +241,12 @@ function Register() {
                   {...register("password", {
                     required: "비밀번호를 입력해주세요.",
                     minLength: {
-                      value: 8,
-                      message: "비밀번호는 최소 8자리 이상 입력해주세요.",
+                      value: 1,
+                      message: "비밀번호는 최소 1자리 이상 입력해주세요",
+                    },
+                    maxLength: {
+                      value: 200,
+                      message: "비밀번호가 너무 길어요",
                     },
                   })}
                 />
@@ -210,7 +255,7 @@ function Register() {
                   type="password"
                   placeholder="비밀번호 확인"
                   {...register("passwordCheck", {
-                    required: "비밀번호를 입력해주세요.",
+                    required: "비밀번호가 틀립니다",
                   })}
                 />
                 <ErrorMsg>{errors?.passwordCheck?.message}</ErrorMsg>

@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { LoginState } from "atoms";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -172,7 +173,7 @@ const ErrorMsg = styled.label`
 `;
 
 function LogIn() {
-  const setIsLoggedIn = useRecoilState(LoginState)[1];
+  const setLogInState = useRecoilState(LoginState)[1];
   const navigate = useNavigate();
   const {
     register,
@@ -181,12 +182,44 @@ function LogIn() {
   } = useForm();
 
   const onValid = async (data) => {
-    setIsLoggedIn(true);
-    navigate("/");
+    //setIsLoggedIn(true);
+    //navigate("/");
     //성공하면 해당 user 아이디 패스워드값 셋팅
-    //JWT
-    navigate("/");
+
+    const json = JSON.stringify({
+      email: data.email,
+      password: data.password,
+    });
+
+    await axios
+      .post("http://localhost:8080/account/login", json, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .catch(function (error) {
+        console.log("Error", error);
+        if (error.response) {
+          console.log("Error", error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+        console.log(error.config);
+      })
+      .then(function (response) {
+        console.log("OK ", response);
+        setLogInState({
+          token: response.data.grantType + response.data.accessToken,
+          refreshToken: response.data.refreshToken,
+        });
+        navigate("/");
+      });
   };
+
   return (
     <>
       <Container>
@@ -207,6 +240,14 @@ function LogIn() {
                         /^[A-Za-z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
                       message: "이메일 형식만 가능합니다.",
                     },
+                    minLength: {
+                      value: 1,
+                      message: "이메일 형식에 맞지 않습니다",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "이메일은 20자 이하만 가능합니다",
+                    },
                   })}
                 />
                 <ErrorMsg className="text-danger">
@@ -218,8 +259,12 @@ function LogIn() {
                   {...register("password", {
                     required: "비밀번호를 입력해주세요.",
                     minLength: {
-                      value: 8,
-                      message: "비밀번호는 최소 8자리 이상 입력해주세요.",
+                      value: 1,
+                      message: "비밀번호는 최소 1자리 이상 입력해주세요",
+                    },
+                    maxLength: {
+                      value: 200,
+                      message: "비밀번호가 너무 길어요",
                     },
                   })}
                 />
