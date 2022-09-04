@@ -19,8 +19,8 @@ const Overlay = styled.div`
 const Container = styled.div`
   font-family: "Roboto", sans-serif;
   position: absolute;
-  width: 360px;
-  height: 600px;
+  width: 440px;
+  height: 560px;
   top: 0vh;
   bottom: 0vh;
   left: 0vw;
@@ -34,6 +34,17 @@ const Container = styled.div`
   background-color: ${(props) => props.theme.lolBgColorNormal};
   color: ${(props) => props.theme.lolTextColor};
   z-index: 9;
+`;
+
+const GridContainer = styled.div`
+  display: grid;
+  width: 80%;
+  height: 180px;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "header right "
+    "main right ";
+  margin-top: 20px;
 `;
 
 const BoardCreateHeader = styled.div`
@@ -78,26 +89,121 @@ const BoardCreateId = styled(BoardCreateContents)`
   }
 `;
 
-const BoardCreateMyPosition = styled(BoardCreateContents)`
-  height: 80px;
+const BoardCreateMyPosition = styled.div`
+  display: flex;
+  height: 80%;
+  flex-direction: column;
+  justify-content: space-around;
+  grid-area: header;
 `;
 
-const BoardCreateOtherPosition = styled(BoardCreateContents)`
-  height: 80px;
-  margin-top: 10px;
+const BoardCreateOtherPosition = styled(BoardCreateMyPosition)`
+  grid-area: main;
 `;
 
-const BoardCreateMic = styled(BoardCreateContents)`
-  height: 50px;
+const BoardCreateMic = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-area: right;
+  & > span {
+    margin-top: 15px;
+  }
+  & > label {
+    &:nth-child(3) {
+      margin-top: 10px;
+      color: ${(props) => props.theme.lolAccentColor1};
+
+      &.checked {
+        color: ${(props) => props.theme.lolAccentColor};
+      }
+    }
+  }
+`;
+
+const ToggleButton = styled.span`
+  & > input {
+    display: none;
+    &,
+    &:after,
+    &:before,
+    & *,
+    & *:after,
+    & *:before,
+    & + label {
+      box-sizing: border-box;
+      &::selection {
+        background: none;
+      }
+    }
+    &:checked + label {
+      background: ${(props) => props.theme.lolBgColorNormal};
+      &:active {
+        box-shadow: none;
+        &:after {
+          margin-left: -0.8em;
+        }
+      }
+    }
+    &:checked + label:after {
+      left: 50%;
+    }
+  }
+  & > label {
+    outline: 0;
+    display: block;
+    width: 4em;
+    height: 2em;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    background: ${(props) => props.theme.lolBgColorNormal};
+    border-radius: 2em;
+    padding: 2px;
+    transition: all 0.4s ease;
+    border: 2px solid ${(props) => props.theme.lolTextColor};
+    &:after,
+    &:before {
+      position: relative;
+      display: block;
+      content: "";
+      width: 50%;
+      height: 100%;
+    }
+    &:after {
+      left: 0;
+      border-radius: 2em;
+      background: ${(props) => props.theme.lolTextColor};
+      transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        padding 0.3s ease, margin 0.3s ease;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 0 rgba(0, 0, 0, 0.08);
+    }
+    &:before {
+      display: none;
+    }
+    &:hover:after {
+      will-change: padding;
+    }
+    &:active {
+      box-shadow: inset 0 0 0 2em #e8eae9;
+      &:after {
+        padding-right: 0.8em;
+      }
+    }
+  }
 `;
 
 const BoardCreateMemo = styled(BoardCreateContents)`
   height: 100px;
+  margin: 0;
   textarea {
+    font-family: "Roboto";
+    font-size: 16px;
     width: 100%;
     height: 60px;
+    padding: 5px;
     color: ${(props) => props.theme.lolTextColor};
-    background-color: transparent;
+    background-color: ${(props) => props.theme.lolBgColorLight};
     border: 1px solid ${(props) => props.theme.lolTextColor};
     resize: none;
     &:focus {
@@ -121,12 +227,30 @@ const BoardCreateButtons = styled(BoardCreateContents)`
 
 function BoardCreate({ setPopupCreate }) {
   const [memo, setMemo] = useState("");
+  const [myLineCheck, setMyLineCheck] = useState([]);
+  const [otherLineCheck, setOtherLineCheck] = useState([]);
+  const [mic, setMic] = useState(false);
   const overlayClose = () => {
     setPopupCreate(false);
   };
 
   const onChange = (e) => {
     setMemo(e.target.value);
+  };
+
+  const handleToggle = () => {
+    setMic(document.querySelector("#tb").checked);
+  };
+
+  const onSubmit = () => {
+    const data = {
+      myLine: myLineCheck,
+      otherLine: otherLineCheck,
+      mic: mic,
+      memo: memo,
+    };
+    console.log(data);
+    overlayClose();
   };
 
   return (
@@ -147,18 +271,33 @@ function BoardCreate({ setPopupCreate }) {
             <option>3번 아이디</option>
           </select>
         </BoardCreateId>
-        <BoardCreateMyPosition>
-          <span>내 포지션</span>
-          <LinePositions useFor="createMy" />
-        </BoardCreateMyPosition>
-        <BoardCreateOtherPosition>
-          <span>다른 사람 포지션</span>
-          <LinePositions useFor="createOther" />
-        </BoardCreateOtherPosition>
-        <BoardCreateMic>
-          <label>마이크 사용 여부</label>
-          <span>Mic</span>
-        </BoardCreateMic>
+        <GridContainer>
+          <BoardCreateMyPosition>
+            <span>내 포지션</span>
+            <LinePositions
+              useFor="createMy"
+              myLineCheck={myLineCheck}
+              setMyLineCheck={setMyLineCheck}
+            />
+          </BoardCreateMyPosition>
+          <BoardCreateOtherPosition>
+            <span>다른 사람 포지션</span>
+            <LinePositions
+              useFor="createOther"
+              otherLineCheck={otherLineCheck}
+              setOtherLineCheck={setOtherLineCheck}
+            />
+          </BoardCreateOtherPosition>
+          <BoardCreateMic>
+            <label>마이크</label>
+            <ToggleButton onClick={handleToggle}>
+              <input type="checkbox" id="tb" />
+              <label htmlFor="tb"></label>
+            </ToggleButton>
+            <label className={mic ? "checked" : ""}>{mic ? "ON" : "OFF"}</label>
+          </BoardCreateMic>
+        </GridContainer>
+
         <BoardCreateMemo>
           <label>메모</label>
           <textarea value={memo} onChange={onChange}>
@@ -166,7 +305,7 @@ function BoardCreate({ setPopupCreate }) {
           </textarea>
         </BoardCreateMemo>
         <BoardCreateButtons>
-          <button>듀오 모집하기</button>
+          <button onClick={onSubmit}>듀오 모집하기</button>
         </BoardCreateButtons>
       </Container>
     </>
