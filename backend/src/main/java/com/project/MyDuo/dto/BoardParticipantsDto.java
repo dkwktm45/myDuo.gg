@@ -3,13 +3,16 @@ package com.project.MyDuo.dto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.project.MyDuo.entity.Account;
 import com.project.MyDuo.entity.BoardParticipants;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardParticipantsDto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

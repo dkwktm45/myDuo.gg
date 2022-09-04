@@ -16,6 +16,7 @@ import net.bytebuddy.utility.nullability.AlwaysNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,6 @@ public class ChatRoomController {
 		logger.info("my-room 접근");
 		return ResponseEntity.ok(boardParticipantService.myChatRoom(account));
 	}
-
 	@Operation(summary = "otherRoom", description = "내가 게시물에 참여한 채팅방")
 	@PostMapping(value = "/other-rooms")
 	public ResponseEntity<List<BoardDto>> otherRoom(@AuthenticationPrincipal Account account) {
@@ -54,9 +54,9 @@ public class ChatRoomController {
 	@Operation(summary = "createRoom", description = "게시물에 대해 처음으로 채팅방 참가 할때")
 	@PostMapping("/room")
 	public Map<String, Object> createRoom(@RequestParam("boardUuid") String boardUuid
-			, @AuthenticationPrincipal Account account) throws Exception {
+			, Authentication authentication) throws Exception {
 		logger.info("채팅방 접근");
 		ChatRoom chatRoom = chatRoomRepository.createChatRoom();
-		return boardParticipantService.setChat(boardUuid, chatRoom.getRoomId(), account);
+		return boardParticipantService.setChat(boardUuid, chatRoom.getRoomId(), authentication);
 	}
 }

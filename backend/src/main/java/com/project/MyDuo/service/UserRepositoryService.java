@@ -17,6 +17,8 @@ public class UserRepositoryService {
         userRepository.save(account);
     }
 
+    public Optional<Account> findById(Long id){return userRepository.findById(id);}
+
     public Optional<Account> findMember(String email) {
         return userRepository.findUserByEmail(email);
     }

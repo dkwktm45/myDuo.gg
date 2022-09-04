@@ -14,6 +14,7 @@ public class BoardParticipants {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long participantId; // 방번호
+	private String participantUuid;
 	private String userName; // 메시지 name
 	private Long userId;
 	private String roomId;

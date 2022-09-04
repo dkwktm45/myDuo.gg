@@ -6,16 +6,17 @@ import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.BoardPositions;
 import com.project.MyDuo.entity.convert.ReportListConverter;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Getter
-@Setter
+@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data @Builder
 public class BoardDto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

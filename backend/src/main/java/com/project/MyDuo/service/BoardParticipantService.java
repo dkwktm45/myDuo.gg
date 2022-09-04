@@ -9,16 +9,16 @@ import com.project.MyDuo.entity.Account;
 import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.BoardParticipants;
 import com.project.MyDuo.entity.redis.ChatMessage;
+import com.project.MyDuo.security.CustomUser;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,15 +31,17 @@ public class BoardParticipantService {
 	private final BoardParticipantsRepository participantsRepository;
 	private final BoardService boardService;
 	private final BoardRepository boardRepository;
-	private final UserRepository userRepository;
 	private final ChatService chatService;
-	public Map<String, Object> setChat(String boardUuid, String chatRoomId, Account account) throws Exception {
+
+	public Map<String, Object> setChat(String boardUuid, String chatRoomId, Authentication authentication) throws Exception {
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		Account account = ((CustomUser) userDetails).getAccount();
 		Board board = boardService.getOne(boardUuid);
 		if(board.getBoardParticipantsList().stream().anyMatch(info -> info.getUserId().equals(account.getId())) && board.getBoardParticipantsList() != null){
 			throw new Exception("이미 존재하는 회원입니다.");
 		}else {
 			BoardParticipants boardParticipants = BoardParticipants.builder()
-					.board(board)
+					.board(board).participantUuid(UUID.randomUUID().toString())
 					.userName(account.getName())
 					.userId(account.getId())
 					.roomId(chatRoomId)
@@ -50,9 +52,6 @@ public class BoardParticipantService {
 			result.put("participants", boardParticipants);
 			return result;
 		}
-	}
-	public void updateUserList(BoardParticipants boardParticipants){
-		participantsRepository.save(boardParticipants);
 	}
 
 	public List<BoardParticipantsDto> myChatRoom(Account account){

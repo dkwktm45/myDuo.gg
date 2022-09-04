@@ -1,6 +1,7 @@
 package com.project.MyDuo.entity;
 
 import com.project.MyDuo.dto.AccountDto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,9 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Entity
+@Getter @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Account {
 
     @Id
@@ -58,11 +59,9 @@ public class Account {
         this.email = accountDto.getEmail();
         this.password = accountDto.getPassword();
         this.heart = accountDto.getHeart();
-        if(accountDto.getBoardDtoList() == null){
-            this.boardList = null;
-        }else{
-            this.boardList = new ArrayList(accountDto.getBoardDtoList());
-        }
+        this.heart = accountDto.getHeart();
+        this.valid = accountDto.getValid();
+        this.role = accountDto.getRole();
     }
     @OneToMany(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id",updatable = false,insertable = false)
