@@ -69,6 +69,10 @@ const Input = styled.input`
   outline: none;
   margin: 10px 0;
   border-bottom: 2px solid ${(props) => props.theme.lolTextColor};
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+  appearance: none;
+  border-radius: 0;
   &:nth-child(1),
   &:nth-child(2) {
     margin-bottom: 20px;
@@ -179,9 +183,10 @@ function Register() {
           <OverView>
             <OverViewItem>
               <Text>회원 가입</Text>
-              <Form onSubmit={handleSubmit(onValid)}>
+              <Form onSubmit={handleSubmit(onValid)} autoComplete="off ">
                 <Input
                   placeholder="이메일 입력"
+                  autocomplete="nope"
                   {...register("email", {
                     required: "이메일 입력은 필수입니다.",
                     pattern: {
@@ -219,6 +224,7 @@ function Register() {
                 <Input
                   type="password"
                   placeholder="비밀번호 입력"
+                  autocomplete="new-password"
                   {...register("password", {
                     required: "비밀번호를 입력해주세요.",
                     minLength: {
@@ -235,6 +241,7 @@ function Register() {
                 <Input
                   type="password"
                   placeholder="비밀번호 확인"
+                  autocomplete="new-password"
                   {...register("passwordCheck", {
                     required: "비밀번호가 틀립니다",
                   })}

@@ -85,6 +85,12 @@ const Input = styled.input`
     color: ${(props) => props.theme.lolTextColor};
     letter-spacing: 0px;
   }
+  //자동 완성 시 흰색 배경 변경 방지
+  &:-webkit-autofill {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-transition: background-color 9999s ease-out;
+    -webkit-text-fill-color: ${(props) => props.theme.lolTextColor} !important;
+  }
 `;
 
 const Submit = styled.input`
