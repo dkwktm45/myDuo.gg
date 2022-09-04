@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { LoginState } from "atoms";
 import { useForm } from "react-hook-form";
+import { accountService } from "services/apiServices";
 
 const Container = styled.div`
   display: flex;
@@ -19,36 +20,25 @@ const OverViewContainer = styled.div`
 `;
 
 const OverView = styled.div`
-  color: ${(props) => props.theme.lolTextColor};
-  background-color: rgba(0, 0, 0, 0);
+  width: 25vw;
+  min-width: 360px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-width: 360px;
-  margin: 0 10px;
-  width: 25vw;
-  &:first-child {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-  }
-
+  color: ${(props) => props.theme.lolTextColor};
+  background-color: transparent;
+  margin: 0 5vw;
   &:nth-child(2) {
     border: 4px solid ${(props) => props.theme.lolTextColor};
   }
-
   span {
     width: 100%;
-  }
-  span:first-child {
-    font-size: 25px;
-    text-align: right;
-  }
-
-  span:nth-child(2) {
     font-size: 120px;
+    &:first-child {
+      font-size: 25px;
+      text-align: right;
+    }
   }
 `;
 
@@ -138,7 +128,7 @@ const ErrorMsg = styled.label`
 `;
 
 function Register() {
-  const setIsLoggedIn = useRecoilState(LoginState)[1];
+  const setLogInState = useRecoilState(LoginState)[1];
   const navigate = useNavigate();
   const {
     register,
@@ -148,14 +138,35 @@ function Register() {
   } = useForm();
 
   const onValid = async (data) => {
+    //비밀번호 확인이 올바른지 않을 경우
     if (data.password !== data.passwordCheck) {
       setError("passwordCheck", { message: "비밀번호를 다시 확인해주세요." });
     }
-    setIsLoggedIn(true);
-    navigate("/");
 
-    //성공하면 해당 user 아이디 패스워드값 셋팅
-    //JWT
+    //입력 받은 form 양식 데이터
+    const json = JSON.stringify({
+      email: data.email,
+      name: data.nickname,
+      password: data.password,
+    });
+
+    //회원가입 API 요청
+    accountService("join", json)
+      .then(function (response) {
+        //회원가입 성공 시 자동 로그인
+        accountService("login", json).then(function (res) {
+          setLogInState({
+            token: res.data.grantType + res.data.accessToken,
+            refreshToken: res.data.refreshToken,
+          });
+          navigate("/");
+        });
+      })
+      .catch(function (error) {
+        setError("email", {
+          message: "이미 계정이 존재합니다",
+        });
+      });
   };
   return (
     <>
@@ -176,8 +187,15 @@ function Register() {
                     pattern: {
                       value:
                         /^[A-Za-z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-
-                      message: "구글 이메일 형식만 가능합니다.",
+                      message: "이메일 형식에 맞지 않습니다",
+                    },
+                    minLength: {
+                      value: 1,
+                      message: "이메일 형식에 맞지 않습니다",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "이메일은 20자 이하만 가능합니다",
                     },
                   })}
                 />
@@ -188,8 +206,12 @@ function Register() {
                   {...register("nickname", {
                     required: "닉네임을 입력해주세요",
                     minLength: {
-                      value: 2,
-                      message: "닉네임은 최소 2자리 이상 입력해주세요.",
+                      value: 1,
+                      message: "닉네임은 최소 1자리 이상 입력해주세요",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "닉네임은 최대 20자 입니다",
                     },
                   })}
                 />
@@ -200,8 +222,12 @@ function Register() {
                   {...register("password", {
                     required: "비밀번호를 입력해주세요.",
                     minLength: {
-                      value: 8,
-                      message: "비밀번호는 최소 8자리 이상 입력해주세요.",
+                      value: 1,
+                      message: "비밀번호는 최소 1자리 이상 입력해주세요",
+                    },
+                    maxLength: {
+                      value: 200,
+                      message: "비밀번호가 너무 길어요",
                     },
                   })}
                 />
@@ -210,7 +236,7 @@ function Register() {
                   type="password"
                   placeholder="비밀번호 확인"
                   {...register("passwordCheck", {
-                    required: "비밀번호를 입력해주세요.",
+                    required: "비밀번호가 틀립니다",
                   })}
                 />
                 <ErrorMsg>{errors?.passwordCheck?.message}</ErrorMsg>

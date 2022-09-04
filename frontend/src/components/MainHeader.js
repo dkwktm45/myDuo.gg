@@ -79,7 +79,6 @@ const RadioButtonLabel = styled.label`
   font-size: 20px;
   width: 40px;
   height: 40px;
-  background-color: blue;
   cursor: pointer;
   color: ${(props) => props.theme.lolTextColor};
   border: 2px solid ${(props) => props.theme.lolBgColorLight};

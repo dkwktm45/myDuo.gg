@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { LoginState } from "atoms";
 import { useForm } from "react-hook-form";
+import { accountService } from "services/apiServices";
 
 const Container = styled.div`
   display: flex;
@@ -20,40 +21,30 @@ const Container = styled.div`
 
 const OverViewContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 `;
 
 const OverView = styled.div`
-  color: ${(props) => props.theme.lolTextColor};
-  background-color: rgba(0, 0, 0, 0);
+  width: 25vw;
+  min-width: 360px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-width: 360px;
-  margin: 0 10px;
-  width: 25vw;
-  &:first-child {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-  }
-
+  color: ${(props) => props.theme.lolTextColor};
+  background-color: transparent;
+  margin: 0 5vw;
   &:nth-child(2) {
     border: 4px solid ${(props) => props.theme.lolTextColor};
   }
   span {
     width: 100%;
-  }
-  span:first-child {
-    font-size: 25px;
-    text-align: right;
-  }
-
-  span:nth-child(2) {
     font-size: 120px;
+    &:first-child {
+      font-size: 25px;
+      text-align: right;
+    }
   }
 `;
 
@@ -172,21 +163,42 @@ const ErrorMsg = styled.label`
 `;
 
 function LogIn() {
-  const setIsLoggedIn = useRecoilState(LoginState)[1];
+  const setLogInState = useRecoilState(LoginState)[1];
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm();
 
   const onValid = async (data) => {
-    setIsLoggedIn(true);
-    navigate("/");
-    //성공하면 해당 user 아이디 패스워드값 셋팅
-    //JWT
-    navigate("/");
+    const json = JSON.stringify({
+      email: data.email,
+      password: data.password,
+    });
+
+    accountService("login", json)
+      .then(function (response) {
+        setLogInState({
+          token: response.data.grantType + response.data.accessToken,
+          refreshToken: response.data.refreshToken,
+        });
+        navigate("/");
+      })
+      .catch(function (error) {
+        if (error.response.status === 400) {
+          setError("email", {
+            message: "이메일을 다시 확인해주세요",
+          });
+        } else if (error.response.status === 500) {
+          setError("password", {
+            message: "비밀번호를 다시 확인해주세요",
+          });
+        }
+      });
   };
+
   return (
     <>
       <Container>
@@ -207,6 +219,14 @@ function LogIn() {
                         /^[A-Za-z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
                       message: "이메일 형식만 가능합니다.",
                     },
+                    minLength: {
+                      value: 1,
+                      message: "이메일 형식에 맞지 않습니다",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "이메일은 20자 이하만 가능합니다",
+                    },
                   })}
                 />
                 <ErrorMsg className="text-danger">
@@ -218,8 +238,12 @@ function LogIn() {
                   {...register("password", {
                     required: "비밀번호를 입력해주세요.",
                     minLength: {
-                      value: 8,
-                      message: "비밀번호는 최소 8자리 이상 입력해주세요.",
+                      value: 1,
+                      message: "비밀번호는 최소 1자리 이상 입력해주세요",
+                    },
+                    maxLength: {
+                      value: 200,
+                      message: "비밀번호가 너무 길어요",
                     },
                   })}
                 />
