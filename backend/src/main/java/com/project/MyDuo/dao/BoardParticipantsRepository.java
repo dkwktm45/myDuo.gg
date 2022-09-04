@@ -17,6 +17,6 @@ public interface BoardParticipantsRepository extends JpaRepository<BoardParticip
 
 	@Query(value = "select * from board_participants p " +
 			"where p.board_id in (select b.board_id from board b "+
-			"where b.id = :id)" , nativeQuery = true)
-	List<BoardParticipants> findByBoard(@Param("id") Long userId);
+			"where b.user_id = :user_id)" , nativeQuery = true)
+	List<BoardParticipants> findByBoard(@Param("user_id") Long userId);
 }

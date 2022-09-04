@@ -39,6 +39,9 @@ public class BoardParticipantService {
 		Board board = boardService.getOne(boardUuid);
 		if(board.getBoardParticipantsList().stream().anyMatch(info -> info.getUserId().equals(account.getId())) && board.getBoardParticipantsList() != null){
 			throw new Exception("이미 존재하는 회원입니다.");
+		}else if(board.getBoardRecruitmentYn() == 1) {
+			chatService.deleteRoom(chatRoomId);
+			throw new Exception("이미 해당 유저는 듀오를 결성했습니다.");
 		}else {
 			BoardParticipants boardParticipants = BoardParticipants.builder()
 					.board(board).participantUuid(UUID.randomUUID().toString())
@@ -54,8 +57,11 @@ public class BoardParticipantService {
 		}
 	}
 
-	public List<BoardParticipantsDto> myChatRoom(Account account){
+	public List<BoardParticipantsDto> myChatRoom(Authentication authentication){
 		logger.info("myChatRoom start");
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		Account account = ((CustomUser) userDetails).getAccount();
+
 		List<BoardParticipantsDto> boardList = participantsRepository.findByBoard(account.getId())
 				.stream().map(BoardParticipantsDto::new)
 				.collect(Collectors.toList());
@@ -64,20 +70,24 @@ public class BoardParticipantService {
 		return boardList;
 	}
 
-	public List<BoardDto> otherChatRoom(Long userId){
+	public List<BoardDto> otherChatRoom(Authentication authentication){
 		logger.info("otherChatRoom start");
-		List<BoardParticipants> participantsList = participantsRepository.findByUserId(userId).get();
+
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		Account account = ((CustomUser) userDetails).getAccount();
+
+		List<BoardParticipants> participantsList = participantsRepository.findByUserId(account.getId()).get();
 		List<BoardDto> boardList = participantsList.stream().map(info -> info.getBoard()).map(BoardDto::new).collect(Collectors.toList());
 		logger.info("otherChatRoom complete");
 		return boardList;
 	}
 
-	public List<BoardParticipants> deleteRoom(Long boardId, Long participantId) {
+	public void deleteRoom(String boardUuid, String participantUuid) {
 		logger.info("deleteRoom start");
-		Board board = boardRepository.findById(boardId).get();
-
+		Board board = boardRepository.findByBoardUuid(boardUuid).get();
+		board.NoRecruit(1);
 		List<BoardParticipants> boardParticipantsList = board.getBoardParticipantsList()
-				.stream().filter(info-> info.getParticipantId() !=participantId).collect(Collectors.toList());
+				.stream().filter(info-> info.getParticipantUuid() !=participantUuid).collect(Collectors.toList());
 
 		boardParticipantsList.stream().forEach(info -> info.setBoard(null));
 
@@ -91,7 +101,6 @@ public class BoardParticipantService {
 		}
 
 		logger.info("deleteRoom end");
-		return boardParticipantsList;
 	}
 
 	public BoardParticipantsDto findByRoomId(String roomId) {

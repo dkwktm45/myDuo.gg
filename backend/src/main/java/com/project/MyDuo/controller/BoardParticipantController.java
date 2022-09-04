@@ -20,8 +20,9 @@ public class BoardParticipantController {
 	private final NotificationService notificationService;
 
 	@DeleteMapping("/delete")
+	@Operation(summary = "게시판 참여자", description = "방장이 해당 유저와 듀오를 원한다면 듀오 결성이 된다.")
 	public void deleteRoom(@RequestBody Map<String,Long> info){
-		List<BoardParticipants> boardParticipants = participantService.deleteRoom(info.get("boardId"),info.get("participantId"));
+		participantService.deleteRoom(String.valueOf(info.get("boardUuid")),String.valueOf(info.get("participantUuid")));
 	}
 
 	@PostMapping("/one")
@@ -29,7 +30,6 @@ public class BoardParticipantController {
 	public ResponseEntity<BoardParticipantsDto> getOne(@RequestParam("roomId")String roomId,
 	                                   @RequestParam("userName")String userName){
 		notificationService.deleteAlarm(roomId,userName);
-
 		return ResponseEntity.ok(participantService.findByRoomId(roomId));
 	}
 }

@@ -69,4 +69,7 @@ public class ChatService {
 		redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
 	}
 
+	public void deleteRoom(String chatRoomId) {
+		chatRoomRepository.deleteRoom(chatRoomId);
+	}
 }

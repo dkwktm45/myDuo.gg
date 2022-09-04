@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
@@ -18,9 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data @Builder
 public class BoardDto {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long boardId;
+
 	private String boardUuid;
 	private String boardName;
 	private String boardContent;
@@ -50,6 +49,7 @@ public class BoardDto {
 		this.myPositions = board.getMyPositions();
 		this.otherPositions = board.getOtherPositions();
 		this.accountDto = new AccountDto(board.getAccount());
+		this.boardParticipantsList = new ArrayList(board.getBoardParticipantsList());
 	}
 
 	@ManyToOne

@@ -57,4 +57,8 @@ public class Board {
 	@JsonBackReference
 	@JoinColumn(name = "user_id")
 	private Account account;
+
+	public void NoRecruit(int no) {
+		this.boardRecruitmentYn = no;
+	}
 }

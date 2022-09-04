@@ -61,11 +61,14 @@ public class ChatRoomRepository {
 	public long minusUserCount(String roomId) {
 		return Optional.ofNullable(valueOps.decrement(USER_COUNT + "_" + roomId)).filter(count -> count > 0).orElse(0L);
 	}
-	public void deleteRoom(List<String> roomIdList){
+	public void deleteRooms(List<String> roomIdList){
 		List<String> chatRooms = opsHashChatRoom.multiGet(CHAT_ROOMS,roomIdList)
 				.stream()
 				.map(info -> info.getRoomId())
 				.collect(Collectors.toList());
 		opsHashChatRoom.delete(CHAT_ROOMS,chatRooms);
+	}
+	public void deleteRoom(String roomId){
+		opsHashChatRoom.delete(CHAT_ROOMS,roomId);
 	}
 }
