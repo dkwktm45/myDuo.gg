@@ -22,5 +22,4 @@ public class Notification implements Serializable {
 	@ElementCollection
 	@CollectionTable(name = "userParticipant",joinColumns = @JoinColumn(name="receiveId"))
 	private Set<Alarm> alarmList = new HashSet<>();
-
 }

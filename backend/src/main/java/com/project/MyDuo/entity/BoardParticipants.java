@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Getter @Builder
 @AllArgsConstructor
@@ -20,7 +17,6 @@ public class BoardParticipants {
 	private String userName; // 메시지 name
 	private Long userId;
 	private String roomId;
-
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference

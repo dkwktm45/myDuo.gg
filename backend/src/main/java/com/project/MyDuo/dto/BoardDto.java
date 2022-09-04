@@ -1,6 +1,8 @@
 package com.project.MyDuo.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.project.MyDuo.entity.Account;
+import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.BoardPositions;
 import com.project.MyDuo.entity.convert.ReportListConverter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +20,7 @@ public class BoardDto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long boardId;
+	private String boardUuid;
 	private String boardName;
 	private String boardContent;
 	private int boardRecruitmentYn;
@@ -36,9 +39,21 @@ public class BoardDto {
 	@JoinColumn(name = "board_id",updatable = false,insertable = false)
 	private List<BoardParticipantsDto> boardParticipantsList;
 
+	public BoardDto(Board board){
+		this.boardContent = board.getBoardContent();
+		this.boardUuid = board.getBoardUuid();
+		this.boardName = board.getBoardName();
+		this.boardRecruitmentYn = board.getBoardRecruitmentYn();
+		this.boardRegDt = board.getBoardRegDt();
+		this.boardMicYn = board.getBoardMicYn();
+		this.myPositions = board.getMyPositions();
+		this.otherPositions = board.getOtherPositions();
+		this.accountDto = new AccountDto(board.getAccount());
+	}
+
 	@ManyToOne
 	@JsonBackReference
 	@JoinColumn(name = "user_id")
-	private UserDto userDto;
+	private AccountDto accountDto;
 
 }

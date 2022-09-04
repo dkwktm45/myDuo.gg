@@ -25,7 +25,7 @@ public class ChatMessage implements Serializable,Comparable<ChatMessage>  {
 	}
 
 	public enum MessageType {
-		ENTER, TALK , QUIT
+		ENTER, TALK , QUIT, DUO
 	}
 	// 메시지 타입 : 입장, 채팅
 	private String messageId; // 방번호
