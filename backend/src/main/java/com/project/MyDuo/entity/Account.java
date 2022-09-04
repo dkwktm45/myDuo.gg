@@ -1,11 +1,14 @@
 package com.project.MyDuo.entity;
 
+import com.project.MyDuo.dto.AccountDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -39,6 +42,7 @@ public class Account {
     private Boolean valid;
 
     private Role role;
+
     @Builder
     public Account(String email, String name, String password) {
         this.email = email;
@@ -48,18 +52,19 @@ public class Account {
         valid=true;
         role=Role.USER;
     }
-
-/*
-    public Member(UserDto user){
-        this.userId = user.getUserId();
-        this.userName = user.getUserName();
-        this.userEmail = user.getUserEmail();
-        this.userPwd = user.getUserPwd();
-        this.userHeart = user.getUserHeart();
+    public Account(AccountDto accountDto){
+        this.id = accountDto.getId();
+        this.name = accountDto.getName();
+        this.email = accountDto.getEmail();
+        this.password = accountDto.getPassword();
+        this.heart = accountDto.getHeart();
+        if(accountDto.getBoardDtoList() == null){
+            this.boardList = null;
+        }else{
+            this.boardList = new ArrayList(accountDto.getBoardDtoList());
+        }
     }
-*/
-   /* @OneToMany(fetch = FetchType.LAZY )
+    @OneToMany(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id",updatable = false,insertable = false)
-    private List<Board> boardList;*/
-
+    private List<Board> boardList;
 }

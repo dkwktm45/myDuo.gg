@@ -25,6 +25,7 @@ public class NotificationController {
 	public void callNotify(@PathVariable("userId") String userId) throws IOException {
 		notificationService.sendMessage(userId, null,null, null);
 	}
+
 	@GetMapping(value = "/receive/notify/{userId}", produces = "text/event-stream")
 	public SseEmitter receiveNotify(@PathVariable("userId") String userId) {
 		SseEmitter sseEmitter = new SseEmitter(1000 * 6000 * 15L);

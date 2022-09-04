@@ -3,9 +3,11 @@ package com.project.MyDuo.service;
 import com.project.MyDuo.dao.BoardParticipantsRepository;
 import com.project.MyDuo.dao.BoardRepository;
 import com.project.MyDuo.dao.UserRepository;
+import com.project.MyDuo.dto.BoardDto;
+import com.project.MyDuo.dto.BoardParticipantsDto;
+import com.project.MyDuo.entity.Account;
 import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.BoardParticipants;
-import com.project.MyDuo.entity.User;
 import com.project.MyDuo.entity.redis.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -31,15 +33,15 @@ public class BoardParticipantService {
 	private final BoardRepository boardRepository;
 	private final UserRepository userRepository;
 	private final ChatService chatService;
-	public Map<String, Object> setChat(Long boardId, String chatRoomId, Long userId, String name) throws Exception {
-		Board board = boardService.getOne(boardId);
-		if(board.getBoardParticipantsList().stream().anyMatch(info -> info.getUserId().equals(userId)) && board.getBoardParticipantsList() != null){
+	public Map<String, Object> setChat(String boardUuid, String chatRoomId, Account account) throws Exception {
+		Board board = boardService.getOne(boardUuid);
+		if(board.getBoardParticipantsList().stream().anyMatch(info -> info.getUserId().equals(account.getId())) && board.getBoardParticipantsList() != null){
 			throw new Exception("이미 존재하는 회원입니다.");
 		}else {
 			BoardParticipants boardParticipants = BoardParticipants.builder()
 					.board(board)
-					.userName(name)
-					.userId(userId)
+					.userName(account.getName())
+					.userId(account.getId())
 					.roomId(chatRoomId)
 					.build();
 			participantsRepository.save(boardParticipants);
@@ -53,20 +55,20 @@ public class BoardParticipantService {
 		participantsRepository.save(boardParticipants);
 	}
 
-	public List<BoardParticipants> myChatRoom(Long userId){
+	public List<BoardParticipantsDto> myChatRoom(Account account){
 		logger.info("myChatRoom start");
-		// 나중에 생략가능 member!
-		User user = userRepository.findById(userId).get();
-		List<BoardParticipants> boardList = participantsRepository.findByBoard(userId);
+		List<BoardParticipantsDto> boardList = participantsRepository.findByBoard(account.getId())
+				.stream().map(BoardParticipantsDto::new)
+				.collect(Collectors.toList());
 
 		logger.info("myChatRoom complete");
 		return boardList;
 	}
 
-	public List<Board> otherChatRoom(Long userId){
+	public List<BoardDto> otherChatRoom(Long userId){
 		logger.info("otherChatRoom start");
 		List<BoardParticipants> participantsList = participantsRepository.findByUserId(userId).get();
-		List<Board> boardList = participantsList.stream().map(info -> info.getBoard()).collect(Collectors.toList());
+		List<BoardDto> boardList = participantsList.stream().map(info -> info.getBoard()).map(BoardDto::new).collect(Collectors.toList());
 		logger.info("otherChatRoom complete");
 		return boardList;
 	}
@@ -83,7 +85,7 @@ public class BoardParticipantService {
 		for(BoardParticipants participants : boardParticipantsList){
 			chatService.sendChatMessage(
 					ChatMessage.builder()
-							.message(board.getUser().getName() + "님이 다른회원과 매칭이 되었습니다. 다음기회에 도전해주세요!")
+							.message(board.getAccount().getName() + "님이 다른회원과 매칭이 되었습니다. 다음기회에 도전해주세요!")
 							.roomId(participants.getRoomId())
 							.build()
 			);
@@ -93,10 +95,10 @@ public class BoardParticipantService {
 		return boardParticipantsList;
 	}
 
-	public BoardParticipants findByRoomId(String roomId) {
+	public BoardParticipantsDto findByRoomId(String roomId) {
 		Optional<BoardParticipants> participantsOptional = participantsRepository.findByRoomId(roomId);
 		if(participantsOptional.isPresent()){
-			return participantsOptional.get();
+			return new BoardParticipantsDto(participantsOptional.get());
 		}else{
 			return null;
 		}

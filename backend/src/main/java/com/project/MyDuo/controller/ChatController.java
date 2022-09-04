@@ -1,18 +1,19 @@
 package com.project.MyDuo.controller;
 
+import com.project.MyDuo.entity.Account;
 import com.project.MyDuo.entity.redis.ChatMessage;
 import com.project.MyDuo.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
 @Slf4j
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
-//	private final JwtTokenProvider jwtTokenProvider;
 	private final ChatService chatService;
 	/**
 	 * websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
@@ -21,12 +22,10 @@ public class ChatController {
 	 * 그렇기에 룸에 입장을 한번만 하자!
 	 */
 	@MessageMapping("/chat/message")
-	public void message(ChatMessage message, @Header("token") String token) {
-		/*String nickname = jwtTokenProvider.getUserNameFromJwt(token);
-		// 로그인 회원 정보로 대화명 설정
-		message.setSender(nickname);
+	public void message(ChatMessage message, @AuthenticationPrincipal Account account) {
+		message.setSender(account.getName());
 		// Websocket에 발행된 메시지를 redis로 발행(publish)
-		chatService.sendChatMessage(message);*/
+		chatService.sendChatMessage(message);
 	}
 	/**
 	 *

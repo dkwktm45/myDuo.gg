@@ -13,4 +13,6 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 			"where b.board_id = (select board_id from board_participants p "+
 			"where p.participant_id = :participant_id)",nativeQuery = true)
 	Optional<Board> findByParticipantId(@Param("participant_id") Long participantId);
+
+	Optional<Board> findByBoardUuid(String boardUuid);
 }

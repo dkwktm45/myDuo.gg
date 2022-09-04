@@ -23,26 +23,30 @@ public class Board {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long boardId;
+	private String boardUuid;
 	private String boardName;
 	private String boardContent;
 	private int boardRecruitmentYn;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate boardRegDt;
 	private int boardMicYn;
+
 	@Convert(converter = ReportListConverter.class)
 	private List<BoardPositions> myPositions;
+
 	@Convert(converter = ReportListConverter.class)
 	private List<BoardPositions> otherPositions;
 
 	public Board(BoardDto boardDto) {
 		this.boardContent = boardDto.getBoardContent();
+		this.boardUuid = boardDto.getBoardUuid();
 		this.boardName = boardDto.getBoardName();
 		this.boardRecruitmentYn = boardDto.getBoardRecruitmentYn();
 		this.boardRegDt = boardDto.getBoardRegDt();
 		this.boardMicYn = boardDto.getBoardMicYn();
 		this.myPositions = boardDto.getMyPositions();
 		this.otherPositions = boardDto.getOtherPositions();
-//		this.member = new Member(boardDto.getUserDto());
+		this.account = new Account(boardDto.getAccountDto());
 	}
 
 	@OneToMany(fetch = FetchType.EAGER )
