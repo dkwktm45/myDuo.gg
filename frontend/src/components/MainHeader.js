@@ -24,6 +24,11 @@ const Positions = styled.div`
   display: flex;
   justify-content: center;
   margin: 10px;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 `;
 
 const Tier = styled.div`
