@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Entity
@@ -66,4 +65,12 @@ public class Account {
     @OneToMany(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id",updatable = false,insertable = false)
     private List<Board> boardList;
+
+    public void setHeartPlus(){
+        this.heart++;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY )
+    @JoinColumn(name = "user_id",updatable = false,insertable = false)
+    private List<Friend> friends;
 }
