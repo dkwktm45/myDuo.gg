@@ -79,17 +79,17 @@ function Introduce() {
     setIntro(e.target.value);
   };
   const handleSudmlt = (e) => {
-
+    e.preventDefault()
   };
   return(
-    <form coSubmit = { handleSudmlt}>
+    <form onSubmit = { handleSudmlt}>
       <label>
         자기소개
-      </label>
-      <input 
+        <input 
         type="text" 
-        value={introduce} 
+        value= {introduce} 
         onChange={handleIntro}/>
+      </label>
     </form>
   )
 }
