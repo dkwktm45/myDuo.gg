@@ -34,8 +34,6 @@ public class BoardParticipantService {
 	private final ChatService chatService;
 
 	public Map<String, Object> setChat(String boardUuid, String chatRoomId, Authentication authentication) throws Exception {
-		logger.info("setChat start");
-
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		Account account = ((CustomUser) userDetails).getAccount();
 		Board board = boardService.getOne(boardUuid);
@@ -52,12 +50,9 @@ public class BoardParticipantService {
 					.roomId(chatRoomId)
 					.build();
 			participantsRepository.save(boardParticipants);
-
 			Map<String, Object> result = new HashMap<>();
 			result.put("boardId",boardParticipants.getBoard().getBoardId());
 			result.put("participants", boardParticipants);
-
-			logger.info("setChat start");
 			return result;
 		}
 	}
