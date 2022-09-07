@@ -183,10 +183,9 @@ function Register() {
           <OverView>
             <OverViewItem>
               <Text>회원 가입</Text>
-              <Form onSubmit={handleSubmit(onValid)} autoComplete="off ">
+              <Form onSubmit={handleSubmit(onValid)} autoComplete="off">
                 <Input
                   placeholder="이메일 입력"
-                  autocomplete="nope"
                   {...register("email", {
                     required: "이메일 입력은 필수입니다.",
                     pattern: {
