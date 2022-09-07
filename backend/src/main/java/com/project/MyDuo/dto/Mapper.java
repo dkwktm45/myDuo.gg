@@ -3,13 +3,12 @@ package com.project.MyDuo.dto;
 import com.project.MyDuo.dto.Board.BoardCreationDto;
 import com.project.MyDuo.dto.LoL.Info.*;
 import com.project.MyDuo.dto.LoL.LoLAccountDto;
-import com.project.MyDuo.entity.Account;
+import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.LoLAccount.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -118,7 +117,7 @@ public class Mapper {
     }
 
 
-    public Board toBoard(Account user, BoardCreationDto creationDto) {
+    public Board toBoard(Member user, BoardCreationDto creationDto) {
         Board board = Board.builder()
                 .uuid(UUID.randomUUID().toString())
                 .lolPuuid(creationDto.getLolPuuid())
@@ -129,7 +128,7 @@ public class Mapper {
                 .registrationTime(new Timestamp(System.currentTimeMillis()))
                 .myPositions(creationDto.getMyPositions())
                 .otherPositions(creationDto.getOtherPositions())
-                .account(user)
+                .member(user)
                 .build();
         return board;
     }

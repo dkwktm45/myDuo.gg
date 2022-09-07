@@ -15,7 +15,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Getter @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+@Table(name = "user")
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +47,7 @@ public class Account {
     private Role role;
 
     @Builder
-    public Account(String email, String name, String password) {
+    public Member(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;
@@ -54,7 +55,7 @@ public class Account {
         valid=true;
         role=Role.USER;
     }
-    public Account(AccountDto accountDto){
+    public Member(AccountDto accountDto){
         this.id = accountDto.getId();
         this.name = accountDto.getName();
         this.email = accountDto.getEmail();

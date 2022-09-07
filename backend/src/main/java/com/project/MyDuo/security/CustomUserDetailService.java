@@ -1,8 +1,7 @@
 package com.project.MyDuo.security;
 
-import com.project.MyDuo.entity.Account;
-import com.project.MyDuo.security.CustomUser;
-import com.project.MyDuo.service.UserRepositoryService;
+import com.project.MyDuo.entity.Member;
+import com.project.MyDuo.service.MemberRepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,17 +18,18 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
 
-    private final UserRepositoryService userRepositoryService;
+    private final MemberRepositoryService memberRepositoryService;
 
     @Override
     //@Cacheable(value = CacheKey.USER, key = "#email", unless = "#result==null")
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = userRepositoryService.findMember(email)
-                .orElseThrow(()-> new NoSuchElementException("등록되지 않은 사용자"));
+        Member member = memberRepositoryService.findMember(email);
+        //todo: null에러 처리
+                //.orElseThrow(()-> new NoSuchElementException("등록되지 않은 사용자"));
 
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority("ROLE_" + account.getRole().name()));
+        roles.add(new SimpleGrantedAuthority("ROLE_" + member.getRole().name()));
 
-        return new CustomUser(account,roles);
+        return new CustomUser(member,roles);
     }
 }

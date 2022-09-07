@@ -19,6 +19,6 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 	Optional<Board> findByUuid(String boardUuid);
 
 	@Override
-	@EntityGraph(attributePaths = "account")
+	@EntityGraph(attributePaths = "member")
 	List<Board> findAll();
 }

@@ -2,7 +2,7 @@ package com.project.MyDuo.entity.LoLAccount;
 
 import com.project.MyDuo.dto.LoL.ChampionDto;
 import com.project.MyDuo.dto.LoL.LoLAccountDto;
-import com.project.MyDuo.entity.Account;
+import com.project.MyDuo.entity.Member;
 import lombok.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +43,7 @@ public class LoLAccount {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Account user;
+    private Member user;
 
     @OneToOne(mappedBy = "loLAccount", cascade = CascadeType.ALL)
     private Score score;
@@ -54,7 +54,7 @@ public class LoLAccount {
     @OneToMany(mappedBy = "loLAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default private List<Champion> champions = new CopyOnWriteArrayList<>();
 
-    public void changeUser(Account user) {
+    public void changeUser(Member user) {
         this.user = user;
 
         if (!user.getLolAccounts().contains(this))
@@ -116,7 +116,7 @@ public class LoLAccount {
         }
     }
 
-    public LoLAccount(String summonerId, String puuid, String name, Account user) {
+    public LoLAccount(String summonerId, String puuid, String name, Member user) {
         this.summonerId = summonerId;
         this.puuid = puuid;
         this.name = name;

@@ -2,7 +2,6 @@ package com.project.MyDuo.controller;
 
 import com.project.MyDuo.dto.BoardDto;
 import com.project.MyDuo.dto.BoardParticipantsDto;
-import com.project.MyDuo.entity.Account;
 import com.project.MyDuo.entity.redis.ChatMessage;
 import com.project.MyDuo.entity.redis.ChatRoom;
 import com.project.MyDuo.service.BoardParticipantService;
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

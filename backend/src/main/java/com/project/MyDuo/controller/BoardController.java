@@ -5,13 +5,13 @@ import com.project.MyDuo.customException.userInvalidException;
 import com.project.MyDuo.dto.Board.BoardCreationDto;
 import com.project.MyDuo.dto.Board.BoardDetailDto;
 import com.project.MyDuo.dto.Mapper;
-import com.project.MyDuo.entity.Account;
+import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import com.project.MyDuo.jwt.JwtTokenUtil;
 import com.project.MyDuo.service.BoardService;
 import com.project.MyDuo.service.LoLAccoutService.LoLAccountService;
-import com.project.MyDuo.service.UserRepositoryService;
+import com.project.MyDuo.service.MemberRepositoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class BoardController<UserService> {
 	private final LoLAccountService loLAccountService;
 	private final BoardService boardService;
 	private final JwtTokenUtil jwtTokenUtil;
-	private final UserRepositoryService userRepositoryService;
+	private final MemberRepositoryService memberRepositoryService;
 	private final Mapper mapper;
 
 	/*@PostMapping(value = "/create")
@@ -54,7 +54,7 @@ public class BoardController<UserService> {
 	public String createBoard(@RequestBody BoardCreationDto boardCreationDto, @RequestHeader String authorization){
 		//@Auth...로 업데이트 되면 업데이트 예정.
 		String email = jwtTokenUtil.getEmail(authorization.split(" ")[1]);
-		Account user = userRepositoryService.findByEmail(email);
+		Member user = memberRepositoryService.findMember(email);
 
 		//user가 비활성화 된 경우 처리.
 		if(!user.getValid())
@@ -72,7 +72,7 @@ public class BoardController<UserService> {
 		if (board == null)
 			throw new boardNotExistException("게시글이 유효하지 않습니다.");
 
-		Account user = userRepositoryService.findByBoardList_Uuid(boardUUID);
+		Member user = memberRepositoryService.findByBoardList_Uuid(boardUUID);
 		if (!user.getValid())
 			throw new boardNotExistException("게시글이 유효하지 않습니다.");
 
