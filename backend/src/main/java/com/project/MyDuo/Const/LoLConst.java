@@ -6,7 +6,7 @@ import java.util.Date;
 public interface LoLConst {
     Date SEASON_12_START = Date.from(Instant.ofEpochSecond(1641481199));
     String API_KEY_NAME = "X-Riot-Token";
-    String API_KEY = "RGAPI-501f179a-10f7-48ae-b00a-14f30d39d068";
+    String API_KEY = "";
     String SUMMONER_BASIC_BASE_URL = "https://kr.api.riotgames.com/lol/summoner/v4";
     String SUMMONER_BASIC_BY_NAME_URI = "/summoners/by-name";
     String SUMMONER_BASIC_BY_PUUID_URI = "/summoners/by-puuid";
