@@ -26,4 +26,6 @@ public interface UserRepository extends JpaRepository<Account,Long> {
     void deleteUserByEmail(@Param("email") String email);
 
     Optional<Account> findById(Long aLong);
+
+	  Account findByEmail(String name);
 }

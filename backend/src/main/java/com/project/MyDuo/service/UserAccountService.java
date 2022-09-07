@@ -1,12 +1,16 @@
 package com.project.MyDuo.service;
 
+import com.project.MyDuo.dto.AccountDto;
 import com.project.MyDuo.dto.JwtResponseDto;
 import com.project.MyDuo.dto.UserJoinRequestDto;
 import com.project.MyDuo.dto.UserLoginRequestDto;
 import com.project.MyDuo.entity.Account;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import com.project.MyDuo.jwt.JwtTokenUtil;
+import com.project.MyDuo.security.CustomUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

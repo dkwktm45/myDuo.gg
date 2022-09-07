@@ -4,8 +4,10 @@ import com.project.MyDuo.dto.JwtResponseDto;
 import com.project.MyDuo.dto.UserJoinRequestDto;
 import com.project.MyDuo.dto.UserLoginRequestDto;
 import com.project.MyDuo.service.UserAccountService;
+import com.project.MyDuo.service.UserRepositoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 public class UserAccountController {
 
     private final UserAccountService userAccountService;
+    private final UserRepositoryService userRepositoryService;
+
+    @PutMapping(value = "/heart")
+    public void Plus(Authentication authentication ,@RequestBody String roomId){
+        userRepositoryService.heartPlus(authentication,roomId);
+    }
 
     @PostMapping("/join")
     public String join(@RequestBody UserJoinRequestDto requestDto) throws Exception {
@@ -40,7 +48,6 @@ public class UserAccountController {
         String accessToken = authorizationHeader.split(" ")[1];
         userAccountService.logout(accessToken);
     }
-
 
     @GetMapping("/withdrawal")
     public void withdrawal(HttpServletRequest httpServletRequest) {

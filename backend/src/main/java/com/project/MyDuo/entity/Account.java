@@ -23,7 +23,7 @@ public class Account {
     private Long id;
 
     @NotNull
-    //@Embedded
+    @Embedded
     @Column(name = "user_email", length = 100)
     private String email;
 
@@ -64,7 +64,7 @@ public class Account {
         this.valid = accountDto.getValid();
         this.role = accountDto.getRole();
     }
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id",updatable = false,insertable = false)
     private List<Board> boardList = new CopyOnWriteArrayList<>();
 
@@ -81,4 +81,12 @@ public class Account {
     }
 
     public void addBoard(Board board) { this.boardList.add(board); }
+
+    public void setHeartPlus(){
+        this.heart++;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY )
+    @JoinColumn(name = "user_id",updatable = false,insertable = false)
+    private List<Friend> friends;
 }
