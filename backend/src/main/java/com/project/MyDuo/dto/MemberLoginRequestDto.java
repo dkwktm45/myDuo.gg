@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
-public class UserLoginRequestDto {
+public class MemberLoginRequestDto {
 
     @Email
     @NotNull

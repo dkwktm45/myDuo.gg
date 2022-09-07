@@ -13,7 +13,7 @@ import com.project.MyDuo.dto.Mapper;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import com.project.MyDuo.jwt.JwtTokenUtil;
 import com.project.MyDuo.service.LoLAccoutService.LoLAccountService;
-import com.project.MyDuo.service.UserAccountService;
+import com.project.MyDuo.service.MemberAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -39,7 +39,7 @@ public class LoLAccountController {
     private final WebClient matchDataWebClient;
 
     private final LoLAccountService loLAccountService;
-    private final UserAccountService userService;
+    private final MemberAccountService userService;
     private final JwtTokenUtil jwtTokenUtil;
 
     private final Mapper mapper;

@@ -4,7 +4,7 @@ import com.project.MyDuo.dao.BoardParticipantsRepository;
 import com.project.MyDuo.dao.BoardRepository;
 import com.project.MyDuo.dto.BoardDto;
 import com.project.MyDuo.dto.BoardParticipantsDto;
-import com.project.MyDuo.entity.Account;
+import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.BoardParticipants;
 import com.project.MyDuo.entity.redis.ChatMessage;
@@ -36,9 +36,9 @@ public class BoardParticipantService {
 		logger.info("setChat start");
 
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Account account = ((CustomUser) userDetails).getAccount();
+		Member member = ((CustomUser) userDetails).getMember();
 		Board board = boardService.getOne(boardUuid);
-		if(board.getBoardParticipantsList().stream().anyMatch(info -> info.getUserId().equals(account.getId())) && board.getBoardParticipantsList() != null){
+		if(board.getBoardParticipantsList().stream().anyMatch(info -> info.getUserId().equals(member.getId())) && board.getBoardParticipantsList() != null){
 			throw new Exception("이미 존재하는 회원입니다.");
 		}else if(board.getClosingStatus()) {
 			chatService.deleteRoom(chatRoomId);
@@ -46,8 +46,8 @@ public class BoardParticipantService {
 		}else {
 			BoardParticipants boardParticipants = BoardParticipants.builder()
 					.board(board).participantUuid(UUID.randomUUID().toString())
-					.userName(account.getName())
-					.userId(account.getId())
+					.userName(member.getName())
+					.userId(member.getId())
 					.roomId(chatRoomId)
 					.build();
 			participantsRepository.save(boardParticipants);
@@ -64,9 +64,9 @@ public class BoardParticipantService {
 	public List<BoardParticipantsDto> myChatRoom(Authentication authentication){
 		logger.info("myChatRoom start");
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Account account = ((CustomUser) userDetails).getAccount();
+		Member member = ((CustomUser) userDetails).getMember();
 
-		List<BoardParticipantsDto> boardList = participantsRepository.findByBoard(account.getId())
+		List<BoardParticipantsDto> boardList = participantsRepository.findByBoard(member.getId())
 				.stream().map(BoardParticipantsDto::new)
 				.collect(Collectors.toList());
 
@@ -78,9 +78,9 @@ public class BoardParticipantService {
 		logger.info("otherChatRoom start");
 
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Account account = ((CustomUser) userDetails).getAccount();
+		Member member = ((CustomUser) userDetails).getMember();
 
-		List<BoardParticipants> participantsList = participantsRepository.findByUserId(account.getId()).get();
+		List<BoardParticipants> participantsList = participantsRepository.findByUserId(member.getId()).get();
 		List<BoardDto> boardList = participantsList.stream().map(info -> info.getBoard()).map(BoardDto::new).collect(Collectors.toList());
 		logger.info("otherChatRoom complete");
 		return boardList;
@@ -98,7 +98,7 @@ public class BoardParticipantService {
 		for(BoardParticipants participants : boardParticipantsList){
 			chatService.sendChatMessage(
 					ChatMessage.builder()
-							.message(board.getAccount().getName() + "님이 다른회원과 매칭이 되었습니다. 다음기회에 도전해주세요!")
+							.message(board.getMember().getName() + "님이 다른회원과 매칭이 되었습니다. 다음기회에 도전해주세요!")
 							.roomId(participants.getRoomId())
 							.build()
 			);

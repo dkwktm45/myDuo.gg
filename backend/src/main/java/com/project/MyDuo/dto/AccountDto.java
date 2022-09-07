@@ -1,7 +1,6 @@
 package com.project.MyDuo.dto;
 
-import com.project.MyDuo.entity.Account;
-import com.project.MyDuo.entity.Board;
+import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,12 +47,12 @@ public class AccountDto {
 	@JoinColumn(name = "user_id",updatable = false,insertable = false)
 	private List<BoardDto> boardDtoList;
 
-	public AccountDto(Account account){
-		this.id = account.getId();
-		this.name = account.getName();
-		this.email = account.getEmail();
-		this.heart = account.getHeart();
-		this.password = account.getPassword();
+	public AccountDto(Member member){
+		this.id = member.getId();
+		this.name = member.getName();
+		this.email = member.getEmail();
+		this.heart = member.getHeart();
+		this.password = member.getPassword();
 	}
 }
 

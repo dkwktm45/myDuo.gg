@@ -1,9 +1,9 @@
 package com.project.MyDuo.service;
 
 import com.project.MyDuo.dao.FriendRepository;
-import com.project.MyDuo.dao.UserRepository;
+import com.project.MyDuo.dao.MemberRepository;
 import com.project.MyDuo.dto.FriendDto;
-import com.project.MyDuo.entity.Account;
+import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Friend;
 import com.project.MyDuo.security.CustomUser;
 import com.project.MyDuo.service.redis.ChatRoomRepository;
@@ -25,14 +25,14 @@ public class FriendService {
 
 	private final FriendRepository friendRepository;
 	private final ChatRoomRepository roomRepository;
-	private final UserRepository userRepository;
+	private final MemberRepository memberRepository;
 
 	public void friendFlus(String email, String roomId) {
 		logger.info("friendFlus start");
 
-		Account account = userRepository.findByEmail(email);
+		Member member = memberRepository.findMemberByEmail(email);
 		String friendEmail = roomRepository.findRoomById(roomId).getUserList().stream().filter(info -> !info.equals(email)).collect(Collectors.toList()).get(0);
-		Friend friend = Friend.builder().priendEmail(friendEmail).priendUuid(UUID.randomUUID().toString()).account(account).build();
+		Friend friend = Friend.builder().priendEmail(friendEmail).priendUuid(UUID.randomUUID().toString()).member(member).build();
 
 		friendRepository.save(friend);
 		logger.info("friendFlus end");
@@ -42,17 +42,17 @@ public class FriendService {
 		logger.info("friendAll start");
 
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Account account = ((CustomUser) userDetails).getAccount();
+		Member member = ((CustomUser) userDetails).getMember();
 
 		logger.info("friendAll end");
-		return friendRepository.findByAccount(account).stream().map(FriendDto::new).collect(Collectors.toList());
+		return friendRepository.findByMember(member).stream().map(FriendDto::new).collect(Collectors.toList());
 	}
 
 	public void deleteOne(String uuid, Authentication authentication) {
 		logger.info("deleteOne start");
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Account account = ((CustomUser) userDetails).getAccount();
-		friendRepository.delete(friendRepository.findByAccountAndPriendUuid(account, uuid));
+		Member member = ((CustomUser) userDetails).getMember();
+		friendRepository.delete(friendRepository.findByMemberAndPriendUuid(member, uuid));
 		logger.info("deleteOne end");
 	}
 }

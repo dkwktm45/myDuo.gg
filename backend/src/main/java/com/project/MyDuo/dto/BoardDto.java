@@ -2,16 +2,13 @@ package com.project.MyDuo.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.project.MyDuo.entity.Board;
-import com.project.MyDuo.entity.BoardPositions;
 import com.project.MyDuo.entity.LoLAccount.LaneType;
 import com.project.MyDuo.entity.convert.ReportListConverter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +44,7 @@ public class BoardDto {
 		this.boardMicYn = board.getMicEnabled();
 		this.myPositions = board.getMyPositions();
 		this.otherPositions = board.getOtherPositions();
-		this.accountDto = new AccountDto(board.getAccount());
+		this.accountDto = new AccountDto(board.getMember());
 		this.boardParticipantsList = new ArrayList(board.getBoardParticipantsList());
 	}
 

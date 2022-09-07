@@ -2,7 +2,7 @@ package com.project.MyDuo.service;
 
 import com.project.MyDuo.dao.BoardRepository;
 import com.project.MyDuo.dto.BoardDto;
-import com.project.MyDuo.entity.Account;
+import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Board;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class BoardService {
 		boardRepository.save(board);
 		logger.info("[서비스] : 게시판 생성 끝");
 	}*/
-	public void save(Board board, Account owner) {
+	public void save(Board board, Member owner) {
 		owner.addBoard(boardRepository.save(board));
 	}
 

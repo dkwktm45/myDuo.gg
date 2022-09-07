@@ -55,17 +55,17 @@ public class Board {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference
 	@JoinColumn(name = "user_id")
-	private Account account;
+	private Member member;
 
 	public void changeStatus(Boolean flag) {
 		this.closingStatus = flag;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setMember(Member member) {
+		this.member = member;
 	}
 
-	public Board(String uuid, String lolPuuid, String name, String content, Boolean closingStatus, Boolean micEnabled, Timestamp registrationTime, List<LaneType> myPositions, List<LaneType> otherPositions, Account account) {
+	public Board(String uuid, String lolPuuid, String name, String content, Boolean closingStatus, Boolean micEnabled, Timestamp registrationTime, List<LaneType> myPositions, List<LaneType> otherPositions, Member member) {
 		this.uuid = uuid;
 		this.lolPuuid = lolPuuid;
 		this.name = name;
@@ -75,6 +75,6 @@ public class Board {
 		this.registrationTime = registrationTime;
 		this.myPositions = myPositions;
 		this.otherPositions = otherPositions;
-		this.account = account;
+		this.member = member;
 	}
 }

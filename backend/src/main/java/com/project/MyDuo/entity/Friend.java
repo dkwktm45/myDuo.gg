@@ -23,5 +23,5 @@ public class Friend {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference
 	@JoinColumn(name = "user_id")
-	private Account account;
+	private Member member;
 }
