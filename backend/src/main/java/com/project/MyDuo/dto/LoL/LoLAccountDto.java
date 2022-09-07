@@ -15,6 +15,7 @@ public class LoLAccountDto {
     private Integer summonerLevel;
     private Integer leaguePoints;
 
+    private String scoreResult;
     private Map<String, ChampionDto> championDtoMap;
 
     public LoLAccountDto() {}
@@ -30,6 +31,7 @@ public class LoLAccountDto {
         this.summonerLevel = summonerLevel;
         this.leaguePoints = leaguePoints;
 
+        scoreResult = "";
         championDtoMap = new ConcurrentHashMap<>();
     }
 }

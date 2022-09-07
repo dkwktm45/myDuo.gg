@@ -2,7 +2,6 @@ package com.project.MyDuo.service;
 
 import com.project.MyDuo.dao.BoardParticipantsRepository;
 import com.project.MyDuo.dao.BoardRepository;
-import com.project.MyDuo.dao.UserRepository;
 import com.project.MyDuo.dto.BoardDto;
 import com.project.MyDuo.dto.BoardParticipantsDto;
 import com.project.MyDuo.entity.Account;
@@ -39,7 +38,7 @@ public class BoardParticipantService {
 		Board board = boardService.getOne(boardUuid);
 		if(board.getBoardParticipantsList().stream().anyMatch(info -> info.getUserId().equals(account.getId())) && board.getBoardParticipantsList() != null){
 			throw new Exception("이미 존재하는 회원입니다.");
-		}else if(board.getBoardRecruitmentYn() == 1) {
+		}else if(board.getClosingStatus()) {
 			chatService.deleteRoom(chatRoomId);
 			throw new Exception("이미 해당 유저는 듀오를 결성했습니다.");
 		}else {
@@ -51,7 +50,7 @@ public class BoardParticipantService {
 					.build();
 			participantsRepository.save(boardParticipants);
 			Map<String, Object> result = new HashMap<>();
-			result.put("boardId",boardParticipants.getBoard().getBoardId());
+			result.put("boardId",boardParticipants.getBoard().getId());
 			result.put("participants", boardParticipants);
 			return result;
 		}
@@ -84,8 +83,8 @@ public class BoardParticipantService {
 
 	public void deleteRoom(String boardUuid, String participantUuid) {
 		logger.info("deleteRoom start");
-		Board board = boardRepository.findByBoardUuid(boardUuid).get();
-		board.NoRecruit(1);
+		Board board = boardRepository.findByUuid(boardUuid).get();
+		board.changeStatus(false);
 		List<BoardParticipants> boardParticipantsList = board.getBoardParticipantsList()
 				.stream().filter(info-> info.getParticipantUuid() !=participantUuid).collect(Collectors.toList());
 

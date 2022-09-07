@@ -4,10 +4,12 @@ import com.project.MyDuo.dto.JwtResponseDto;
 import com.project.MyDuo.dto.UserJoinRequestDto;
 import com.project.MyDuo.dto.UserLoginRequestDto;
 import com.project.MyDuo.entity.Account;
+import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import com.project.MyDuo.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -93,4 +95,14 @@ public class UserAccountService {
 
         return JwtResponseDto.of(accessToken, refreshToken);
     }
+
+    /*LoLAccount관련 메서드 등록. 작성자: Jeong Seong Soo*/
+    @Transactional
+    public void addLoLAccount(String email, LoLAccount account) {
+        Account user = userRepositoryService.findByEmail(email);
+
+        user.addLoLAccount(account);
+        account.changeUser(user);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.project.MyDuo.entity;
 
 import com.project.MyDuo.dto.AccountDto;
+import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,8 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Getter @Entity
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class Account {
     private Long id;
 
     @NotNull
-    @Embedded
+    //@Embedded
     @Column(name = "user_email", length = 100)
     private String email;
 
@@ -63,7 +64,21 @@ public class Account {
         this.valid = accountDto.getValid();
         this.role = accountDto.getRole();
     }
-    @OneToMany(fetch = FetchType.LAZY )
+    @OneToMany
     @JoinColumn(name = "user_id",updatable = false,insertable = false)
-    private List<Board> boardList;
+    private List<Board> boardList = new CopyOnWriteArrayList<>();
+
+    /* LoLAccount용 메서드
+    * 작성자 : Jeong Seong Soo*/
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LoLAccount> lolAccounts = new CopyOnWriteArrayList<>();
+
+    public void addLoLAccount(LoLAccount account) {
+        this.lolAccounts.add(account);
+
+        if (account.getUser() != this)
+            account.changeUser(this);
+    }
+
+    public void addBoard(Board board) { this.boardList.add(board); }
 }

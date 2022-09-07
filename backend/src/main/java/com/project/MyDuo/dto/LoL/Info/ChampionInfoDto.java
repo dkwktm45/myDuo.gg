@@ -8,7 +8,7 @@ public class ChampionInfoDto {
     String championName;
     Integer totalPlayedCount;
     Double kills, deaths, assists;
-    Double csPerGame, grade, winRate;
+    Double csPerGame, grade, winningRate;
 
 
     public ChampionInfoDto() {}
@@ -23,6 +23,6 @@ public class ChampionInfoDto {
 
         this.grade = this.deaths == 0d ? (this.kills + this.assists) * 1.20
                 : (this.kills + this.assists) / this.deaths;
-        this.winRate = wins / totalPlayedCount.doubleValue();
+        this.winningRate = (wins / totalPlayedCount.doubleValue()) * 100;
     }
 }

@@ -1,15 +1,16 @@
 package com.project.MyDuo.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.project.MyDuo.entity.Account;
 import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.BoardPositions;
+import com.project.MyDuo.entity.LoLAccount.LaneType;
 import com.project.MyDuo.entity.convert.ReportListConverter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,29 +24,27 @@ public class BoardDto {
 	private String boardUuid;
 	private String boardName;
 	private String boardContent;
-	private int boardRecruitmentYn;
+	private Boolean boardRecruitmentYn, boardMicYn;
 
 	@Schema(description = "생성 날짜", defaultValue = "2022-01-05")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate boardRegDt;
+	private Timestamp boardRegDt;
 
-	private int boardMicYn;
 	@Convert(converter = ReportListConverter.class)
-	private List<BoardPositions> myPositions;
+	private List<LaneType> myPositions;
 	@Convert(converter = ReportListConverter.class)
-	private List<BoardPositions> otherPositions;
+	private List<LaneType> otherPositions;
 
 	@OneToMany(fetch = FetchType.LAZY )
 	@JoinColumn(name = "board_id",updatable = false,insertable = false)
 	private List<BoardParticipantsDto> boardParticipantsList;
 
 	public BoardDto(Board board){
-		this.boardContent = board.getBoardContent();
-		this.boardUuid = board.getBoardUuid();
-		this.boardName = board.getBoardName();
-		this.boardRecruitmentYn = board.getBoardRecruitmentYn();
-		this.boardRegDt = board.getBoardRegDt();
-		this.boardMicYn = board.getBoardMicYn();
+		this.boardContent = board.getContent();
+		this.boardUuid = board.getUuid();
+		this.boardName = board.getName();
+		this.boardRecruitmentYn = board.getClosingStatus();
+		this.boardRegDt = board.getRegistrationTime();
+		this.boardMicYn = board.getMicEnabled();
 		this.myPositions = board.getMyPositions();
 		this.otherPositions = board.getOtherPositions();
 		this.accountDto = new AccountDto(board.getAccount());

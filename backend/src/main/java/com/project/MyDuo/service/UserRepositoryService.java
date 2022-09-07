@@ -26,4 +26,8 @@ public class UserRepositoryService {
     public void deleteMember(String email) {
         userRepository.deleteUserByEmail(email);
     }
+
+    /*작성자: Jeong Seong Soo*/
+    public Account findByEmail(String email) { return userRepository.findByEmail(email);}
+    public Account findByBoardList_Uuid(String uuid) {return userRepository.findByBoardList_Uuid(uuid);}
 }

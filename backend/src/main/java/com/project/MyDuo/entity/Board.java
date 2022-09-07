@@ -1,53 +1,52 @@
 package com.project.MyDuo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.project.MyDuo.dto.BoardDto;
+import com.project.MyDuo.entity.LoLAccount.LaneType;
 import com.project.MyDuo.entity.convert.ReportListConverter;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "board")
 public class Board {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long boardId;
-	private String boardUuid;
-	private String boardName;
-	private String boardContent;
-	private int boardRecruitmentYn;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate boardRegDt;
-	private int boardMicYn;
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "board_id")
+	private Long id;
+
+	@Column(name = "board_uuid", unique = true)
+	private String uuid;
+
+	@Column(name = "lol_puuid")
+	private String lolPuuid;
+
+	@Column(name = "board_name")
+	private String name;
+
+	@Column(name = "board_content", length = 100)
+	private String content;
+
+	@Column(name = "closing_status")
+	private Boolean closingStatus;
+	@Column(name = "mic_enabled")
+	private Boolean micEnabled;
+
+	@Column(name = "registration_time")
+	private Timestamp registrationTime;
 
 	@Convert(converter = ReportListConverter.class)
-	private List<BoardPositions> myPositions;
+	@Column(name = "my_positions")
+	private List<LaneType> myPositions;
 
+	@Column(name = "other_positions")
 	@Convert(converter = ReportListConverter.class)
-	private List<BoardPositions> otherPositions;
-
-	public Board(BoardDto boardDto) {
-		this.boardContent = boardDto.getBoardContent();
-		this.boardUuid = boardDto.getBoardUuid();
-		this.boardName = boardDto.getBoardName();
-		this.boardRecruitmentYn = boardDto.getBoardRecruitmentYn();
-		this.boardRegDt = boardDto.getBoardRegDt();
-		this.boardMicYn = boardDto.getBoardMicYn();
-		this.myPositions = boardDto.getMyPositions();
-		this.otherPositions = boardDto.getOtherPositions();
-		this.account = new Account(boardDto.getAccountDto());
-	}
+	private List<LaneType> otherPositions;
 
 	@OneToMany(fetch = FetchType.EAGER )
 	@JoinColumn(name = "board_id",updatable = false,insertable = false)
@@ -58,7 +57,24 @@ public class Board {
 	@JoinColumn(name = "user_id")
 	private Account account;
 
-	public void NoRecruit(int no) {
-		this.boardRecruitmentYn = no;
+	public void changeStatus(Boolean flag) {
+		this.closingStatus = flag;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	public Board(String uuid, String lolPuuid, String name, String content, Boolean closingStatus, Boolean micEnabled, Timestamp registrationTime, List<LaneType> myPositions, List<LaneType> otherPositions, Account account) {
+		this.uuid = uuid;
+		this.lolPuuid = lolPuuid;
+		this.name = name;
+		this.content = content;
+		this.closingStatus = closingStatus;
+		this.micEnabled = micEnabled;
+		this.registrationTime = registrationTime;
+		this.myPositions = myPositions;
+		this.otherPositions = otherPositions;
+		this.account = account;
 	}
 }
