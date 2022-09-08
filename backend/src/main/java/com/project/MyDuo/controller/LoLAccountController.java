@@ -11,7 +11,9 @@ import com.project.MyDuo.dto.LoL.MatchData.MatchDataDto;
 import com.project.MyDuo.dto.LoL.MatchData.ParticipantDto;
 import com.project.MyDuo.dto.Mapper;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
+import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.jwt.JwtTokenUtil;
+import com.project.MyDuo.security.AuthUser;
 import com.project.MyDuo.service.LoLAccoutService.LoLAccountService;
 import com.project.MyDuo.service.MemberAccountService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -39,22 +42,22 @@ public class LoLAccountController {
     private final WebClient matchDataWebClient;
 
     private final LoLAccountService loLAccountService;
-    private final MemberAccountService userService;
+    private final MemberAccountService memberAccountService;
     private final JwtTokenUtil jwtTokenUtil;
 
     private final Mapper mapper;
 
-    @PostMapping("/add") @ResponseBody
-    public String addSummoner(@RequestHeader String authorization, String summonerName) {// 소환사 등록 메서드.
-        String email = jwtTokenUtil.getEmail(authorization.split(" ")[1]);
+    @PostMapping("/add") @ResponseBody @Transactional
+    public String addSummoner(@AuthUser Member member, String summonerName) {// 소환사 등록 메서드.
         //user에 대한 검증.
-        if (loLAccountService.countValidLoLAccount(email) == 5)
+        if (loLAccountService.countValidLoLAccount(member.getEmail()) == 5)
             throw new noMoreLoLAccountException("한 회원당 최대 5개의 LoL계정을 등록할 수 있습니다.");
 
         //summonerName에 대한 검증.
         LoLBasicInfoDto basicInfoDto = getLoLBasicInfoDtoWithName(summonerName);
         LoLAccount loLAccount = loLAccountService.findByPuuid(basicInfoDto.getPuuid());
         if(loLAccount != null) {
+            //loLAccount.getUser().removeLoLAccount(loLAccount.getPuuid());
             if (loLAccount.isValid())
                 throw new summonerAlreadyRegisteredException("해당 소환사 계정이 이미 등록되어 있습니다.");
             else {
@@ -73,7 +76,7 @@ public class LoLAccountController {
         }
 
         //User에 account등록.
-        userService.addLoLAccount(email, loLAccount);
+        memberAccountService.addLoLAccount(member.getEmail(), loLAccount);
         loLAccountService.save(loLAccount);
 
         return "소환사 등록이 완료되었습니다.";

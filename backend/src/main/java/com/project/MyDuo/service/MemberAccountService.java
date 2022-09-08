@@ -104,5 +104,4 @@ public class MemberAccountService {
         user.addLoLAccount(account);
         account.changeUser(user);
     }
-
 }

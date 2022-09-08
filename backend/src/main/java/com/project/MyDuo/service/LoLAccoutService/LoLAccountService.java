@@ -15,7 +15,6 @@ public class LoLAccountService {
     private final LoLAccountRepository repository;
 
     public boolean existsByPuuid(String puuid) {return repository.existsByPuuid(puuid);}
-    @Transactional
     public LoLAccount findByPuuid(String puuid) {return repository.findByPuuid(puuid);}
 
     public LoLAccount findByName(String summonerName) {return repository.findByName(summonerName);}

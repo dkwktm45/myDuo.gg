@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -79,6 +80,15 @@ public class Member {
 
         if (account.getUser() != this)
             account.changeUser(this);
+    }
+
+    public void removeLoLAccount(String lolPuuid) {
+        for (int idx = 0; idx < lolAccounts.size(); idx++) {
+            if (!lolAccounts.get(idx).getPuuid().equals(lolPuuid)) {
+                lolAccounts.remove(idx);
+                return;
+            }
+        }
     }
 
     public void addBoard(Board board) { this.boardList.add(board); }
