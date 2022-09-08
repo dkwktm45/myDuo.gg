@@ -9,6 +9,7 @@ import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import com.project.MyDuo.jwt.JwtTokenUtil;
+import com.project.MyDuo.security.AuthUser;
 import com.project.MyDuo.service.BoardService;
 import com.project.MyDuo.service.LoLAccoutService.LoLAccountService;
 import com.project.MyDuo.service.MemberRepositoryService;
@@ -42,27 +43,25 @@ public class BoardController<UserService> {
 		boardService.createBoard(boardDto,authentication);
 	}*/
 
-	@GetMapping("/create") @ResponseBody
-	public Map<String, String> getLoLAccountInfos(@RequestHeader String authorization) {
-		//@Auth...로 업데이트 되면 업데이트 예정.
-		String email = jwtTokenUtil.getEmail(authorization.split(" ")[1]);
-		return loLAccountService.getSimpleLoLAccountInfos(email);
+	@GetMapping("/create") @ResponseBody @Transactional
+	public Map<String, String> getLoLAccountInfos(@AuthUser Member member) {
+		return loLAccountService.getSimpleLoLAccountInfos(member.getEmail());
 	}
 
 	@PostMapping("/create") @ResponseBody @Transactional
 	@Operation(summary = "게시판 저장", description = "userId를 포함한 데이터를 넘겨야 합니다.")
-	public String createBoard(@RequestBody BoardCreationDto boardCreationDto, @RequestHeader String authorization){
-		//@Auth...로 업데이트 되면 업데이트 예정.
-		String email = jwtTokenUtil.getEmail(authorization.split(" ")[1]);
-		Member user = memberRepositoryService.findMember(email);
-
+	public String createBoard(@AuthUser Member member, @RequestBody BoardCreationDto boardCreationDto){
 		//user가 비활성화 된 경우 처리.
-		if(!user.getValid())
+		if(!member.getValid())
 			throw new userInvalidException("회원 계정에 이상이 있습니다.");
+
+		//@Auth...로 업데이트 되면 업데이트 예정.
+		Member user = memberRepositoryService.findMember(member.getEmail());
 
 		//user정보를 가지고 Board객체를 생성하는 과정.
 		Board board = mapper.toBoard(user, boardCreationDto);
 		boardService.save(board, user);
+
 		return board.getUuid();
 	}
 
