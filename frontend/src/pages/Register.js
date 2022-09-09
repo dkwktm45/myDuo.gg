@@ -153,7 +153,6 @@ function Register() {
       name: data.nickname,
       password: data.password,
     });
-
     //회원가입 API 요청
     accountService("join", json)
       .then(function (response) {
