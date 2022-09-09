@@ -1,7 +1,6 @@
 package com.project.MyDuo.controller;
 
 import com.project.MyDuo.dto.BoardParticipantsDto;
-import com.project.MyDuo.entity.BoardParticipants;
 import com.project.MyDuo.service.BoardParticipantService;
 import com.project.MyDuo.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

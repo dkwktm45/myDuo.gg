@@ -1,6 +1,7 @@
 package com.project.MyDuo.entity;
 
 import com.project.MyDuo.dto.AccountDto;
+import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,13 +9,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Getter @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+@Table(name = "user")
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +48,7 @@ public class Account {
     private Role role;
 
     @Builder
-    public Account(String email, String name, String password) {
+    public Member(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;
@@ -53,7 +56,7 @@ public class Account {
         valid=true;
         role=Role.USER;
     }
-    public Account(AccountDto accountDto){
+    public Member(AccountDto accountDto){
         this.id = accountDto.getId();
         this.name = accountDto.getName();
         this.email = accountDto.getEmail();
@@ -65,5 +68,36 @@ public class Account {
     }
     @OneToMany(fetch = FetchType.LAZY )
     @JoinColumn(name = "user_id",updatable = false,insertable = false)
-    private List<Board> boardList;
+    private List<Board> boardList = new CopyOnWriteArrayList<>();
+
+    /* LoLAccount용 메서드
+    * 작성자 : Jeong Seong Soo*/
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LoLAccount> lolAccounts = new CopyOnWriteArrayList<>();
+
+    public void addLoLAccount(LoLAccount account) {
+        this.lolAccounts.add(account);
+
+        if (account.getUser() != this)
+            account.changeUser(this);
+    }
+
+    public void removeLoLAccount(String lolPuuid) {
+        for (int idx = 0; idx < lolAccounts.size(); idx++) {
+            if (!lolAccounts.get(idx).getPuuid().equals(lolPuuid)) {
+                lolAccounts.remove(idx);
+                return;
+            }
+        }
+    }
+
+    public void addBoard(Board board) { this.boardList.add(board); }
+
+    public void setHeartPlus(){
+        this.heart++;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY )
+    @JoinColumn(name = "user_id",updatable = false,insertable = false)
+    private List<Friend> friends;
 }

@@ -16,9 +16,9 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 			"where p.participant_uuid = :participant_uuid)",nativeQuery = true)
 	Optional<Board> findByParticipantUuId(@Param("participant_uuid") String participantUuid);
 
-	Optional<Board> findByBoardUuid(String boardUuid);
+	Optional<Board> findByUuid(String boardUuid);
 
 	@Override
-	@EntityGraph(attributePaths = "account")
+	@EntityGraph(attributePaths = "member")
 	List<Board> findAll();
 }

@@ -2,7 +2,8 @@ import styled from "styled-components";
 import NavBar from "components/NavBar";
 import { useState } from "react";
 import Alarm from "components/Alarm";
-//import io from "socket.io-client";
+import ChatListItem from "components/ChatListItem";
+import ChatRoom from "components/ChatRoom";
 
 const Container = styled.div`
   width: 100%;
@@ -11,24 +12,23 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 100px;
+  font-family: "Roboto";
 `;
 
 const Wrapper = styled.div`
   width: 30vw;
+  min-width: 500px;
   height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 5vw;
+  margin: 0 3vw;
   color: white;
-  &:nth-child(2) {
-    border: 1px solid ${(props) => props.theme.lolTextColor};
-  }
 `;
 
 const TabMenus = styled.div`
   width: 100%;
-  height: 30px;
+  height: 40px;
   display: flex;
   align-items: center;
 `;
@@ -39,48 +39,65 @@ const TabMenu = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   cursor: pointer;
-  border: 1px solid ${(props) => props.theme.lolTextColor};
   background-color: ${(props) =>
-    props.on === "true" ? props.theme.lolBgColorLight : "transeparent"};
+    props.on === "true"
+      ? props.theme.lolBgColorLight
+      : props.theme.lolBgColorNormal};
+  color: ${(props) => (props.on === "true" ? props.theme.lolTextColor : "")};
 `;
 
 const TabContents = styled.div`
-  border: 1px solid ${(props) => props.theme.lolTextColor};
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: ${(props) => props.theme.lolBgColorNormal};
+  background-color: ${(props) => props.theme.lolBgColorLight};
   span {
     width: 80%;
     margin: 10px 0;
   }
 `;
 
-const DuoChatWrapper = styled.div`
+const ChatList = styled.div`
   width: 80%;
   height: 42%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${(props) => props.theme.lolBgColorLight};
-`;
-
-const DuoChatRoom = styled.div`
-  width: 90%;
-  height: 50px;
   background-color: ${(props) => props.theme.lolBgColorNormal};
-  margin: 1px 0;
-`;
+  overflow: auto;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${(props) => props.theme.lolTextColor};
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: ${(props) => props.theme.lolBgColorLight};
+    border-radius: 5px;
+    box-shadow: inset 0px 0px 5px ${(props) => props.theme.lolBgColorNormal};
+  }
 
-const FriendChatWrapper = styled(DuoChatWrapper)`
-  height: 90%;
+  //내 게시물 지원자와의 채팅 리스트
+  &.duo-applicant {
+  }
+  //내가 지원한 듀오
+  &.duo-apply {
+  }
+  //친구 채팅 리스트
+  &.friend {
+    height: 90%;
+  }
+  &.disabled {
+  }
 `;
-
-const FriendChatRoom = styled(DuoChatRoom)``;
 
 function Chat() {
   const [chatRoom, setChatRoom] = useState("");
@@ -113,24 +130,58 @@ function Chat() {
             {isDuoChat ? (
               <>
                 <span>내가 모집하는 듀오</span>
-                <DuoChatWrapper>
-                  <DuoChatRoom />
-            
-                </DuoChatWrapper>
+                <ChatList className="duo-applicant">
+                  {[
+                    "duoApplicant_1",
+                    "duoApplicant_2",
+                    "duoApplicant_3",
+                    "duoApplicant_4",
+                    "duoApplicant_5",
+                  ].map((item, index) => {
+                    return (
+                      <ChatListItem
+                        type={"duo-applicant"}
+                        key={index}
+                        data={item}
+                        chatRoom={chatRoom}
+                        setChatRoom={setChatRoom}
+                      />
+                    );
+                  })}
+                </ChatList>
                 <span>내가 지원한 듀오</span>
-                <DuoChatWrapper></DuoChatWrapper>
+                <ChatList className="duo-apply">
+                  <ChatListItem
+                    type={"duo-apply"}
+                    key={1}
+                    data={1}
+                    chatRoom={chatRoom}
+                    setChatRoom={setChatRoom}
+                  />
+                </ChatList>
               </>
             ) : (
               <>
-                <FriendChatWrapper>
-                  <FriendChatRoom />
-                  <FriendChatRoom />
-                </FriendChatWrapper>
+                <ChatList className="friend">
+                  <ChatListItem
+                    type={"friend"}
+                    key={1}
+                    data={1}
+                    chatRoom={chatRoom}
+                    setChatRoom={setChatRoom}
+                  />
+                </ChatList>
               </>
             )}
           </TabContents>
         </Wrapper>
-        <Wrapper>{chatRoom === "" ? "" : <div>채팅</div>}</Wrapper>
+        <Wrapper>
+          {chatRoom === "" ? (
+            ""
+          ) : (
+            <ChatRoom chatRoom={chatRoom} setChatRoom={setChatRoom} />
+          )}
+        </Wrapper>
       </Container>
       <Alarm />
     </>

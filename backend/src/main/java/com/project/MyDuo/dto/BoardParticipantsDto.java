@@ -1,7 +1,6 @@
 package com.project.MyDuo.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.project.MyDuo.entity.Account;
 import com.project.MyDuo.entity.BoardParticipants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

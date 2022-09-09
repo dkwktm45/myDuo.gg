@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import LinePositions from "components/LinePositions";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const Overlay = styled.div`
   position: fixed;
@@ -16,7 +17,7 @@ const Overlay = styled.div`
   z-index: 5;
 `;
 
-const Container = styled.div`
+const Container = styled.form`
   font-family: "Roboto", sans-serif;
   position: absolute;
   width: 440px;
@@ -99,6 +100,9 @@ const BoardCreateMyPosition = styled.div`
 
 const BoardCreateOtherPosition = styled(BoardCreateMyPosition)`
   grid-area: main;
+  input {
+    display: none;
+  }
 `;
 
 const BoardCreateMic = styled.div`
@@ -137,7 +141,7 @@ const ToggleButton = styled.span`
       }
     }
     &:checked + label {
-      background: ${(props) => props.theme.lolBgColorNormal};
+      background: ${(props) => props.theme.lolBgColorLight};
       &:active {
         box-shadow: none;
         &:after {
@@ -185,7 +189,7 @@ const ToggleButton = styled.span`
       will-change: padding;
     }
     &:active {
-      box-shadow: inset 0 0 0 2em #e8eae9;
+      box-shadow: inset 0 0 0 2em ${(props) => props.theme.lolBgColorLight};
       &:after {
         padding-right: 0.8em;
       }
@@ -225,38 +229,47 @@ const BoardCreateButtons = styled(BoardCreateContents)`
   }
 `;
 
+const ErrorMsg = styled.label`
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
+  color: ${(props) => props.theme.lolAccentColor1};
+`;
+
 function BoardCreate({ setPopupCreate }) {
-  const [memo, setMemo] = useState("");
   const [myLineCheck, setMyLineCheck] = useState([]);
   const [otherLineCheck, setOtherLineCheck] = useState([]);
   const [mic, setMic] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm();
+
+  const onValid = async (data) => {
+    if (myLineCheck.length !== 2 || otherLineCheck.length !== 2) {
+      console.log("ERROR");
+      setError("line", {
+        message: "각 포지션 2가지 선택은 필수입니다.",
+      });
+    } else {
+      data["myLine"] = myLineCheck;
+      data["otherLine"] = otherLineCheck;
+      console.log(data);
+
+      overlayClose();
+    }
+  };
+
   const overlayClose = () => {
     setPopupCreate(false);
-  };
-
-  const onChange = (e) => {
-    setMemo(e.target.value);
-  };
-
-  const handleToggle = () => {
-    setMic(document.querySelector("#tb").checked);
-  };
-
-  const onSubmit = () => {
-    const data = {
-      myLine: myLineCheck,
-      otherLine: otherLineCheck,
-      mic: mic,
-      memo: memo,
-    };
-    console.log(data);
-    overlayClose();
   };
 
   return (
     <>
       <Overlay onClick={overlayClose} />
-      <Container>
+      <Container onSubmit={handleSubmit(onValid)}>
         <BoardCreateHeader>
           <span>게시물 등록하기</span>
           <span onClick={overlayClose}>
@@ -265,7 +278,7 @@ function BoardCreate({ setPopupCreate }) {
         </BoardCreateHeader>
         <BoardCreateId>
           <span>롤 아이디 선택하기</span>
-          <select>
+          <select {...register("lolId")}>
             <option>1번 아이디</option>
             <option>2번 아이디</option>
             <option>3번 아이디</option>
@@ -287,11 +300,14 @@ function BoardCreate({ setPopupCreate }) {
               otherLineCheck={otherLineCheck}
               setOtherLineCheck={setOtherLineCheck}
             />
+            <input type="text" {...register("line")} />
           </BoardCreateOtherPosition>
           <BoardCreateMic>
             <label>마이크</label>
-            <ToggleButton onClick={handleToggle}>
-              <input type="checkbox" id="tb" />
+            <ToggleButton
+              onClick={() => setMic(document.querySelector("#tb").checked)}
+            >
+              <input type="checkbox" id="tb" {...register("micYn")} />
               <label htmlFor="tb"></label>
             </ToggleButton>
             <label className={mic ? "checked" : ""}>{mic ? "ON" : "OFF"}</label>
@@ -300,12 +316,11 @@ function BoardCreate({ setPopupCreate }) {
 
         <BoardCreateMemo>
           <label>메모</label>
-          <textarea value={memo} onChange={onChange}>
-            hello
-          </textarea>
+          <textarea {...register("memo")} />
         </BoardCreateMemo>
+        <ErrorMsg>{errors?.line?.message}</ErrorMsg>
         <BoardCreateButtons>
-          <button onClick={onSubmit}>듀오 모집하기</button>
+          <button>듀오 모집하기</button>
         </BoardCreateButtons>
       </Container>
     </>
