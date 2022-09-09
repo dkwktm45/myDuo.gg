@@ -38,20 +38,18 @@ public class FriendService {
 		logger.info("friendFlus end");
 	}
 
-	public List<FriendDto> friendAll(Authentication authentication) {
+	public List<FriendDto> friendAll( Member member) {
 		logger.info("friendAll start");
 
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Member member = ((CustomUser) userDetails).getMember();
+/*		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		Member member = ((CustomUser) userDetails).getMember();*/
 
 		logger.info("friendAll end");
 		return friendRepository.findByMember(member).stream().map(FriendDto::new).collect(Collectors.toList());
 	}
 
-	public void deleteOne(String uuid, Authentication authentication) {
+	public void deleteOne(String uuid,Member member) {
 		logger.info("deleteOne start");
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Member member = ((CustomUser) userDetails).getMember();
 		friendRepository.delete(friendRepository.findByMemberAndPriendUuid(member, uuid));
 		logger.info("deleteOne end");
 	}
