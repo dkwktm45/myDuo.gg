@@ -39,7 +39,13 @@ public class SecurityConfig{
             httpSecurity
                 .authorizeHttpRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers(AUTH_WHITELLIST).permitAll()
-                .anyRequest().authenticated().and().cors()
+                .anyRequest().authenticated()
+
+                .and()
+                .cors()
+
+                .and().headers()
+                .frameOptions().sameOrigin()
         // httpSecurity
         //         .authorizeHttpRequests()
         //         .antMatchers(AUTH_WHITELLIST).permitAll()
