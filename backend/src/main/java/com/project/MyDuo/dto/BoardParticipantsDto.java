@@ -20,7 +20,7 @@ public class BoardParticipantsDto {
 	private String userName; // 메시지 name
 	private Long userId;
 	private String roomId;
-
+	private String boardName;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference
 	@JoinColumn(name = "board_id")
@@ -31,6 +31,7 @@ public class BoardParticipantsDto {
 		this.userName = participants.getUserName();
 		this.userId = participants.getUserId();
 		this.roomId = participants.getRoomId();
+		this.boardName = participants.getBoard().getName();
 		if(participants.getBoard() == null){
 			this.boardDto = null;
 		}else{
