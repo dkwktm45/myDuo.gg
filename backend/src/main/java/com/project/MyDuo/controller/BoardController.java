@@ -4,6 +4,7 @@ import com.project.MyDuo.customException.boardNotExistException;
 import com.project.MyDuo.customException.userInvalidException;
 import com.project.MyDuo.dto.Board.BoardCreationDto;
 import com.project.MyDuo.dto.Board.BoardDetailDto;
+import com.project.MyDuo.dto.BoardDto;
 import com.project.MyDuo.dto.Mapper;
 import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Board;
@@ -18,9 +19,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -88,17 +92,17 @@ public class BoardController<UserService> {
 		);
 	}
 
+	@PostMapping("/all") @ResponseBody
+	public List<BoardDto> deleteBoard() {
+		return boardService.findAllBoard();
+	}
+
 	/*@PostMapping("/{boarduuid}") @ResponseBody
 	public String deleteBoard(@PathVariable String boarduuid) {
 		boardService.deleteByuuid(boarduuid);
 		return "게시글 삭제가 완료되었습니다";
 	}*/
-	/*@Operation(summary = "게시판 불러오기", description = "모든 게시판을 불러옵니다.")
-	@PostMapping(value = "/all")
-	public ResponseEntity<List<BoardDto>> findAll(){
-		logger.info("board-all");
-		return ResponseEntity.ok(boardService.findAllBoard());
-	}
+
 
 	@Operation(summary = "채팅 버튼권한 확인용", description = "participantId를 권한 확인을 위한 게시판 정보")
 	@PostMapping(value = "/one")
@@ -109,5 +113,5 @@ public class BoardController<UserService> {
 		result.put("board" , board);
 		result.put("userName",board.getAccountDto().getName());
 		return ResponseEntity.ok(result);
-	}*/
+	}
 }

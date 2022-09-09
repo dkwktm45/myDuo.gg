@@ -1,6 +1,12 @@
 package com.project.MyDuo.service;
 
+import com.project.MyDuo.dao.FriendRepository;
+import com.project.MyDuo.dao.MemberRepository;
+import com.project.MyDuo.dto.FriendDto;
+import com.project.MyDuo.entity.Friend;
+import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.redis.ChatMessage;
+import com.project.MyDuo.entity.redis.ChatRoom;
 import com.project.MyDuo.service.redis.ChatMessageRepository;
 import com.project.MyDuo.service.redis.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +18,8 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,7 +36,8 @@ public class ChatService {
 	private final ChatRoomRepository chatRoomRepository;
 	private final NotificationService notificationService;
 	private final ChatMessageRepository chatMessageRepository;
-
+	private final FriendRepository friendRepository;
+	private final MemberRepository memberRepository;
 	/**
 	 * destination정보에서 roomId 추출
 	 */
@@ -68,8 +77,31 @@ public class ChatService {
 		chatMessageRepository.createChatMessage(chatMessage);
 		redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
 	}
+	public void createFriendChat(Member member, String email) {
 
+		ChatRoom chatRoom = ChatRoom.create();
+		Set<String> userList = new HashSet<>();
+		userList.add(email);
+		userList.add(member.getEmail());
+		chatRoom.setUserList(userList);
+		chatRoomRepository.save(chatRoom);
+
+		Friend friend = friendRepository.findByMemberAndPriendEmail(member,email);
+		friend.toSetRoomId(chatRoom.getRoomId());
+		friendRepository.save(friend);
+
+		Friend otherFriend = memberRepository.findMemberByEmail(email).getFriends()
+				.stream().filter(info -> info.getPriendEmail().equals(member.getEmail())).findFirst()
+				.orElseThrow(() -> new IllegalArgumentException());
+
+		otherFriend.toSetRoomId(chatRoom.getRoomId());
+	}
+
+	public ChatRoom createDuoChat(){
+		return chatRoomRepository.createChatRoom();
+	}
 	public void deleteRoom(String chatRoomId) {
 		chatRoomRepository.deleteRoom(chatRoomId);
 	}
+
 }

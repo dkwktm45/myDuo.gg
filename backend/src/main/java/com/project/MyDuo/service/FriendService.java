@@ -39,12 +39,6 @@ public class FriendService {
 	}
 
 	public List<FriendDto> friendAll( Member member) {
-		logger.info("friendAll start");
-
-/*		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Member member = ((CustomUser) userDetails).getMember();*/
-
-		logger.info("friendAll end");
 		return friendRepository.findByMember(member).stream().map(FriendDto::new).collect(Collectors.toList());
 	}
 

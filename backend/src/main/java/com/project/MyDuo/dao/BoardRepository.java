@@ -18,6 +18,11 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 
 	Optional<Board> findByUuid(String boardUuid);
 
+	@Query(value = "select * from board b " +
+			"where b.board_id = (select board_id from board_participants p "+
+			"where p.user_id = :user_id)",nativeQuery = true)
+	List<Board> findByOtherChat(@Param("user_id") Long id);
+
 	@Override
 	@EntityGraph(attributePaths = "member")
 	List<Board> findAll();

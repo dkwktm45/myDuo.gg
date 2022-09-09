@@ -34,6 +34,7 @@ public class Board {
 
 	@Column(name = "closing_status")
 	private Boolean closingStatus;
+
 	@Column(name = "mic_enabled")
 	private Boolean micEnabled;
 

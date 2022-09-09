@@ -34,11 +34,13 @@ public class FriendController {
 		logger.info("all start");
 		return ResponseEntity.ok(friendService.friendAll(member));
 	}
-	@DeleteMapping("/one")
+
+	@DeleteMapping("/delete-one")
 	@Operation(summary = "친구 목록", description = "나에게 맞는 모든 친구들을 불러온다.")
 	public void deleteOne(@RequestParam("friendUuid") String uuid,@AuthUser Member member){
 		logger.info("deleteOne start");
 		friendService.deleteOne(uuid , member);
 	}
+
 
 }

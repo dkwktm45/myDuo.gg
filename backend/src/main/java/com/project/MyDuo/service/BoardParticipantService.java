@@ -74,16 +74,18 @@ public class BoardParticipantService {
 		return boardList;
 	}
 
-	public List<BoardDto> otherChatRoom(Authentication authentication){
+	public List<BoardParticipantsDto> otherChatRoom(Authentication authentication){
 		logger.info("otherChatRoom start");
 
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		Member member = ((CustomUser) userDetails).getMember();
 
-		List<BoardParticipants> participantsList = participantsRepository.findByUserId(member.getId()).get();
-		List<BoardDto> boardList = participantsList.stream().map(info -> info.getBoard()).map(BoardDto::new).collect(Collectors.toList());
+		List<BoardParticipantsDto> participantsList = participantsRepository.findByUserId(member.getId())
+				.get().stream().map(BoardParticipantsDto::new).collect(Collectors.toList());
+
+
 		logger.info("otherChatRoom complete");
-		return boardList;
+		return participantsList;
 	}
 
 	public void deleteRoom(String boardUuid, String participantUuid) {
