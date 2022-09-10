@@ -6,8 +6,8 @@ import org.springframework.security.config.annotation.web.socket.AbstractSecurit
 @Configuration
 public class SockSecurityConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
-	@Override
-	protected boolean sameOriginDisabled() {
-		return true;
-	}
+    @Override
+    protected boolean sameOriginDisabled() {
+        return true;
+    }
 }

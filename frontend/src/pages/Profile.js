@@ -1,9 +1,10 @@
 import NavBar from "components/NavBar";
 import styled from "styled-components";
-import { useResetRecoilState } from "recoil";
+import { useResetRecoilState, useRecoilValue } from "recoil";
 import { LoginState } from "atoms";
 import { useNavigate } from "react-router-dom";
 import Alarm from "components/Alarm";
+import axios from "axios";
 
 const Container = styled.div`
   width: 50vw;
@@ -40,12 +41,26 @@ const Header = styled.div`
 
 function Profile() {
   const navigate = useNavigate();
-  const onClickLogOut = () => {
-    logOut();
-    navigate("/login");
-  };
-
+  const account = useRecoilValue(LoginState);
   const logOut = useResetRecoilState(LoginState);
+  const onClickLogOut = async () => {
+    console.log(account.token);
+    await axios
+      .get("http://localhost:8080/account/logout", {
+        headers: {
+          Authorization: account.token,
+        },
+      })
+      .then(function (response) {
+        console.log(response);
+        logOut();
+        navigate("/login");
+      })
+      .catch(function (error) {
+        console.log("Error Msg", error);
+      });
+    logOut();
+  };
 
   return (
     <>

@@ -19,3 +19,27 @@ export const accountService = async (type, data) => {
     return response;
   }
 };
+
+export const boardCreateOpenService = async (token) => {
+  console.log("게시물생성", token);
+  const response = await axios.get("http://127.0.0.1:8080/board/create", {
+    headers: {
+      Authorization: token,
+    },
+  });
+  return response;
+};
+
+export const appendLolAccount = async () => {
+  //url : /lol/add
+  // header : authorization
+  // body : summonerName
+  return;
+};
+
+export const removeLolAccount = async () => {
+  // url : /lol/remove
+  // header : authorization
+  // body : encryptedPUUID
+  return;
+};
