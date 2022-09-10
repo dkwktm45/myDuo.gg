@@ -44,10 +44,6 @@ public class SecurityConfig{
                 .anyRequest().authenticated()
 
                 .and().headers().frameOptions().disable()
-        // httpSecurity
-        //         .authorizeHttpRequests()
-        //         .antMatchers(AUTH_WHITELLIST).permitAll()
-        //         .anyRequest().authenticated()
 
                 //.and()
                 //.exceptionHandling()
@@ -89,7 +85,7 @@ public class SecurityConfig{
         configuration.setAllowedMethods(Arrays.asList("GET","POST"));
         configuration.addAllowedHeader("*");
         configuration.setMaxAge((long) 3600);
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
