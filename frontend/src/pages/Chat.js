@@ -4,6 +4,10 @@ import { useState } from "react";
 import Alarm from "components/Alarm";
 import ChatListItem from "components/ChatListItem";
 import ChatRoom from "components/ChatRoom";
+import { useEffect } from "react";
+import { LoginState } from "atoms";
+import { useRecoilValue } from "recoil";
+import axios from "axios";
 
 const Container = styled.div`
   width: 100%;
@@ -101,11 +105,38 @@ const ChatList = styled.div`
 
 function Chat() {
   const [chatRoom, setChatRoom] = useState("");
+  const account = useRecoilValue(LoginState);
 
   const [isDuoChat, setssDuoChat] = useState(true);
+  const [myChatList, setMyChatList] = useState([]);
+  const [otherChatList, setOtherChatList] = useState([]);
   const handleTabMenu = (e) => {
     setssDuoChat(!isDuoChat);
   };
+
+  useEffect(() => {
+    (async () => {
+      await axios
+        .post("http://localhost:8080/participants/my-rooms", null, {
+          headers: {
+            Authorization: account.token,
+          },
+        })
+        .then(function (response) {
+          setMyChatList(response.data);
+        });
+
+      await axios
+        .post("http://localhost:8080/participants/other-rooms", null, {
+          headers: {
+            Authorization: account.token,
+          },
+        })
+        .then(function (response) {
+          setOtherChatList(response.data);
+        });
+    })();
+  }, [account.token]);
 
   return (
     <>
@@ -131,13 +162,7 @@ function Chat() {
               <>
                 <span>내가 모집하는 듀오</span>
                 <ChatList className="duo-applicant">
-                  {[
-                    "duoApplicant_1",
-                    "duoApplicant_2",
-                    "duoApplicant_3",
-                    "duoApplicant_4",
-                    "duoApplicant_5",
-                  ].map((item, index) => {
+                  {myChatList.map((item, index) => {
                     return (
                       <ChatListItem
                         type={"duo-applicant"}
@@ -151,13 +176,17 @@ function Chat() {
                 </ChatList>
                 <span>내가 지원한 듀오</span>
                 <ChatList className="duo-apply">
-                  <ChatListItem
-                    type={"duo-apply"}
-                    key={1}
-                    data={1}
-                    chatRoom={chatRoom}
-                    setChatRoom={setChatRoom}
-                  />
+                  {otherChatList.map((item, index) => {
+                    return (
+                      <ChatListItem
+                        type={"duo-apply"}
+                        key={index}
+                        data={item}
+                        chatRoom={chatRoom}
+                        setChatRoom={setChatRoom}
+                      />
+                    );
+                  })}
                 </ChatList>
               </>
             ) : (

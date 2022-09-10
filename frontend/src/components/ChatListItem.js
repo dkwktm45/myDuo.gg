@@ -1,4 +1,10 @@
 import styled from "styled-components";
+import Stomp from "webstomp-client";
+import sockjs from "sockjs-client";
+import { LoginState } from "atoms";
+import { useRecoilValue } from "recoil";
+import { useState } from "react";
+import axios from "axios";
 
 const DuoChatList = styled.div`
   width: 95%;
@@ -61,32 +67,86 @@ const DuoChatList = styled.div`
 `;
 
 function ChatListItem({ ...props }) {
+  const account = useRecoilValue(LoginState);
+
   const handleChatRoom = () => {
-    if (props.data === props.chatRoom) {
-      props.setChatRoom("");
-    } else {
-      props.setChatRoom(props.data);
-    }
+    //console.log("participantUuid", props.data.participantUuid);
+    //console.log("roomId", props.data.roomId);
+
+    var chatSocket = new sockjs("http://localhost:8080/ws-stomp", null, {
+      headers: {
+        Authorization: account.token,
+      },
+    });
+    const ws = Stomp.over(chatSocket);
+
+    ws.connect(
+      { Authorization: account.token },
+      function (frame) {
+        ws.subscribe("/sub/chat/room/" + props.data.roomId, function (message) {
+          var recv = JSON.parse(message.body);
+          console.log("연결 성공", recv);
+          props.setChatRoom(props.data.roomId);
+        });
+      },
+      function (error) {
+        alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
+        ws.disconnect(
+          () => {
+            console.log("connect 끊음");
+          },
+          { roomId: props.data.roomId }
+        );
+        //location.href = "/chat-list";
+        console.log("실패");
+      }
+    );
+
+    console.log(chatSocket);
+    console.log(ws);
   };
-  return (
-    <DuoChatList
-      key={props.index}
-      onClick={handleChatRoom}
-      className={props.data === props.chatRoom ? "selected" : ""}
-    >
-      <div>
-        <img src={`../img/emblems/Emblem_Silver.png`} alt="lolLogo" />
-      </div>
-      <div>{props.data}</div>
-      <div>
-        <label>안녕하세요</label>
-        <label>오후 3:13</label>
-      </div>
-      <div>
-        <span>3</span>
-      </div>
-    </DuoChatList>
-  );
+
+  if (props.type === "duo-applicant") {
+    return (
+      <DuoChatList
+        key={props.index}
+        onClick={handleChatRoom}
+        className={props.data === props.chatRoom ? "selected" : ""}
+      >
+        <div>
+          <img src={`../img/emblems/Emblem_Silver.png`} alt="lolLogo" />
+        </div>
+        <div>{props.data.userName}</div>
+        <div>
+          <label>안녕하세요</label>
+          <label>오후 3:13</label>
+        </div>
+        <div>
+          <span>3</span>
+        </div>
+      </DuoChatList>
+    );
+  } else if (props.type === "duo-apply") {
+    return (
+      <DuoChatList
+        key={props.index}
+        onClick={handleChatRoom}
+        className={props.data === props.chatRoom ? "selected" : ""}
+      >
+        <div>
+          <img src={`../img/emblems/Emblem_Silver.png`} alt="lolLogo" />
+        </div>
+        <div>{props.data.boardName}</div>
+        <div>
+          <label>안녕하세요</label>
+          <label>오후 3:13</label>
+        </div>
+        <div>
+          <span>3</span>
+        </div>
+      </DuoChatList>
+    );
+  }
 }
 
 export default ChatListItem;

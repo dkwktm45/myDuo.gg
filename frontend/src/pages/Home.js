@@ -6,10 +6,11 @@ import BoardHeader from "components/BoardHeader";
 import Alarm from "components/Alarm";
 import { useState } from "react";
 import { useEffect } from "react";
-import { LineFilterState, TierFilterState } from "atoms";
+import { LineFilterState, LoginState, TierFilterState } from "atoms";
 import { useRecoilValue } from "recoil";
 import BoardDetail from "components/BoardDetail";
 import BoardCreate from "components/BoardCreate";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -54,6 +55,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [popupBoard, setPopupBoard] = useState("");
   const [popupCreate, setPopupCreate] = useState(false);
+  const account = useRecoilValue(LoginState);
 
   useEffect(() => {
     (async () => {
@@ -61,6 +63,18 @@ function Home() {
       const json = await response.json();
       setBoards(json);
       setLoading(false);
+
+      // await axios
+      //   .post("http://localhost:8080/board/all", null, {
+      //     headers: {
+      //       Authorization: account.token,
+      //     },
+      //   })
+      //   .then(function (response) {
+      //     console.log(response.data);
+      //     setBoards(response.data);
+      //     setLoading(false);
+      //   });
     })();
   }, []);
 

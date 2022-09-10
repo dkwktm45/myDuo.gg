@@ -26,10 +26,9 @@ const Container = styled.div`
 `;
 
 const WrapperClosed = styled.div`
-  width: 70px;
-  height: 70px;
-  border: 2px solid ${(props) => props.theme.lolBgColorLight};
-  font-size: 40px;
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -43,25 +42,38 @@ const WrapperOpened = styled.div`
   width: 350px;
   height: 600px;
   border: none;
-  border-radius: 35px;
+  border-radius: 30px;
   background-color: ${(props) => props.theme.lolTextColor};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Header = styled.div`
   width: 95%;
   height: 30px;
   display: flex;
-  justify-content: right;
-  flex-direction: row-reverse;
+  justify-content: space-between;
   margin: 20px 0;
   label {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 5px;
+    margin: 0 20px;
     cursor: pointer;
     font-size: 20px;
+    &:first-child {
+      margin-top: 10px;
+    }
   }
+`;
+
+const Body = styled.div`
+  width: 80%;
+  height: 80%;
+  background-color: ${(props) => props.theme.lolBgColorLight};
+  color: ${(props) => props.theme.lolTextColor};
 `;
 
 function Alarm() {
@@ -81,10 +93,12 @@ function Alarm() {
         ) : (
           <WrapperOpened>
             <Header>
+              <label>알림</label>
               <label onClick={handleAlarmWindow}>
                 <FontAwesomeIcon icon={faXmark} />
               </label>
             </Header>
+            <Body>sdfsakl</Body>
           </WrapperOpened>
         )}
       </Container>

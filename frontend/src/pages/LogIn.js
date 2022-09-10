@@ -183,13 +183,13 @@ function LogIn() {
       email: data.email,
       password: data.password,
     });
-
     accountService("login", json)
       .then(function (response) {
         setLogInState({
-          token: response.data.grantType + response.data.accessToken,
+          token: `Bearer ${response.data.accessToken}`,
           refreshToken: response.data.refreshToken,
         });
+        console.log(`Bearer ${response.data.accessToken}`);
         navigate("/");
       })
       .catch(function (error) {
