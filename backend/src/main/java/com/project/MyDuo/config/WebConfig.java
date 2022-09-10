@@ -18,7 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
 						HttpMethod.PUT.name(),
 						HttpMethod.DELETE.name(),
 						HttpMethod.HEAD.name()
-				)
+				).allowedHeaders("*")
+				.exposedHeaders("*")
 				.allowedOrigins("http://127.0.0.1:3000");
 	}
 }

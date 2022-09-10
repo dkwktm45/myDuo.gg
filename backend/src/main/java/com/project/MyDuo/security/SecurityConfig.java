@@ -30,7 +30,7 @@ public class SecurityConfig{
     private final ObjectMapper objectMapper;
 
     private final String[] AUTH_WHITELLIST = {
-            "/account/", "/account/join", "/account/login",
+            "/account/", "/account/join", "/account/login","ws-stomp",
             "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**"
     };
 
@@ -69,6 +69,7 @@ public class SecurityConfig{
                 
         return httpSecurity.build();
     }
+
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
