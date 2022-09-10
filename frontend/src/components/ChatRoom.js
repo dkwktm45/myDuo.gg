@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import React, { useRef, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 const Wrapper = styled.div`
   width: 30vw;
@@ -22,11 +24,13 @@ const ChatHeader = styled.div`
   height: 100%;
   margin: 10px 0;
   display: grid;
-  grid-template-columns: 60px 1fr 1fr 80px;
+  grid-template-columns: 60px 1fr 1fr 120px 40px;
   color: ${(props) => props.theme.lolTextColor};
   div {
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-direction: column;
     &:nth-child(1) {
       img {
         width: 50px;
@@ -36,8 +40,6 @@ const ChatHeader = styled.div`
       }
     }
     &:nth-child(2) {
-      justify-content: center;
-      flex-direction: column;
       align-items: flex-start;
       span {
         font-size: 14px;
@@ -52,7 +54,34 @@ const ChatHeader = styled.div`
       }
     }
     &:nth-child(3) {
-      background-color: tomato;
+      background-color: yellowgreen;
+    }
+    &:nth-child(4) {
+      div {
+        &:nth-child(2) {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          button {
+            width: 45px;
+            height: 25px;
+            padding: 5px;
+            color: ${(props) => props.theme.lolAccentColor};
+            background-color: ${(props) => props.theme.lolBgColorNormal};
+            border: none;
+            margin: 3px;
+            &:nth-child(2) {
+              color: ${(props) => props.theme.lolAccentColor1};
+              background-color: ${(props) => props.theme.lolBgColorNormal};
+            }
+          }
+        }
+      }
+    }
+    &:nth-child(5) {
+      font-size: 18px;
+      color: whitesmoke;
+      cursor: pointer;
     }
   }
 `;
@@ -175,8 +204,8 @@ const ChatController = styled.div`
     width: 15%;
     height: 50px;
     border: none;
-    font-family: "Hanna";
-    font-size: 18px;
+    font-family: "Roboto";
+    font-size: 16px;
     background-color: ${(props) => props.theme.lolTextColor};
     cursor: pointer;
   }
@@ -199,7 +228,16 @@ function ChatRoom({ ...props }) {
           <span>유저의 롤 아이디</span>
         </div>
         <div></div>
-        <div></div>
+        <div>
+          <div>듀오 요청</div>
+          <div>
+            <button>수락</button>
+            <button>거절</button>
+          </div>
+        </div>
+        <div>
+          <FontAwesomeIcon icon={faRightFromBracket} />
+        </div>
       </ChatHeader>
       <ChatBody ref={scrollRef}>
         <div className="info">채팅방이 생성되었습니다.</div>
