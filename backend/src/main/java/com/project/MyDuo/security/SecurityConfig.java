@@ -19,6 +19,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
+import java.util.Arrays;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig{
@@ -31,7 +33,7 @@ public class SecurityConfig{
 
     private final String[] AUTH_WHITELLIST = {
             "/account/", "/account/join", "/account/login",
-            "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**"
+            "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/ws-stomp/**",
     };
 
     @Bean
@@ -41,11 +43,7 @@ public class SecurityConfig{
                 .antMatchers(AUTH_WHITELLIST).permitAll()
                 .anyRequest().authenticated()
 
-                .and()
-                .cors()
-
-                .and().headers()
-                .frameOptions().sameOrigin()
+                .and().headers().frameOptions().disable()
         // httpSecurity
         //         .authorizeHttpRequests()
         //         .antMatchers(AUTH_WHITELLIST).permitAll()
@@ -53,7 +51,8 @@ public class SecurityConfig{
 
                 //.and()
                 //.exceptionHandling()
-                //.authenticationEntryPoint(jwtEntryPoint)
+                    //.authenticationEntryPoint(jwtEntryPoint)
+                .and().cors().configurationSource(corsConfigurationSource())
 
                 .and()
                 .logout().disable()
@@ -86,11 +85,11 @@ public class SecurityConfig{
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedMethod("*");
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
         configuration.addAllowedHeader("*");
         configuration.setMaxAge((long) 3600);
-        configuration.setAllowCredentials(false);
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
