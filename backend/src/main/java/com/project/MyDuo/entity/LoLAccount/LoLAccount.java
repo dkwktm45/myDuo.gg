@@ -67,6 +67,7 @@ public class LoLAccount {
     }
 
     public void setLanes() {
+        lanes.add(new Lane(LaneType.ALL,this));
        lanes.add(new Lane(LaneType.TOP,this));
        lanes.add(new Lane(LaneType.JUNGLE,this));
        lanes.add(new Lane(LaneType.MID, this));
