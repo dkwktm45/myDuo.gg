@@ -14,16 +14,21 @@ import java.io.Serializable;
 public class Alarm  implements Serializable {
 	private static final long serialVersionUID = 6494678977089006639L;
 
+	@Nullable
+	private String id;
+
 	@NotNull
 	private String senderId;
 
-	private String senderName;
 	@Nullable
 	private String RoomId;
+
+	private String senderName;
+
 	@NotNull
 	private Alarm.AlarmType alarmType;
 
 	public enum AlarmType {
-		FRIEND, DUO, AGREE
+		FRIEND, DUO, AGREE , MESSAGE
 	}
 }

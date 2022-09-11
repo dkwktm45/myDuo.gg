@@ -108,7 +108,7 @@ public class MemberAccountService {
 
     /*작성자: 게드릉*/
     @Transactional
-    public Member headrToEntity(String headers) {
+    public Member headerToEntity(String headers) {
         if(headers == null || headers.equals("null")){
             throw new MessageDeliveryException("메세지 예외");
         }

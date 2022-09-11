@@ -2,18 +2,28 @@ package com.project.MyDuo.controller;
 
 import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.redis.ChatMessage;
+import com.project.MyDuo.security.AuthUser;
+import com.project.MyDuo.service.ChatMessageService;
 import com.project.MyDuo.service.ChatService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Controller
-public class ChatController {
+@RestController
+public class MessageController {
 	private final ChatService chatService;
+	private final ChatMessageService chatMessageService;
 	/**
 	 * websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
 	 * roomid 에 따른 메세지 저장?
@@ -21,10 +31,10 @@ public class ChatController {
 	 * 그렇기에 룸에 입장을 한번만 하자!
 	 */
 	@MessageMapping("/chat/message")
-	public void message(ChatMessage message, @AuthenticationPrincipal Member member) {
+	public void message(ChatMessage message, @AuthUser Member member) {
 		message.setSender(member.getName());
 		// Websocket에 발행된 메시지를 redis로 발행(publish)
-		chatService.sendChatMessage(message);
+		chatMessageService.sendChatMessage(message,member);
 	}
 	/**
 	 *
@@ -34,5 +44,14 @@ public class ChatController {
 	 * 보낸 사람한테는 알람이 안간다.
 	 *
 	 **/
+	@DeleteMapping("/message-delete")
+	public void deleteMessage(@RequestParam("roomId") String roomId){
+		chatMessageService.deleteMessage(roomId);
+	}
 
+	@PostMapping("/messages-all")
+	@Operation(summary = "findAllMessage", description = "채팅방 Id에 따른 메시지 불러오기")
+	public List<ChatMessage> messages(@RequestParam("roomId") String roomId) {
+		return chatMessageService.findAllMessage(roomId);
+	}
 }

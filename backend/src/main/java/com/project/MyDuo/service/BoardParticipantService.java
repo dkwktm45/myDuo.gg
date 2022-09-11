@@ -2,7 +2,6 @@ package com.project.MyDuo.service;
 
 import com.project.MyDuo.dao.BoardParticipantsRepository;
 import com.project.MyDuo.dao.BoardRepository;
-import com.project.MyDuo.dto.BoardDto;
 import com.project.MyDuo.dto.BoardParticipantsDto;
 import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Board;
@@ -31,6 +30,7 @@ public class BoardParticipantService {
 	private final BoardService boardService;
 	private final BoardRepository boardRepository;
 	private final ChatService chatService;
+	private final ChatMessageService chatMessageService;
 
 	public Map<String, Object> setChat(String boardUuid, String chatRoomId, Authentication authentication) throws Exception {
 		logger.info("setChat start");
@@ -88,7 +88,7 @@ public class BoardParticipantService {
 		return participantsList;
 	}
 
-	public void deleteRoom(String boardUuid, String participantUuid) {
+	public void deleteRoom(String boardUuid, String participantUuid, Member member) {
 		logger.info("deleteRoom start");
 		Board board = boardRepository.findByUuid(boardUuid).get();
 		board.changeStatus(false);
@@ -98,14 +98,16 @@ public class BoardParticipantService {
 		boardParticipantsList.stream().forEach(info -> info.setBoard(null));
 
 		for(BoardParticipants participants : boardParticipantsList){
-			chatService.sendChatMessage(
+			chatMessageService.sendChatMessage(
 					ChatMessage.builder()
+							.sender(board.getName())
 							.message(board.getMember().getName() + "님이 다른회원과 매칭이 되었습니다. 다음기회에 도전해주세요!")
 							.roomId(participants.getRoomId())
-							.build()
-			);
+							.build(),
+					member);
 		}
 
+		participantsRepository.saveAll(boardParticipantsList);
 		logger.info("deleteRoom end");
 	}
 

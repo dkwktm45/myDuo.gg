@@ -40,13 +40,6 @@ public class BoardController<UserService> {
 	private final MemberRepositoryService memberRepositoryService;
 	private final Mapper mapper;
 
-	/*@PostMapping(value = "/create")
-	@Operation(summary = "게시판 저장", description = "userId를 포함한 데이터를 넘겨야 합니다.")
-	public void createBoard(@RequestBody @Valid BoardDto boardDto, Authentication authentication){
-		logger.info("board-create");
-		boardService.createBoard(boardDto,authentication);
-	}*/
-
 	@GetMapping("/create") @ResponseBody @Transactional
 	public Map<String, String> getLoLAccountInfos(@AuthUser Member member) {
 		return loLAccountService.getSimpleLoLAccountInfos(member.getEmail());
@@ -96,13 +89,6 @@ public class BoardController<UserService> {
 	public List<BoardDto> deleteBoard() {
 		return boardService.findAllBoard();
 	}
-
-	/*@PostMapping("/{boarduuid}") @ResponseBody
-	public String deleteBoard(@PathVariable String boarduuid) {
-		boardService.deleteByuuid(boarduuid);
-		return "게시글 삭제가 완료되었습니다";
-	}*/
-
 
 	@Operation(summary = "채팅 버튼권한 확인용", description = "participantId를 권한 확인을 위한 게시판 정보")
 	@PostMapping(value = "/one")

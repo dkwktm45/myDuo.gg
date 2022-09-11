@@ -2,7 +2,9 @@ package com.project.MyDuo.controller;
 
 import com.project.MyDuo.dto.BoardDto;
 import com.project.MyDuo.dto.BoardParticipantsDto;
+import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.redis.ChatRoom;
+import com.project.MyDuo.security.AuthUser;
 import com.project.MyDuo.service.BoardParticipantService;
 import com.project.MyDuo.service.ChatService;
 import com.project.MyDuo.service.NotificationService;
@@ -30,8 +32,8 @@ public class BoardParticipantController {
 
 	@DeleteMapping("/delete")
 	@Operation(summary = "게시판 참여자", description = "방장이 해당 유저와 듀오를 원한다면 듀오 결성이 된다.")
-	public void deleteRoom(@RequestBody Map<String,Long> info){
-		participantService.deleteRoom(String.valueOf(info.get("boardUuid")),String.valueOf(info.get("participantUuid")));
+	public void deleteRoom(@RequestBody Map<String,Long> info, @AuthUser Member member){
+		participantService.deleteRoom(String.valueOf(info.get("boardUuid")),String.valueOf(info.get("participantUuid")),member);
 	}
 
 	@PostMapping("/one")

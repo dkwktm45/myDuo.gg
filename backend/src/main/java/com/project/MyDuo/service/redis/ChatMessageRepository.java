@@ -38,8 +38,8 @@ public class ChatMessageRepository {
 		Collections.sort(chatMessages,Collections.reverseOrder());
 		return chatMessages;
 	}
-	public void deleteMessage(List<String> roomId){
-
+	public void deleteMessage(List<ChatMessage> chatMessageList){
+		opsHashChatRoom.delete(CHAT_MESSAGE,chatMessageList);
 	}
 	// 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
 	public void createChatMessage(ChatMessage message) {
