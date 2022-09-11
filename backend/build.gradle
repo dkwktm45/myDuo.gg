@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.apache.commons:commons-lang3:3.8'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'org.springframework.security:spring-security-messaging'
+	implementation 'com.google.code.gson:gson:2.8.5'
 
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'

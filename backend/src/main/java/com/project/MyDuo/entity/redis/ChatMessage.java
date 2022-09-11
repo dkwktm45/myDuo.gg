@@ -16,13 +16,8 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Builder
-public class ChatMessage implements Serializable,Comparable<ChatMessage>  {
+public class ChatMessage implements Serializable  {
 	private static final long serialVersionUID = 6494678977089006523L;
-
-	@Override
-	public int compareTo(ChatMessage chatMessage) {
-		return getCreatedAt().compareTo(chatMessage.getCreatedAt());
-	}
 
 	public enum MessageType {
 		ENTER, TALK , QUIT, DUO
@@ -34,7 +29,5 @@ public class ChatMessage implements Serializable,Comparable<ChatMessage>  {
 	private String sender; // 메시지 보낸사람
 	private String message; // 메시지
 	private long userCount;
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	private LocalDateTime createdAt;
+
 }

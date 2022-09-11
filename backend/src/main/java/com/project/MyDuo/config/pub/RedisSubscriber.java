@@ -1,6 +1,7 @@
 package com.project.MyDuo.config.pub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.project.MyDuo.entity.redis.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class RedisSubscriber {
 
-	private final ObjectMapper objectMapper;
 	private final SimpMessageSendingOperations messagingTemplate;
 
 	/**
@@ -21,7 +21,7 @@ public class RedisSubscriber {
 	public void sendMessage(String publishMessage) {
 		try {
 			// ChatMessage 객채로 맵핑
-			ChatMessage chatMessage = objectMapper.readValue(publishMessage, ChatMessage.class);
+			ChatMessage chatMessage = new Gson().fromJson(publishMessage, ChatMessage.class);
 			// 채팅방을 구독한 클라이언트에게 메시지 발송
 			messagingTemplate.convertAndSend("/sub/chat/room/" + chatMessage.getRoomId(), chatMessage);
 		} catch (Exception e) {

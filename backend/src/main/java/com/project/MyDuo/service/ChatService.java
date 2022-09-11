@@ -62,7 +62,6 @@ public class ChatService {
 
 		}
 		Long userCount =chatRoomRepository.getUserCount(chatMessage.getRoomId());
-		chatMessage.setCreatedAt(LocalDateTime.now());
 		Set<String> RoomUsers = chatRoomRepository.findRoomById(chatMessage.getRoomId()).getUserList();
 		try {
 			if (userCount.equals(1L) && RoomUsers.size() == 2){
