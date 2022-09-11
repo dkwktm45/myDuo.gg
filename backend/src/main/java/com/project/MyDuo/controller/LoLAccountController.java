@@ -14,7 +14,7 @@ import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.jwt.JwtTokenUtil;
 import com.project.MyDuo.security.AuthUser;
-import com.project.MyDuo.service.LoLAccoutService.LoLAccountService;
+import com.project.MyDuo.service.LoLAccountService;
 import com.project.MyDuo.service.MemberAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

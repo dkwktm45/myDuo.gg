@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Entity @Getter @Builder
@@ -28,7 +27,9 @@ public class LoLAccount {
     private String name;
 
     //Rank게임을 하지 않은 사용자들을 위한 기본 값 설정.
+    @Column(name = "lol_rank")
     @Builder.Default private String rank = "UNRANKED";
+    @Column(name = "lol_tier")
     @Builder.Default private String tier = "";
 
     @Column(name = "win_count")
