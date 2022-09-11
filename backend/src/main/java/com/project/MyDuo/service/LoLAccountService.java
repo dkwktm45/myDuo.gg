@@ -1,14 +1,12 @@
-package com.project.MyDuo.service.LoLAccoutService;
+package com.project.MyDuo.service;
 
-import com.project.MyDuo.dao.LoLAccount.LoLAccountRepository;
+import com.project.MyDuo.dao.LoLAccountRepository;
+import com.project.MyDuo.dto.LoL.Info.LoLNameAndPuuidDto;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service @RequiredArgsConstructor
 public class LoLAccountService {
@@ -25,14 +23,8 @@ public class LoLAccountService {
 
     public LoLAccount save(LoLAccount entity) {return repository.save(entity);}
 
-    public Map<String, String > getSimpleLoLAccountInfos(String email) {
-        Map<String, String> map = new ConcurrentHashMap<>();
-        List<LoLAccount> list = repository.findByValidTrueAndUser_Email(email);
-
-        for (LoLAccount account : list)
-            map.put(account.getName(), account.getPuuid());
-
-        return map;
+    public List<LoLNameAndPuuidDto> getSimpleLoLAccountInfos(String email) {
+        return repository.findValidLoLAccountInfos(email);
     }
 
 }
