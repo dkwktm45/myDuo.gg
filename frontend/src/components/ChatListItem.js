@@ -87,7 +87,9 @@ function ChatListItem({ ...props }) {
           var recv = JSON.parse(message.body);
           console.log("연결 성공", recv);
           props.setChatRoom(props.data.roomId);
-        });
+        } ,{ 
+            Authorization: account.token 
+          } );
       },
       function (error) {
         alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");

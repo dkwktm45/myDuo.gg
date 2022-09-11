@@ -7,6 +7,7 @@ import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import com.project.MyDuo.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,5 +104,16 @@ public class MemberAccountService {
 
         user.addLoLAccount(account);
         account.changeUser(user);
+    }
+
+    /*작성자: 게드릉*/
+    @Transactional
+    public Member headrToEntity(String headers) {
+        if(headers == null || headers.equals("null")){
+            throw new MessageDeliveryException("메세지 예외");
+        }
+        String token = headers.substring("Bearer ".length());
+        String email = jwtTokenUtil.getEmail(token);
+        return memberRepositoryService.findMember(email);
     }
 }

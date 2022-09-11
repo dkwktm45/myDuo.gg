@@ -77,6 +77,7 @@ public class ChatService {
 		chatMessageRepository.createChatMessage(chatMessage);
 		redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
 	}
+
 	public void createFriendChat(Member member, String email) {
 
 		ChatRoom chatRoom = ChatRoom.create();
@@ -97,11 +98,26 @@ public class ChatService {
 		otherFriend.toSetRoomId(chatRoom.getRoomId());
 	}
 
+	/**
+	 * Chat
+	 * 간단 로직 함수
+	 */
 	public ChatRoom createDuoChat(){
 		return chatRoomRepository.createChatRoom();
 	}
+
 	public void deleteRoom(String chatRoomId) {
 		chatRoomRepository.deleteRoom(chatRoomId);
 	}
+
+	public ChatRoom findRoom(String roomId){return chatRoomRepository.findRoomById(roomId);}
+
+	public void updateRoom(ChatRoom chatRoom){
+		chatRoomRepository.updateChatRoom(chatRoom);
+	}
+
+	public long plusCount(String roomId) {return chatRoomRepository.plusUserCount(roomId);}
+
+	public long minusCount(String roomId) {return chatRoomRepository.minusUserCount(roomId);}
 
 }

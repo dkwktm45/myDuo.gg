@@ -29,11 +29,6 @@ public class ChatRoomRepository {
 	@Resource(name = "redisTemplate")
 	private HashOperations<String, String, ChatRoom> opsHashFriendRoom;
 
-	// 모든 채팅방 조회
-	public List<ChatRoom> findAllRoom(List<String> roomIdList) {
-		return opsHashChatRoom.multiGet(CHAT_ROOMS, roomIdList);
-	}
-
 	// 특정 채팅방 조회
 	public ChatRoom findRoomById(String id) {
 		return opsHashChatRoom.get(CHAT_ROOMS, id);
