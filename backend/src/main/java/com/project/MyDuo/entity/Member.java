@@ -47,6 +47,11 @@ public class Member {
 
     private Role role;
 
+    @Column(name = "user_memo")
+    private String memo;
+    @Column(name = "representative_account")
+    private String LoLRepPuuid;
+
     @Builder
     public Member(String email, String name, String password) {
         this.email = email;
