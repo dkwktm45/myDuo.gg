@@ -79,7 +79,9 @@ function ChatListItem({ ...props }) {
       },
     });
     const ws = Stomp.over(chatSocket);
-
+    ws.debug  = function(str) {
+      console.log("debug null 인곳!!")
+    };
     ws.connect(
       { Authorization: account.token },
       function (frame) {
