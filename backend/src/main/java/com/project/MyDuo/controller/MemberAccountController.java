@@ -7,10 +7,12 @@ import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.security.AuthUser;
 import com.project.MyDuo.service.MemberAccountService;
 import com.project.MyDuo.service.MemberRepositoryService;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,8 +61,10 @@ public class MemberAccountController {
     }
 
     //테스트 용
+
+
     @PostMapping("/test")
-    public String test(@AuthUser Member member) {
+    public String test(@ApiIgnore @AuthUser Member member) {
         return member.getEmail();
     }
 }
