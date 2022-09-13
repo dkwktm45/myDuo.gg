@@ -47,7 +47,6 @@ public class FriendController {
 
 	@PutMapping("/plus")
 	public void friendFlus(@RequestBody Alarm alarm , @AuthUser Member member){
-
 		friendService.friendFlus(member.getEmail(),alarm.getId());
 //		notificationService.deleteAlarm(roomId,userName);
 		logger.info("알림 데이터 : {}",alarm);
