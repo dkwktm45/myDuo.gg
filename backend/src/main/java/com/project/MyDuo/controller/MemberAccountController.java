@@ -65,7 +65,7 @@ public class MemberAccountController {
 
     @PostMapping("/test")
     public String test(@ApiIgnore @AuthUser Member member) {
-        return member.getEmail();
+        return member.getName();
     }
 }
 
