@@ -18,3 +18,11 @@ export const TierFilterState = atom({
   key: "TierFilterState",
   default: "ALL",
 });
+
+export const BoardStatus = atom({
+  key: "BoardStatus",
+  default: {
+    new: null,
+    old: null,
+  },
+});
