@@ -81,11 +81,10 @@ public class SecurityConfig{
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("http://localhost:3000");
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
-        configuration.setMaxAge((long) 3600);
-        configuration.setAllowCredentials(false);
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
