@@ -53,9 +53,8 @@ public class ChatMessage implements Serializable,Comparable<ChatMessage>  {
 		} else if (ChatMessage.MessageType.QUIT.equals(message.getType())) {
 			message.setMessage("님이 방에서 나갔습니다.");
 			message.setSender(message.getSender());
-		}else{
-			message.setCreatedAt(LocalDateTime.now());
 		}
+		message.setCreatedAt(LocalDateTime.now());
 		return message;
 	}
 }
