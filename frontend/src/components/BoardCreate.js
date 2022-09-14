@@ -269,16 +269,19 @@ function BoardCreate({ setPopupCreate }) {
 
   useEffect(() => {
     (async () => {
+      console.log(account);
       await axios
-        .get("http://127.0.0.1:8080/board/create", {
+        .get("http://localhost:8080/board/create", {
           headers: {
             Authorization: account.token,
           },
         })
         .then(function (response) {
+          console.log(response);
           if (Object.keys(response.data).length !== 0) {
             setLolAccount(Object.keys(response.data));
             setLolPuuid(response.data);
+            console.log("lol:::", response.data);
           }
         })
         .catch(function (error) {
@@ -286,7 +289,7 @@ function BoardCreate({ setPopupCreate }) {
         });
       setIsloding(false);
     })();
-  }, [account.token]);
+  }, [account]);
 
   const {
     register,
@@ -304,7 +307,7 @@ function BoardCreate({ setPopupCreate }) {
     } else {
       data["myPositions"] = myLineCheck;
       data["otherPositions"] = otherLineCheck;
-      data["lolPuuid"] = lolPuuid[data.lolId];
+      data["lolPuuid"] = lolPuuid[data.lolId].puuid;
       console.log(data);
       await axios
         .post("http://localhost:8080/board/create", data, {
@@ -356,7 +359,9 @@ function BoardCreate({ setPopupCreate }) {
               {lolAccount !== "" ? (
                 <select {...register("lolId")}>
                   {lolAccount.map((v, i) => (
-                    <option key={i}>{v}</option>
+                    <option key={i} value={i}>
+                      {lolPuuid[i].name}
+                    </option>
                   ))}
                   {lolAccount.length < 5 ? (
                     <option onClick={addAccount}>+ 롤 아이디 추가하기</option>
