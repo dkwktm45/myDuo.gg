@@ -35,7 +35,6 @@ public class ChatMessageRepository {
 	public List<ChatMessage> findAllMessage(String id) {
 		List<ChatMessage> chatMessages = opsHashChatRoom.values(CHAT_MESSAGE)
 				.stream().filter(info -> info.getRoomId().equals(id)).collect(Collectors.toList());
-		//Collections.sort(chatMessages,Collections.reverseOrder());
 		return chatMessages;
 	}
 	public void deleteMessage(List<ChatMessage> chatMessageList){

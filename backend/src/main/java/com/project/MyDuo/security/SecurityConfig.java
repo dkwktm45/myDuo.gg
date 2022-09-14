@@ -43,7 +43,7 @@ public class SecurityConfig{
                 .antMatchers(AUTH_WHITELLIST).permitAll()
                 .anyRequest().authenticated()
 
-                .and().headers().frameOptions().disable()
+                .and().headers().frameOptions().sameOrigin()
 
                 //.and()
                 //.exceptionHandling()

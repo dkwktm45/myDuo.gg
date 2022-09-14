@@ -69,6 +69,8 @@ public class ChatService {
 		chatRoomRepository.updateChatRoom(chatRoom);
 	}
 
+	public long infoCount(String roomId) {return chatRoomRepository.getUserCount(roomId);}
+
 	public long plusCount(String roomId) {return chatRoomRepository.plusUserCount(roomId);}
 
 	public long minusCount(String roomId) {return chatRoomRepository.minusUserCount(roomId);}

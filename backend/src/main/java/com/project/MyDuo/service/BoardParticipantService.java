@@ -99,7 +99,7 @@ public class BoardParticipantService {
 							.message(board.getMember().getName() + "님이 다른회원과 매칭이 되었습니다. 다음기회에 도전해주세요!")
 							.roomId(participants.getRoomId())
 							.build(),
-					member);
+					member.getEmail());
 		}
 
 		participantsRepository.saveAll(boardParticipantsList);

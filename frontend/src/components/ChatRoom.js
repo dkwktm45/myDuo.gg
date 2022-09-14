@@ -251,7 +251,11 @@ function ChatRoom({ ...props }) {
         type: "TALK",
         roomId: props.chatRoom,
         message: data.msg,
-      })
+        sender: myNickName,
+      }),
+      {
+        Authorization: account.token,
+      }
     );
     data.msg = "";
   };

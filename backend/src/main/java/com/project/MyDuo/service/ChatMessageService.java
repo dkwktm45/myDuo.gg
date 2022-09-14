@@ -1,6 +1,5 @@
 package com.project.MyDuo.service;
 
-import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.redis.ChatMessage;
 import com.project.MyDuo.service.redis.ChatMessageRepository;
 import com.project.MyDuo.service.redis.ChatRoomRepository;
@@ -11,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,34 +34,30 @@ public class ChatMessageService {
 	}
 
 	public List<ChatMessage> findAllMessage(String roomId) {
-		return chatMessageRepository.findAllMessage(roomId);
+		List<ChatMessage> chatMessageList = chatMessageRepository.findAllMessage(roomId);
+		Collections.sort(chatMessageList);
+		return chatMessageList;
 	}
 
 	/**
 	 * 채팅방에 메시지 발송
+	 * 해당 채팅방은 메시지를 보낸 다음 채팅방에 구독되어 있지않는다면 알림을 보낸다.
 	 */
-	public void sendChatMessage(ChatMessage chatMessage, Member member) {
-		if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
-			chatMessage.setMessage("님이 방에 입장했습니다.");
-			chatMessage.setSender(chatMessage.getSender());
-		} else if (ChatMessage.MessageType.QUIT.equals(chatMessage.getType())) {
-			chatMessage.setMessage("님이 방에서 나갔습니다.");
-			chatMessage.setSender(chatMessage.getSender());
-		}else if (ChatMessage.MessageType.DUO.equals(chatMessage.getType())){
-
-		}
-		Long userCount =chatRoomRepository.getUserCount(chatMessage.getRoomId());
+	public void sendChatMessage(ChatMessage chatMessage, String email) {
+		chatMessage = ChatMessage.messageSetting(chatMessage);
+		Long userCount = chatRoomRepository.getUserCount(chatMessage.getRoomId());
 		Set<String> RoomUsers = chatRoomRepository.findRoomById(chatMessage.getRoomId()).getUserList();
 		try {
-			if (userCount.equals(1L) && RoomUsers.size() == 2){
+			if (userCount <= 1L && RoomUsers.size() == 2){
 				notificationService.chatType(RoomUsers.stream()
-								.filter(info -> !info.equals(member.getEmail()))
+								.filter(info -> !info.equals(email))
 								.collect(Collectors.toList()).get(0)
 						,chatMessage.getSender(),chatMessage.getRoomId(),DUO);
 			}
 		}catch (Exception e){
 			logger.error("Exception {}", e);
 		}
+
 		chatMessageRepository.createChatMessage(chatMessage);
 		redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
 	}

@@ -1,6 +1,5 @@
 package com.project.MyDuo.controller;
 
-import com.project.MyDuo.dto.BoardDto;
 import com.project.MyDuo.dto.BoardParticipantsDto;
 import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.redis.ChatRoom;

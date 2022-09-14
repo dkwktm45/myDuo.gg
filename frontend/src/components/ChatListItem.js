@@ -68,6 +68,7 @@ const DuoChatList = styled.div`
 
 function ChatListItem({ ...props }) {
   const account = useRecoilValue(LoginState);
+  const myNickName = window.localStorage.getItem("myNick");
   //var [ws, setWs] = useState(null);
   var ws = props.ws;
   var setWs = props.setWs;
@@ -119,6 +120,7 @@ function ChatListItem({ ...props }) {
             props.setChatRoom(roomId);
           },
           {
+            name : myNickName,
             Authorization: account.token,
           }
         );
