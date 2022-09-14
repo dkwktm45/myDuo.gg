@@ -33,7 +33,6 @@ public class MessageController {
 	@MessageMapping("/chat/message")
 	public void message(ChatMessage message, @AuthUser Member member) {
 		message.setSender(member.getName());
-		// Websocket에 발행된 메시지를 redis로 발행(publish)
 		chatMessageService.sendChatMessage(message,member);
 	}
 	/**
@@ -51,7 +50,7 @@ public class MessageController {
 
 	@PostMapping("/messages-all")
 	@Operation(summary = "findAllMessage", description = "채팅방 Id에 따른 메시지 불러오기")
-	public List<ChatMessage> messages(@RequestParam("roomId") String roomId) {
+	public List<ChatMessage> messages(@RequestParam("roomId") String roomId, @AuthUser Member member) {
 		return chatMessageService.findAllMessage(roomId);
 	}
 }

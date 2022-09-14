@@ -1,5 +1,6 @@
 package com.project.MyDuo.dao;
 
+import com.project.MyDuo.dto.BoardParticipantsDto;
 import com.project.MyDuo.entity.BoardParticipants;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,6 @@ public interface BoardParticipantsRepository extends JpaRepository<BoardParticip
 			"where p.board_id in (select b.board_id from board b "+
 			"where b.user_id = :user_id)" , nativeQuery = true)
 	List<BoardParticipants> findByBoard(@Param("user_id") Long userId);
+
+
 }

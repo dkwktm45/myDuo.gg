@@ -61,10 +61,8 @@ public class BoardParticipantService {
 		}
 	}
 
-	public List<BoardParticipantsDto> myChatRoom(Authentication authentication){
+	public List<BoardParticipantsDto> myChatRoom(Member member){
 		logger.info("myChatRoom start");
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Member member = ((CustomUser) userDetails).getMember();
 
 		List<BoardParticipantsDto> boardList = participantsRepository.findByBoard(member.getId())
 				.stream().map(BoardParticipantsDto::new)
@@ -74,16 +72,13 @@ public class BoardParticipantService {
 		return boardList;
 	}
 
-	public List<BoardParticipantsDto> otherChatRoom(Authentication authentication){
+	public List<BoardParticipantsDto> otherChatRoom(Member member){
 		logger.info("otherChatRoom start");
-
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Member member = ((CustomUser) userDetails).getMember();
 
 		List<BoardParticipantsDto> participantsList = participantsRepository.findByUserId(member.getId())
 				.get().stream().map(BoardParticipantsDto::new).collect(Collectors.toList());
 
-
+//		List<BoardParticipantsDto> participantsList = participantsRepository.findByMyoom(member.getId());
 		logger.info("otherChatRoom complete");
 		return participantsList;
 	}
@@ -95,7 +90,7 @@ public class BoardParticipantService {
 		List<BoardParticipants> boardParticipantsList = board.getBoardParticipantsList()
 				.stream().filter(info-> info.getParticipantUuid() !=participantUuid).collect(Collectors.toList());
 
-		boardParticipantsList.stream().forEach(info -> info.setBoard(null));
+		boardParticipantsList.stream().forEach(info -> info.toNoBoard());
 
 		for(BoardParticipants participants : boardParticipantsList){
 			chatMessageService.sendChatMessage(
