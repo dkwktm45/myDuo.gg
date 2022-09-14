@@ -105,11 +105,16 @@ const ChatList = styled.div`
 
 function Chat() {
   const [chatRoom, setChatRoom] = useState("");
+  const [chatting, setChatting] = useState([]);
+
   const account = useRecoilValue(LoginState);
 
   const [isDuoChat, setssDuoChat] = useState(true);
   const [myChatList, setMyChatList] = useState([]);
   const [otherChatList, setOtherChatList] = useState([]);
+
+  var [ws, setWs] = useState(null);
+
   const handleTabMenu = (e) => {
     setssDuoChat(!isDuoChat);
   };
@@ -170,6 +175,9 @@ function Chat() {
                         data={item}
                         chatRoom={chatRoom}
                         setChatRoom={setChatRoom}
+                        setChatting={setChatting}
+                        ws={ws}
+                        setWs={setWs}
                       />
                     );
                   })}
@@ -184,6 +192,9 @@ function Chat() {
                         data={item}
                         chatRoom={chatRoom}
                         setChatRoom={setChatRoom}
+                        setChatting={setChatting}
+                        ws={ws}
+                        setWs={setWs}
                       />
                     );
                   })}
@@ -198,6 +209,8 @@ function Chat() {
                     data={1}
                     chatRoom={chatRoom}
                     setChatRoom={setChatRoom}
+                    ws={ws}
+                    setWs={setWs}
                   />
                 </ChatList>
               </>
@@ -208,7 +221,13 @@ function Chat() {
           {chatRoom === "" ? (
             ""
           ) : (
-            <ChatRoom chatRoom={chatRoom} setChatRoom={setChatRoom} />
+            <ChatRoom
+              chatRoom={chatRoom}
+              setChatRoom={setChatRoom}
+              chatting={chatting}
+              setChatting={setChatting}
+              ws={ws}
+            />
           )}
         </Wrapper>
       </Container>

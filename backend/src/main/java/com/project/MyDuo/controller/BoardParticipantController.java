@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class BoardParticipantController {
 
 	@DeleteMapping("/delete")
 	@Operation(summary = "게시판 참여자", description = "방장이 해당 유저와 듀오를 원한다면 듀오 결성이 된다.")
-	public void deleteRoom(@RequestBody Map<String,Long> info, @AuthUser Member member){
+	public void deleteRoom(@RequestBody Map<String,Long> info, @ApiIgnore @AuthUser Member member){
 		participantService.deleteRoom(String.valueOf(info.get("boardUuid")),String.valueOf(info.get("participantUuid")),member);
 	}
 

@@ -26,6 +26,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,13 +45,13 @@ public class BoardController<UserService> {
 	private final Mapper mapper;
 
 	@GetMapping("/create") @ResponseBody
-	public List<LoLNameAndPuuidDto> getLoLAccountInfos(@AuthUser Member member) {
+	public List<LoLNameAndPuuidDto> getLoLAccountInfos(@ApiIgnore @AuthUser Member member) {
 		return loLAccountService.getSimpleLoLAccountInfos(member.getEmail());
 	}
 
 	@PostMapping("/create") @ResponseBody @Transactional
 	@Operation(summary = "게시판 저장", description = "userId를 포함한 데이터를 넘겨야 합니다.")
-	public String createBoard(@AuthUser Member member, @RequestBody BoardCreationDto boardCreationDto){
+	public String createBoard(@ApiIgnore @AuthUser Member member, @RequestBody BoardCreationDto boardCreationDto){
 		//user가 비활성화 된 경우 처리.
 		if(!member.getValid())
 			throw new userInvalidException("회원 계정에 이상이 있습니다.");

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class MessageController {
 	 * 그렇기에 룸에 입장을 한번만 하자!
 	 */
 	@MessageMapping("/chat/message")
-	public void message(ChatMessage message, @AuthUser Member member) {
+	public void message(ChatMessage message, @ApiIgnore @AuthUser Member member) {
 		message.setSender(member.getName());
 		chatMessageService.sendChatMessage(message,member);
 	}

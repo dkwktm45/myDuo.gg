@@ -54,6 +54,7 @@ function Profile() {
       .then(function (response) {
         console.log(response);
         logOut();
+        window.localStorage.removeItem("myNick");
         navigate("/login");
       })
       .catch(function (error) {
