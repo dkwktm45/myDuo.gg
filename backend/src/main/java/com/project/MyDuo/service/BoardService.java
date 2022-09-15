@@ -51,6 +51,9 @@ public class BoardService {
 		return boardRepository.findOldBoardBars(new Timestamp(timeStamp), pageable);
 	}
 
+	public List<BoardBarDto> getMyBoardBars(String email) {
+		return boardRepository.findMyBoardBars(email);
+	}
 	public BoardDetailBaseDto findBoardDetailBaseDto(String boardUUID) {
 		return boardRepository.findValidBoardDetailInfo(boardUUID);
 	}

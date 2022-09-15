@@ -1,5 +1,6 @@
 package com.project.MyDuo.dto;
 
+import com.project.MyDuo.dto.Board.BoardBarDto;
 import com.project.MyDuo.dto.Board.BoardCreationDto;
 import com.project.MyDuo.dto.LoL.Info.*;
 import com.project.MyDuo.dto.LoL.LoLAccountDto;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -142,5 +144,16 @@ public class Mapper {
                 pageableDto.getSort().equals("registrationTime,desc")
                         ? Sort.by("registrationTime").descending() : Sort.unsorted()
         );
+    }
+
+    @Transactional
+    public LoLAccountInfoDto userToLoLAccountInfoDto(Member user) {
+        Optional<LoLAccount> loLAccount = user.getLolAccounts()
+                .stream()
+                .filter(l -> l.getPuuid().equals(user.getLoLRepPuuid()))
+                .findAny();
+
+        return loLAccount.isEmpty() ?
+                null : toLoLAccountInfoDto(loLAccount.get());
     }
 }

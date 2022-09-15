@@ -1,6 +1,7 @@
 package com.project.MyDuo.service;
 
 import com.project.MyDuo.dao.LoLAccountRepository;
+import com.project.MyDuo.dto.LoL.Info.LoLAccountInfoDto;
 import com.project.MyDuo.dto.LoL.Info.LoLNameAndPuuidDto;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +27,4 @@ public class LoLAccountService {
     public List<LoLNameAndPuuidDto> getSimpleLoLAccountInfos(String email) {
         return repository.findValidLoLAccountInfos(email);
     }
-
 }

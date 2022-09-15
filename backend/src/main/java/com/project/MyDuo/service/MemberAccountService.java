@@ -1,8 +1,6 @@
 package com.project.MyDuo.service;
 
-import com.project.MyDuo.dto.JwtResponseDto;
-import com.project.MyDuo.dto.MemberJoinRequestDto;
-import com.project.MyDuo.dto.MemberLoginRequestDto;
+import com.project.MyDuo.dto.*;
 import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import com.project.MyDuo.jwt.JwtTokenUtil;
@@ -22,9 +20,12 @@ import static com.project.MyDuo.jwt.JwtExpiration.REISSUE_EXPIRATION_TIME;
 public class MemberAccountService {
 
     private final MemberRepositoryService memberRepositoryService;
+    private final BoardService boardService;
+    private final LoLAccountService loLAccountService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final RefreshTokenService refreshTokenService;
+    private final Mapper mapper;
 
     public String join(MemberJoinRequestDto requestDto) throws Exception {
 
@@ -105,7 +106,20 @@ public class MemberAccountService {
         user.addLoLAccount(account);
         account.changeUser(user);
     }
+    @Transactional
+    public MemberProfileDto profile(String email) {
+        Member member = memberRepositoryService.findMember(email);
 
+        return MemberProfileDto
+                .builder()
+                .userName(member.getName())
+                .userMemo(member.getMemo())
+                .loLAccountInfo(member.getLoLRepPuuid() == null ?
+                        null : mapper.toLoLAccountInfoDto(loLAccountService.findByPuuid(member.getLoLRepPuuid())))
+                .boardBars(boardService.getMyBoardBars(member.getEmail()))
+                .loLNameAndPuuids(loLAccountService.getSimpleLoLAccountInfos(email))
+                .build();
+    }
     /*작성자: 게드릉*/
     @Transactional
     public Member headerToEntity(String headers) {

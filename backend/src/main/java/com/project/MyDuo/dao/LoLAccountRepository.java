@@ -1,5 +1,6 @@
 package com.project.MyDuo.dao;
 
+import com.project.MyDuo.dto.LoL.Info.LoLAccountInfoDto;
 import com.project.MyDuo.dto.LoL.Info.LoLNameAndPuuidDto;
 import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,5 +36,4 @@ public interface LoLAccountRepository extends JpaRepository<LoLAccount, Long> {
             "INNER JOIN Member m " +
             "ON m.id = l.user.id AND m.email = :email AND l.valid = true")
     List<LoLNameAndPuuidDto> findValidLoLAccountInfos(@Param("email") String email);
-
 }

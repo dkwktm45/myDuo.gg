@@ -59,4 +59,13 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 			"INNER JOIN LoLAccount l " +
 			"ON b.lolPuuid = l.puuid AND b.registrationTime < :registrationTime")
 	Slice<BoardBarDto> findOldBoardBars(@Param("registrationTime") Timestamp timestamp, Pageable pageable);
+
+	@Query(value = "SELECT " +
+			"new com.project.MyDuo.dto.Board.BoardBarDto(b.closingStatus, l.name, l.tier, l.rank, b.myPositions, b.otherPositions, b.content, b.registrationTime, b.uuid) " +
+			"FROM Board b " +
+			"INNER JOIN Member m " +
+			"ON m.email = :email AND b.member.id = m.id " +
+			"INNER JOIN LoLAccount l " +
+			"ON b.lolPuuid = l.puuid")
+	List<BoardBarDto> findMyBoardBars(@Param("email") String email);
 }

@@ -14,7 +14,7 @@ public class DatasourceConfig {
 	 * username : root(보통 만드시면 root로 됩니다.)
 	 * password : 자신이 처음에 설정한 password 입력
 	 * **/
-	@Bean
+	/*@Bean
 	public DataSource mySqlDataSource()
 	{
 		DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
@@ -23,5 +23,5 @@ public class DatasourceConfig {
 		dataSourceBuilder.username("root");
 		dataSourceBuilder.password("dkwktm45");
 		return dataSourceBuilder.build();
-	}
+	}*/
 }
