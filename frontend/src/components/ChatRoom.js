@@ -2,6 +2,11 @@ import styled from "styled-components";
 import React, { useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { LoginState } from "atoms";
+import { useRecoilValue } from "recoil";
+import axios from "axios";
 
 const Wrapper = styled.div`
   width: 30vw;
@@ -184,7 +189,7 @@ const ChatBody = styled.div`
   }
 `;
 
-const ChatController = styled.div`
+const ChatController = styled.form`
   height: 100%;
   display: flex;
   justify-content: center;
@@ -210,12 +215,54 @@ const ChatController = styled.div`
     cursor: pointer;
   }
 `;
+
 function ChatRoom({ ...props }) {
   const scrollRef = useRef();
+  const account = useRecoilValue(LoginState);
+  const myNickName = window.localStorage.getItem("myNick");
+  const [chats, setChats] = useState([]);
+  var ws = props.ws;
 
   useEffect(() => {
+    //채팅창 시작 시 스크롤 맨 아래에서부터 시작
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  });
+
+    var params = new URLSearchParams();
+    params.append("roomId", props.chatRoom);
+    axios
+      .post("http://localhost:8080/messages-all", params, {
+        headers: {
+          Authorization: account.token,
+        },
+      })
+      .then((res) => {
+        console.log("메세지 내용", res.data);
+        console.log("메세지 보낸 사람", res.data[0].sender);
+        console.log("내 닉네임 = ", myNickName);
+        setChats(res.data);
+      });
+  }, [account, myNickName, props.chatRoom]);
+
+  const onValid = (data) => {
+    console.log(data.msg);
+    ws.send(
+      "/pub/chat/message",
+      JSON.stringify({
+        type: "TALK",
+        roomId: props.chatRoom,
+        message: data.msg,
+        sender: myNickName,
+      }),
+      {
+        Authorization: account.token,
+      }
+    );
+    data.msg = "";
+  };
+
+  const { register, handleSubmit } = useForm();
+
+  console.log(chats);
 
   return (
     <ChatWrapper>
@@ -240,65 +287,44 @@ function ChatRoom({ ...props }) {
         </div>
       </ChatHeader>
       <ChatBody ref={scrollRef}>
-        <div className="info">채팅방이 생성되었습니다.</div>
-        <div className="my">
-          <span>
-            <label>
-              안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요
-              안녕하세요 안녕하세요 안녕하세요 안녕하세요
-            </label>
-            <label>오후 3:00</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>
-              반갑습니다 반갑습니다 반갑습니다 반갑습니다 반갑습니다 반갑습니다
-              반갑습니다 반갑습니다 반갑습니다 반갑습니다
-            </label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="my">
-          <span>
-            <label>듀오 해요</label>
-            <label>오후 3:10</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>넵</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>Hi Hi Hi Hi Hi Hi</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>Hi Hi Hi Hi Hi Hi</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>Hi Hi Hi Hi Hi Hi</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>Hi Hi Hi Hi Hi Hi</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
+        {chats.map((msg) => {
+          if (msg.type === "ENTER") {
+            return (
+              <div className="info" key={msg.messageId}>
+                <span>
+                  <label>
+                    {msg.sender}
+                    {msg.message}
+                  </label>
+                </span>
+              </div>
+            );
+          } else {
+            if (myNickName === msg.sender) {
+              return (
+                <div className="my">
+                  <span>
+                    <label>{msg.message}</label>
+                    <label>오후 3:00</label>
+                  </span>
+                </div>
+              );
+            } else {
+              return (
+                <div className="other">
+                  <span>
+                    <label>{msg.message}</label>
+                    <label>오후 3:00</label>
+                  </span>
+                </div>
+              );
+            }
+          }
+        })}
       </ChatBody>
-      <ChatController>
-        <input type="text" />
-        <button>전송</button>
+      <ChatController onSubmit={handleSubmit(onValid)}>
+        <input type="text" {...register("msg")} />
+        <button type="submit">전송</button>
       </ChatController>
     </ChatWrapper>
   );

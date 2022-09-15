@@ -1,6 +1,5 @@
 package com.project.MyDuo.controller;
 
-import com.project.MyDuo.dto.BoardDto;
 import com.project.MyDuo.dto.BoardParticipantsDto;
 import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.redis.ChatRoom;
@@ -47,21 +46,22 @@ public class BoardParticipantController {
 
 	@Operation(summary = "myRoom", description = "내가 만든 게시물에 대한 채팅방 참여자")
 	@PostMapping(value = "/my-rooms")
-	public ResponseEntity<List<BoardParticipantsDto>> myRoom(Authentication authentication) {
+	public ResponseEntity<List<BoardParticipantsDto>> myRoom(@AuthUser Member member) {
 		logger.info("my-room 접근");
-		return ResponseEntity.ok(boardParticipantService.myChatRoom(authentication));
+		return ResponseEntity.ok(boardParticipantService.myChatRoom(member));
 	}
 
 	@Operation(summary = "otherRoom", description = "내가 게시물에 참여한 채팅방")
 	@PostMapping(value = "/other-rooms")
-	public ResponseEntity<List<BoardParticipantsDto>> otherRoom(Authentication authentication) {
+	public ResponseEntity<List<BoardParticipantsDto>> otherRoom(@AuthUser Member member) {
 		logger.info("other-room 접근");
-		return ResponseEntity.ok(boardParticipantService.otherChatRoom(authentication));
+		return ResponseEntity.ok(boardParticipantService.otherChatRoom(member));
 	}
 
 	@Operation(summary = "createRoom", description = "게시물에 대해 처음으로 채팅방 참가 할때")
 	@PostMapping("/room")
-	public Map<String, Object> createRoom(@RequestParam("boardUuid") String boardUuid
+	public Map<String, Object> createRoom(// 승률 , 티어
+			@RequestParam("boardUuid") String boardUuid
 			, Authentication authentication) throws Exception {
 		logger.info("채팅방 접근");
 		ChatRoom chatRoom = chatService.createDuoChat();

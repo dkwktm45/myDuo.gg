@@ -68,28 +68,62 @@ const DuoChatList = styled.div`
 
 function ChatListItem({ ...props }) {
   const account = useRecoilValue(LoginState);
+  const myNickName = window.localStorage.getItem("myNick");
+  //var [ws, setWs] = useState(null);
+  var ws = props.ws;
+  var setWs = props.setWs;
 
-  const handleChatRoom = () => {
-    //console.log("participantUuid", props.data.participantUuid);
-    //console.log("roomId", props.data.roomId);
+  const handleChatRoom = async () => {
+    if (ws === null) {
+      var chatSocket = new sockjs("http://localhost:8080/ws-stomp", null, {
+        headers: {
+          Authorization: account.token,
+        },
+      });
+      ws = Stomp.over(chatSocket);
+      setWs(ws);
+    }
+    if (props.chatRoom === "") {
+      props.setChatRoom(props.data.roomId);
+      connectChat(ws, props.data.roomId);
+    } else {
+      if (props.chatRoom !== props.data.roomId) {
+        disconnectChat(ws, props.chatRoom);
+        handleChatRoom();
+      } else {
+        disconnectChat(ws, props.chatRoom);
+        props.setChatRoom("");
+      }
+    }
+  };
 
-    var chatSocket = new sockjs("http://localhost:8080/ws-stomp", null, {
-      headers: {
-        Authorization: account.token,
+  const disconnectChat = (ws, roomId) => {
+    ws.disconnect(
+      () => {
+        console.log("connect 끊음");
+        setWs(null);
       },
-    });
-    const ws = Stomp.over(chatSocket);
+      { roomId: roomId }
+    );
+  };
 
+  const connectChat = (ws, roomId) => {
+    //ws.debug = function (str) {};
     ws.connect(
       { Authorization: account.token },
       function (frame) {
-        ws.subscribe("/sub/chat/room/" + props.data.roomId, function (message) {
-          var recv = JSON.parse(message.body);
-          console.log("연결 성공", recv);
-          props.setChatRoom(props.data.roomId);
-        } ,{ 
-            Authorization: account.token 
-          } );
+        ws.subscribe(
+          "/sub/chat/room/" + roomId,
+          function (message) {
+            var recv = JSON.parse(message.body);
+            console.log("연결 성공", recv);
+            props.setChatRoom(roomId);
+          },
+          {
+            name : myNickName,
+            Authorization: account.token,
+          }
+        );
       },
       function (error) {
         alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
@@ -97,7 +131,7 @@ function ChatListItem({ ...props }) {
           () => {
             console.log("connect 끊음");
           },
-          { roomId: props.data.roomId }
+          { roomId: roomId }
         );
         //location.href = "/chat-list";
         console.log("실패");
@@ -113,7 +147,7 @@ function ChatListItem({ ...props }) {
       <DuoChatList
         key={props.index}
         onClick={handleChatRoom}
-        className={props.data === props.chatRoom ? "selected" : ""}
+        className={props.data.roomId === props.chatRoom ? "selected" : ""}
       >
         <div>
           <img src={`../img/emblems/Emblem_Silver.png`} alt="lolLogo" />
