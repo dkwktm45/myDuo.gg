@@ -4,10 +4,10 @@ import { useResetRecoilState, useRecoilValue } from "recoil";
 import { LoginState } from "atoms";
 import { useNavigate } from "react-router-dom";
 import Alarm from "components/Alarm";
-import axios from "axios";
+import { logoutService } from "services/apiServices";
 
 const Container = styled.div`
-  width: 50vw;
+  width: 100vw;
   height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
@@ -44,15 +44,8 @@ function Profile() {
   const account = useRecoilValue(LoginState);
   const logOut = useResetRecoilState(LoginState);
   const onClickLogOut = async () => {
-    console.log(account.token);
-    await axios
-      .get("http://localhost:8080/account/logout", {
-        headers: {
-          Authorization: account.token,
-        },
-      })
+    logoutService(account.token)
       .then(function (response) {
-        console.log(response);
         logOut();
         window.localStorage.removeItem("myNick");
         navigate("/login");

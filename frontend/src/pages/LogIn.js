@@ -192,7 +192,7 @@ function LogIn() {
         });
         console.log(`Bearer ${response.data.accessToken}`);
 
-        const nick = axios
+        axios
           .post("http://localhost:8080/account/test", null, {
             headers: {
               Authorization: `Bearer ${response.data.accessToken}`,
@@ -200,7 +200,6 @@ function LogIn() {
           })
           .then((response) => {
             window.localStorage.setItem("myNick", response.data);
-            console.log(response.data);
           });
 
         navigate("/");
