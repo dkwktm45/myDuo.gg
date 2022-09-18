@@ -20,26 +20,34 @@ export const accountService = async (type, data) => {
   }
 };
 
-export const boardCreateOpenService = async (token) => {
-  console.log("게시물생성", token);
-  const response = await axios.get("http://127.0.0.1:8080/board/create", {
+export const logoutService = async (data) => {
+  const response = await axios.get(BASE_URL + "/account/logout", {
     headers: {
-      Authorization: token,
+      Authorization: data,
     },
   });
   return response;
 };
 
-export const appendLolAccount = async () => {
-  //url : /lol/add
-  // header : authorization
-  // body : summonerName
+export const expiredToken = async () => {
+  window.localStorage.removeItem("myNick");
   return;
 };
 
-export const removeLolAccount = async () => {
-  // url : /lol/remove
-  // header : authorization
-  // body : encryptedPUUID
-  return;
-};
+export function loadBoards(params) {
+  var res = axios
+    .get("http://127.0.0.1:8080/board/list", {
+      headers: {
+        Authorization: params.queryKey[1].token,
+        "Access-Control-Allow-Origin": "http://localhost:3000",
+      },
+      params: {
+        page: 0,
+        registrationTime: "4124440596000000",
+        size: null,
+        sort: "registrationTime,desc",
+      },
+    })
+    .then((response) => response.data.content);
+  return res;
+}
