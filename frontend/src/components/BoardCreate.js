@@ -4,7 +4,6 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import LinePositions from "components/LinePositions";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { boardCreateOpenService } from "services/apiServices";
 import { useRecoilValue } from "recoil";
 import { LoginState } from "atoms";
 import axios from "axios";
@@ -258,38 +257,13 @@ const Loading = styled.div`
   justify-content: center;
 `;
 
-function BoardCreate({ setPopupCreate }) {
+function BoardCreate({ setPopupCreate, setRefresh }) {
   const [myLineCheck, setMyLineCheck] = useState([]);
   const [otherLineCheck, setOtherLineCheck] = useState([]);
   const [mic, setMic] = useState(false);
   const account = useRecoilValue(LoginState);
   const [isLoding, setIsloding] = useState(false);
-  const [lolAccount, setLolAccount] = useState("");
-  const [lolPuuid, setLolPuuid] = useState();
-
-  useEffect(() => {
-    (async () => {
-      console.log(account);
-      await axios
-        .get("http://localhost:8080/board/create", {
-          headers: {
-            Authorization: account.token,
-          },
-        })
-        .then(function (response) {
-          console.log(response);
-          if (Object.keys(response.data).length !== 0) {
-            setLolAccount(Object.keys(response.data));
-            setLolPuuid(response.data);
-            console.log("lol:::", response.data);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      setIsloding(false);
-    })();
-  }, [account]);
+  const [lolAccount, setLolAccount] = useState([]);
 
   const {
     register,
@@ -298,28 +272,44 @@ function BoardCreate({ setPopupCreate }) {
     setError,
   } = useForm();
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/board/create", {
+        headers: {
+          Authorization: account.token,
+        },
+      })
+      .then(function (response) {
+        setLolAccount(response.data);
+        setIsloding(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [account]);
+
   const onValid = async (data) => {
     if (myLineCheck.length !== 2 || otherLineCheck.length !== 2) {
-      console.log("ERROR");
       setError("line", {
         message: "각 포지션 2가지 선택은 필수입니다.",
       });
     } else {
       data["myPositions"] = myLineCheck;
       data["otherPositions"] = otherLineCheck;
-      data["lolPuuid"] = lolPuuid[data.lolId].puuid;
-      console.log(data);
+      data["lolPuuid"] = data.lolId;
       await axios
         .post("http://localhost:8080/board/create", data, {
           headers: {
             Authorization: account.token,
           },
         })
-        .then(function (response) {
-          console.log(response);
+        .then((response) => {
           console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
         });
-
+      setRefresh(false);
       overlayClose();
     }
   };
@@ -328,16 +318,8 @@ function BoardCreate({ setPopupCreate }) {
     setPopupCreate(false);
   };
 
-  const addAccount = async () => {
-    await axios
-      .get("http://localhost:8080/lol/add", {
-        headers: {
-          Authorization: account.token,
-        },
-      })
-      .then(function (response) {
-        console.log(response.data);
-      });
+  const addAccount = () => {
+    //유저 등록 페이지로 이동
   };
 
   return (
@@ -356,22 +338,18 @@ function BoardCreate({ setPopupCreate }) {
           <>
             <BoardCreateId>
               <span>롤 아이디 선택하기</span>
-              {lolAccount !== "" ? (
-                <select {...register("lolId")}>
-                  {lolAccount.map((v, i) => (
-                    <option key={i} value={i}>
-                      {lolPuuid[i].name}
-                    </option>
-                  ))}
-                  {lolAccount.length < 5 ? (
-                    <option onClick={addAccount}>+ 롤 아이디 추가하기</option>
-                  ) : (
-                    ""
-                  )}
-                </select>
-              ) : (
-                <label {...register("lolId")}>loading ...</label>
-              )}
+              <select {...register("lolId")}>
+                {lolAccount.map((v) => (
+                  <option key={v.puuid} value={v.puuid}>
+                    {v.name}
+                  </option>
+                ))}
+                {lolAccount.length < 5 ? (
+                  <option onClick={addAccount}>+ 롤 아이디 등록하기</option>
+                ) : (
+                  ""
+                )}
+              </select>
             </BoardCreateId>
             <GridContainer>
               <BoardCreateMyPosition>
