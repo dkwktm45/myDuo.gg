@@ -9,6 +9,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { useState } from "react";
+import axios from "axios";
+import { LoginState } from "atoms";
+import { useRecoilValue } from "recoil";
 
 const Overlay = styled.div`
   position: fixed;
@@ -24,7 +27,7 @@ const Overlay = styled.div`
 
 const PostDetail = styled.div`
   font-family: "Roboto", sans-serif;
-  position: absolute;
+  position: fixed;
   width: 480px;
   height: 620px;
   top: 0vh;
@@ -40,6 +43,7 @@ const PostDetail = styled.div`
   border: 2px solid ${(props) => props.theme.lolTextColor};
   background-color: ${(props) => props.theme.lolBgColorNormal};
   z-index: 9;
+  margin-top: 100px;
 `;
 
 const PostDetailHeader = styled.div`
@@ -354,7 +358,7 @@ const PostDetailButtons = styled.div`
   }
 `;
 
-function DetailBoard({ setPopupBoard, data }) {
+function DetailBoard({ ...props }) {
   const lane = ["TOP", "JUNGLE", "MID", "BOT", "SUPPORT"];
   const championNameToKorean = {
     Garen: "가렌",
@@ -506,28 +510,63 @@ function DetailBoard({ setPopupBoard, data }) {
     Heimerdinger: "하이머딩거",
     Hecarim: "헤카림",
   };
+  const account = useRecoilValue(LoginState);
   const [boardUserData, setBoardUserData] = useState();
   const [loading, setLoading] = useState(true);
-  const [refresh, setRefresh] = useState(0);
+  const [isMine, setIsMine] = useState(false);
+  const [, setRefresh] = useState(0);
   const overlayClose = () => {
     setLoading(true);
-    setPopupBoard("");
+    props.setPopupBoard("");
   };
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8080/board/detail/" + props.data.boardUuid, {
+        headers: {
+          Authorization: account.token,
+        },
+      })
+      .then(function (response) {
+        setBoardUserData(response.data);
+        setLoading(false);
+        setRefresh(1);
+      });
+  }, [account, props.data.boardUuid]);
 
   useEffect(() => {
-    (async () => {
-      const response = await fetch("http://localhost:8000/user");
-      const json = await response.json();
-      const userData = json.filter((v) => v.name === data.boardName)[0];
-      setBoardUserData(userData);
-      setLoading(false);
-      setRefresh(1);
-    })();
-  }, [data, refresh]);
+    axios
+      .get("http://localhost:8080/board/create", {
+        headers: {
+          Authorization: account.token,
+        },
+      })
+      .then(function (response) {
+        setIsMine(response.data.map((v) => v.name).includes(props.popupUser));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [account, props.popupUser]);
 
   const refreshBoard = () => {
     setRefresh(0);
-    console.log("전적 갱신", data);
+    console.log("전적 갱신", props.data);
+  };
+
+  const participate = () => {
+    axios
+      .post("http://127.0.0.1:8080/participants/room", null, {
+        headers: {
+          Authorization: account.token,
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+        },
+        params: {
+          boardUuid: props.data.boardUuid,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      });
   };
 
   return (
@@ -543,7 +582,7 @@ function DetailBoard({ setPopupBoard, data }) {
                 <span>
                   <FontAwesomeIcon icon={faCircleUser} />
                 </span>
-                <span>{boardUserData.name}</span>
+                <span>{boardUserData.loLAccountInfoDto.name}</span>
               </div>
               <span onClick={overlayClose}>
                 <FontAwesomeIcon icon={faXmark} />
@@ -552,27 +591,26 @@ function DetailBoard({ setPopupBoard, data }) {
             <PostDetailUserInfo>
               <div>
                 <img
-                  src={`../img/emblems/Emblem_${boardUserData.tier.replace(
-                    /\b[a-z]/g,
-                    (char) => char.toUpperCase()
-                  )}.png`}
+                  src={`../img/emblems/Emblem_${boardUserData.loLAccountInfoDto.tier}.png`}
                   alt="lolLogo"
                 />
               </div>
               <div>
-                <label>{boardUserData.name}</label>
+                <label>{boardUserData.loLAccountInfoDto.name}</label>
                 <div>
-                  <label>{`${boardUserData.tier} ${boardUserData.rank}`}</label>
-                  <label>{`${boardUserData.leaguePoints}LP`}</label>
+                  <label>{`${boardUserData.loLAccountInfoDto.tier} ${boardUserData.loLAccountInfoDto.rank}`}</label>
+                  <label>{`${boardUserData.loLAccountInfoDto.leaguePoints}LP`}</label>
                 </div>
               </div>
               <div>
-                <label>{`${boardUserData.wins}승 ${boardUserData.losses}패`}</label>
-                <label>{`승률 ${boardUserData.winningRate.toFixed(1)}%`}</label>
+                <label>{`${boardUserData.loLAccountInfoDto.wins}승 ${boardUserData.loLAccountInfoDto.losses}패`}</label>
+                <label>{`승률 ${boardUserData.loLAccountInfoDto.winningRate.toFixed(
+                  1
+                )}%`}</label>
               </div>
               <div>
                 <span>
-                  {data.boardMicYn ? (
+                  {boardUserData.micEnabled ? (
                     <FontAwesomeIcon icon={faMicrophone} />
                   ) : (
                     <FontAwesomeIcon icon={faMicrophoneSlash} />
@@ -584,7 +622,7 @@ function DetailBoard({ setPopupBoard, data }) {
                 <span>
                   <FontAwesomeIcon icon={faHeart} />
                 </span>
-                <span>18</span>
+                <span>{boardUserData.userHeart}</span>
               </div>
             </PostDetailUserInfo>
             <PostDetailLineInfo>
@@ -594,24 +632,28 @@ function DetailBoard({ setPopupBoard, data }) {
                 <div>
                   <img
                     src={`../img/positions/Position_Gold-${
-                      lane[boardUserData.laneInfo[0]]
+                      lane[boardUserData.loLAccountInfoDto.laneInfo[0]]
                     }.png`}
                     alt=""
                   />
-                  <label>{lane[boardUserData.laneInfo[0]]}</label>
+                  <label>
+                    {lane[boardUserData.loLAccountInfoDto.laneInfo[0]]}
+                  </label>
                 </div>
                 <div>
                   <img
                     src={`../img/positions/Position_Gold-${
-                      lane[boardUserData.laneInfo[1]]
+                      lane[boardUserData.loLAccountInfoDto.laneInfo[1]]
                     }.png`}
                     alt=""
                   />
-                  <label>{lane[boardUserData.laneInfo[1]]}</label>
+                  <label>
+                    {lane[boardUserData.loLAccountInfoDto.laneInfo[1]]}
+                  </label>
                 </div>
               </div>
               <div>
-                {boardUserData.championInfo.map((champ) => {
+                {boardUserData.loLAccountInfoDto.championInfo.map((champ) => {
                   return (
                     <label key={champ.championName}>
                       <div>
@@ -650,7 +692,7 @@ function DetailBoard({ setPopupBoard, data }) {
               <div>최근 경기 결과</div>
               <div>
                 <div>
-                  {boardUserData.resultRecentGameDto.result
+                  {boardUserData.loLAccountInfoDto.resultRecentGameDto.result
                     .split("")
                     .map((result, i) => (
                       <span key={i} className={result === "L" ? "lose" : ""}>
@@ -663,11 +705,16 @@ function DetailBoard({ setPopupBoard, data }) {
             <PostDetailMemo>
               <div>메모</div>
               <div>
-                <p>{data.boardContent}</p>
+                <p>{boardUserData.boardContent}</p>
               </div>
             </PostDetailMemo>
             <PostDetailButtons>
-              <button>참가 신청</button>
+              {isMine ? (
+                <button disabled>참가 신청</button>
+              ) : (
+                <button onClick={participate}>참가 신청</button>
+              )}
+
               <button onClick={refreshBoard}>전적 갱신하기</button>
             </PostDetailButtons>
           </>
