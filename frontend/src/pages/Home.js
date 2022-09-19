@@ -117,6 +117,10 @@ function Home() {
       });
   };
 
+  console.log(lineFilter, tierFilter);
+  try {
+    console.log([...data, ...moreData]);
+  } catch {}
   return (
     <>
       <NavBar />
@@ -129,39 +133,23 @@ function Home() {
               <LoadingMsg>Loading...</LoadingMsg>
             ) : (
               <Boards>
-                {data.map((data, i) => {
-                  if (
-                    (lineFilter === "ALL" ||
-                      data.myPositions.includes("ALL") ||
-                      data.myPositions.includes(lineFilter)) &&
-                    (tierFilter === "ALL" || data.boardUserTier === tierFilter)
-                  ) {
-                    return (
-                      <Board
-                        key={data.boardUuid}
-                        postId={data.boardUuid}
-                        data={data}
-                        setPopupBoard={setPopupBoard}
-                        setPopupUser={setPopupUser}
-                      />
-                    );
-                  } else {
-                    return "";
-                  }
-                })}
-
-                {moreData.length !== 0
-                  ? moreData.map((v, j) => {
-                      return (
-                        <Board
-                          key={v.boardUuid}
-                          postId={v.boardUuid}
-                          data={v}
-                          setPopupBoard={setPopupBoard}
-                        />
-                      );
-                    })
-                  : ""}
+                {[...data, ...moreData]
+                  .filter(
+                    (v) =>
+                      (lineFilter === 0 ||
+                        v.myPositions.includes(0) ||
+                        v.myPositions.includes(lineFilter)) &&
+                      (tierFilter === "ALL" || tierFilter === v.tier)
+                  )
+                  .map((v) => (
+                    <Board
+                      key={v.boardUuid}
+                      postId={v.boardUuid}
+                      data={v}
+                      setPopupBoard={setPopupBoard}
+                      setPopupUser={setPopupUser}
+                    />
+                  ))}
               </Boards>
             )}
             <MoreButton type="button" onClick={moreBoards}>
@@ -174,7 +162,9 @@ function Home() {
       <Alarm />
       {popupBoard !== "" ? (
         <BoardDetail
-          data={data.filter((data) => data.boardUuid === popupBoard)[0]}
+          data={
+            [...data, ...moreData].filter((v) => v.boardUuid === popupBoard)[0]
+          }
           setPopupBoard={setPopupBoard}
           popupUser={popupUser}
         />
