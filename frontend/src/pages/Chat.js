@@ -104,14 +104,12 @@ const ChatList = styled.div`
 `;
 
 function Chat() {
-  const [chatRoom, setChatRoom] = useState("");
-  const [chatting, setChatting] = useState([]);
-
   const account = useRecoilValue(LoginState);
-
+  const [room, setRoom] = useState(null);
   const [isDuoChat, setssDuoChat] = useState(true);
   const [myChatList, setMyChatList] = useState([]);
   const [otherChatList, setOtherChatList] = useState([]);
+  const [chats, setChats] = useState([]);
 
   var [ws, setWs] = useState(null);
 
@@ -129,6 +127,7 @@ function Chat() {
         })
         .then(function (response) {
           setMyChatList(response.data);
+          console.log(response.data);
         });
 
       await axios
@@ -170,14 +169,14 @@ function Chat() {
                   {myChatList.map((item, index) => {
                     return (
                       <ChatListItem
-                        type={"duo-applicant"}
                         key={index}
+                        type={"duo-applicant"}
                         data={item}
-                        chatRoom={chatRoom}
-                        setChatRoom={setChatRoom}
-                        setChatting={setChatting}
                         ws={ws}
                         setWs={setWs}
+                        setChats={setChats}
+                        setRoom={setRoom}
+                        room={room}
                       />
                     );
                   })}
@@ -187,14 +186,14 @@ function Chat() {
                   {otherChatList.map((item, index) => {
                     return (
                       <ChatListItem
-                        type={"duo-apply"}
                         key={index}
+                        type={"duo-apply"}
                         data={item}
-                        chatRoom={chatRoom}
-                        setChatRoom={setChatRoom}
-                        setChatting={setChatting}
                         ws={ws}
                         setWs={setWs}
+                        setChats={setChats}
+                        setRoom={setRoom}
+                        room={room}
                       />
                     );
                   })}
@@ -207,10 +206,11 @@ function Chat() {
                     type={"friend"}
                     key={1}
                     data={1}
-                    chatRoom={chatRoom}
-                    setChatRoom={setChatRoom}
                     ws={ws}
                     setWs={setWs}
+                    setChats={setChats}
+                    setRoom={setRoom}
+                    room={room}
                   />
                 </ChatList>
               </>
@@ -218,16 +218,10 @@ function Chat() {
           </TabContents>
         </Wrapper>
         <Wrapper>
-          {chatRoom === "" ? (
+          {room === null ? (
             ""
           ) : (
-            <ChatRoom
-              chatRoom={chatRoom}
-              setChatRoom={setChatRoom}
-              chatting={chatting}
-              setChatting={setChatting}
-              ws={ws}
-            />
+            <ChatRoom chats={chats} ws={ws} room={room} isDuoChat={isDuoChat} />
           )}
         </Wrapper>
       </Container>

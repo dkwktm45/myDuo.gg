@@ -2,11 +2,9 @@ import styled from "styled-components";
 import React, { useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { LoginState } from "atoms";
 import { useRecoilValue } from "recoil";
-import axios from "axios";
 
 const Wrapper = styled.div`
   width: 30vw;
@@ -59,7 +57,7 @@ const ChatHeader = styled.div`
       }
     }
     &:nth-child(3) {
-      background-color: yellowgreen;
+      background-color: transparent;
     }
     &:nth-child(4) {
       div {
@@ -101,9 +99,7 @@ const ChatBody = styled.div`
   overflow: auto;
   overflow-x: hidden;
   align-items: center;
-  /*
-  * 스크롤바 디자인
-  */
+
   &::-webkit-scrollbar {
     width: 10px;
   }
@@ -220,36 +216,20 @@ function ChatRoom({ ...props }) {
   const scrollRef = useRef();
   const account = useRecoilValue(LoginState);
   const myNickName = window.localStorage.getItem("myNick");
-  const [chats, setChats] = useState([]);
+  const { register, handleSubmit, reset } = useForm();
   var ws = props.ws;
 
   useEffect(() => {
     //채팅창 시작 시 스크롤 맨 아래에서부터 시작
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-
-    var params = new URLSearchParams();
-    params.append("roomId", props.chatRoom);
-    axios
-      .post("http://localhost:8080/messages-all", params, {
-        headers: {
-          Authorization: account.token,
-        },
-      })
-      .then((res) => {
-        console.log("메세지 내용", res.data);
-        console.log("메세지 보낸 사람", res.data[0].sender);
-        console.log("내 닉네임 = ", myNickName);
-        setChats(res.data);
-      });
-  }, [account, myNickName, props.chatRoom]);
+  }, [props.chats]);
 
   const onValid = (data) => {
-    console.log(data.msg);
     ws.send(
       "/pub/chat/message",
       JSON.stringify({
         type: "TALK",
-        roomId: props.chatRoom,
+        roomId: props.room.roomId,
         message: data.msg,
         sender: myNickName,
       }),
@@ -257,13 +237,17 @@ function ChatRoom({ ...props }) {
         Authorization: account.token,
       }
     );
-    data.msg = "";
+    reset();
   };
 
-  const { register, handleSubmit } = useForm();
-
-  console.log(chats);
-
+  const toAMPM = (date) => {
+    return new Date(date).toLocaleString("ko-KR", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+  };
+  console.log(props.room.boardName);
   return (
     <ChatWrapper>
       <ChatHeader>
@@ -271,23 +255,32 @@ function ChatRoom({ ...props }) {
           <img src={`../img/emblems/Emblem_Silver.png`} alt="lolLogo" />
         </div>
         <div>
-          <span>{props.chatRoom}</span>
+          <span>{props.room.userName}</span>
           <span>유저의 롤 아이디</span>
         </div>
-        <div></div>
         <div>
-          <div>듀오 요청</div>
-          <div>
-            <button>수락</button>
-            <button>거절</button>
-          </div>
+          <button>친구 신청하기</button>
         </div>
+        <div>
+          {myNickName === props.room.boardName ? (
+            <>
+              <div>듀오 요청</div>
+              <div>
+                <button>수락</button>
+                <button>거절</button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+
         <div>
           <FontAwesomeIcon icon={faRightFromBracket} />
         </div>
       </ChatHeader>
       <ChatBody ref={scrollRef}>
-        {chats.map((msg) => {
+        {props.chats.map((msg) => {
           if (msg.type === "ENTER") {
             return (
               <div className="info" key={msg.messageId}>
@@ -302,19 +295,19 @@ function ChatRoom({ ...props }) {
           } else {
             if (myNickName === msg.sender) {
               return (
-                <div className="my">
+                <div className="my" key={msg.messageId}>
                   <span>
                     <label>{msg.message}</label>
-                    <label>오후 3:00</label>
+                    <label>{toAMPM(new Date(msg.createdAt))}</label>
                   </span>
                 </div>
               );
             } else {
               return (
-                <div className="other">
+                <div className="other" key={msg.messageId}>
                   <span>
                     <label>{msg.message}</label>
-                    <label>오후 3:00</label>
+                    <label>{toAMPM(new Date(msg.createdAt))}</label>
                   </span>
                 </div>
               );
@@ -323,7 +316,7 @@ function ChatRoom({ ...props }) {
         })}
       </ChatBody>
       <ChatController onSubmit={handleSubmit(onValid)}>
-        <input type="text" {...register("msg")} />
+        <input type="text" {...register("msg")} autoComplete="off" />
         <button type="submit">전송</button>
       </ChatController>
     </ChatWrapper>

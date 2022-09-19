@@ -3,7 +3,6 @@ import Stomp from "webstomp-client";
 import sockjs from "sockjs-client";
 import { LoginState } from "atoms";
 import { useRecoilValue } from "recoil";
-import { useState } from "react";
 import axios from "axios";
 
 const DuoChatList = styled.div`
@@ -69,13 +68,13 @@ const DuoChatList = styled.div`
 function ChatListItem({ ...props }) {
   const account = useRecoilValue(LoginState);
   const myNickName = window.localStorage.getItem("myNick");
-  //var [ws, setWs] = useState(null);
   var ws = props.ws;
   var setWs = props.setWs;
+  var chatSocket = null;
 
-  const handleChatRoom = async () => {
+  const handleChatRoom = () => {
     if (ws === null) {
-      var chatSocket = new sockjs("http://localhost:8080/ws-stomp", null, {
+      chatSocket = new sockjs("http://localhost:8080/ws-stomp", null, {
         headers: {
           Authorization: account.token,
         },
@@ -83,16 +82,18 @@ function ChatListItem({ ...props }) {
       ws = Stomp.over(chatSocket);
       setWs(ws);
     }
-    if (props.chatRoom === "") {
-      props.setChatRoom(props.data.roomId);
+    if (props.room === null) {
+      props.setRoom(props.data);
       connectChat(ws, props.data.roomId);
     } else {
-      if (props.chatRoom !== props.data.roomId) {
-        disconnectChat(ws, props.chatRoom);
-        handleChatRoom();
+      if (props.room.roomId !== props.data.roomId) {
+        disconnectChat(ws, props.room.roomId);
+
+        props.setRoom(null);
       } else {
-        disconnectChat(ws, props.chatRoom);
-        props.setChatRoom("");
+        disconnectChat(ws, props.room.roomId);
+
+        props.setRoom(null);
       }
     }
   };
@@ -100,46 +101,49 @@ function ChatListItem({ ...props }) {
   const disconnectChat = (ws, roomId) => {
     ws.disconnect(
       () => {
-        console.log("connect 끊음");
+        console.log("connect 종료");
         setWs(null);
       },
       { roomId: roomId }
     );
   };
 
+  const refreshChat = (roomId) => {
+    var params = new URLSearchParams();
+    params.append("roomId", roomId);
+    axios
+      .post("http://localhost:8080/messages-all", params, {
+        headers: {
+          Authorization: account.token,
+        },
+      })
+      .then((res) => {
+        props.setChats(res.data);
+      });
+  };
+
   const connectChat = (ws, roomId) => {
-    //ws.debug = function (str) {};
+    ws.debug = function (str) {}; //ws 로그 해제
     ws.connect(
       { Authorization: account.token },
       function (frame) {
+        refreshChat(roomId);
         ws.subscribe(
           "/sub/chat/room/" + roomId,
-          function (message) {
-            var recv = JSON.parse(message.body);
-            console.log("연결 성공", recv);
-            props.setChatRoom(roomId);
+          function () {
+            refreshChat(roomId);
           },
           {
-            name : myNickName,
+            name: myNickName,
             Authorization: account.token,
           }
         );
       },
       function (error) {
-        alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
-        ws.disconnect(
-          () => {
-            console.log("connect 끊음");
-          },
-          { roomId: roomId }
-        );
-        //location.href = "/chat-list";
-        console.log("실패");
+        console.log("연결 실패");
+        disconnectChat(ws, roomId);
       }
     );
-
-    console.log(chatSocket);
-    console.log(ws);
   };
 
   if (props.type === "duo-applicant") {
@@ -147,7 +151,7 @@ function ChatListItem({ ...props }) {
       <DuoChatList
         key={props.index}
         onClick={handleChatRoom}
-        className={props.data.roomId === props.chatRoom ? "selected" : ""}
+        className={props.data.roomId === props.room?.roomId ? "selected" : ""}
       >
         <div>
           <img src={`../img/emblems/Emblem_Silver.png`} alt="lolLogo" />
@@ -167,7 +171,7 @@ function ChatListItem({ ...props }) {
       <DuoChatList
         key={props.index}
         onClick={handleChatRoom}
-        className={props.data === props.chatRoom ? "selected" : ""}
+        className={props.data === props.room?.roomId ? "selected" : ""}
       >
         <div>
           <img src={`../img/emblems/Emblem_Silver.png`} alt="lolLogo" />
