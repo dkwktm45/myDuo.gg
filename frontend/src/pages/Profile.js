@@ -5,6 +5,7 @@ import { LoginState } from "atoms";
 import { useNavigate } from "react-router-dom";
 import Alarm from "components/Alarm";
 import { logoutService } from "services/apiServices";
+import Footer from "components/Footer";
 
 const Container = styled.div`
   width: 100vw;
@@ -68,6 +69,7 @@ function Profile() {
           </Header>
           <TestButton onClick={onClickLogOut}>로그아웃</TestButton>
         </Wrapper>
+        <Footer />
       </Container>
       <Alarm />
     </>
