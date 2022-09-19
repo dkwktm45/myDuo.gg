@@ -515,10 +515,7 @@ function DetailBoard({ ...props }) {
   const [loading, setLoading] = useState(true);
   const [isMine, setIsMine] = useState(false);
   const [, setRefresh] = useState(0);
-  const overlayClose = () => {
-    setLoading(true);
-    props.setPopupBoard("");
-  };
+
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8080/board/detail/" + props.data.boardUuid, {
@@ -530,43 +527,35 @@ function DetailBoard({ ...props }) {
         setBoardUserData(response.data);
         setLoading(false);
         setRefresh(1);
+        if (window.localStorage.getItem("myNick") === response.data.userName) {
+          setIsMine(true);
+        }
       });
   }, [account, props.data.boardUuid]);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/board/create", {
-        headers: {
-          Authorization: account.token,
-        },
-      })
-      .then(function (response) {
-        setIsMine(response.data.map((v) => v.name).includes(props.popupUser));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, [account, props.popupUser]);
-
-  const refreshBoard = () => {
-    setRefresh(0);
-    console.log("전적 갱신", props.data);
-  };
 
   const participate = () => {
     axios
       .post("http://127.0.0.1:8080/participants/room", null, {
         headers: {
           Authorization: account.token,
-          "Access-Control-Allow-Origin": "http://localhost:3000",
         },
         params: {
           boardUuid: props.data.boardUuid,
         },
       })
       .then((response) => {
-        console.log(response);
+        console.log("participate", response);
       });
+  };
+
+  const refreshBoard = () => {
+    setRefresh(0);
+    console.log("전적 갱신", props.data);
+  };
+
+  const overlayClose = () => {
+    setLoading(true);
+    props.setPopupBoard("");
   };
 
   return (
@@ -582,7 +571,7 @@ function DetailBoard({ ...props }) {
                 <span>
                   <FontAwesomeIcon icon={faCircleUser} />
                 </span>
-                <span>{boardUserData.loLAccountInfoDto.name}</span>
+                <span>{boardUserData.userName}</span>
               </div>
               <span onClick={overlayClose}>
                 <FontAwesomeIcon icon={faXmark} />
@@ -613,7 +602,7 @@ function DetailBoard({ ...props }) {
                   {boardUserData.micEnabled ? (
                     <FontAwesomeIcon icon={faMicrophone} />
                   ) : (
-                    <FontAwesomeIcon icon={faMicrophoneSlash} />
+                    <FontAwesomeIcon icon={faMicrophoneSlash} color="#d82e34" />
                   )}
                 </span>
                 <span>마이크</span>
