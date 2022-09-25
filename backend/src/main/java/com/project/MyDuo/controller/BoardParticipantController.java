@@ -32,8 +32,8 @@ public class BoardParticipantController {
 
 	@DeleteMapping("/delete")
 	@Operation(summary = "게시판 참여자", description = "방장이 해당 유저와 듀오를 원한다면 듀오 결성이 된다.")
-	public void deleteRoom(@RequestBody Map<String,Long> info, @ApiIgnore @AuthUser Member member){
-		participantService.deleteRoom(String.valueOf(info.get("boardUuid")),String.valueOf(info.get("participantUuid")),member);
+	public void deleteRoom(@RequestBody Map<String,String> info, @ApiIgnore @AuthUser Member member){
+		participantService.deleteRoom(info.get("boardUuid"),info.get("participantUuid"),member);
 	}
 
 	@PostMapping("/one")
@@ -46,14 +46,14 @@ public class BoardParticipantController {
 
 	@Operation(summary = "myRoom", description = "내가 만든 게시물에 대한 채팅방 참여자")
 	@PostMapping(value = "/my-rooms")
-	public ResponseEntity<List<BoardParticipantsDto>> myRoom(@AuthUser Member member) {
+	public ResponseEntity<List<BoardParticipantsDto>> myRoom(@ApiIgnore @AuthUser Member member) {
 		logger.info("my-room 접근");
 		return ResponseEntity.ok(boardParticipantService.myChatRoom(member));
 	}
 
 	@Operation(summary = "otherRoom", description = "내가 게시물에 참여한 채팅방")
 	@PostMapping(value = "/other-rooms")
-	public ResponseEntity<List<BoardParticipantsDto>> otherRoom(@AuthUser Member member) {
+	public ResponseEntity<List<BoardParticipantsDto>> otherRoom(@ApiIgnore @AuthUser Member member) {
 		logger.info("other-room 접근");
 		return ResponseEntity.ok(boardParticipantService.otherChatRoom(member));
 	}
