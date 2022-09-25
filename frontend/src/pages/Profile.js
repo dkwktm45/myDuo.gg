@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Alarm from "components/Alarm";
 import { logoutService } from "services/apiServices";
 import Footer from "components/Footer";
+import { useState } from "react";
 
 const Container = styled.div`
   width: 100vw;
@@ -125,8 +126,6 @@ function Profile() {
       });
     logOut();
   };
-
-  const logOut = useResetRecoilState(LoginState);
 
   const [introduce, setIntro] = useState("");
   const handleIntro = (e) => {
