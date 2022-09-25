@@ -111,7 +111,7 @@ function MainHeader({ setPopupCreate }) {
   const setTierFilter = useRecoilState(TierFilterState)[1];
 
   const handleLineFilter = (e) => {
-    setLineFilter(e.target.value);
+    setLineFilter(lineTypes.indexOf(e.target.value));
   };
 
   const handleTierFilter = (e) => {
@@ -136,7 +136,7 @@ function MainHeader({ setPopupCreate }) {
                 line={v}
                 isHeader={true}
                 onChange={handleLineFilter}
-                checked={lineFilter === v}
+                checked={lineFilter === i}
               />
               <RadioButtonLabel htmlFor={v} />
               {i === 0 ? (
@@ -152,6 +152,7 @@ function MainHeader({ setPopupCreate }) {
         <Tier>
           <Select onChange={handleTierFilter}>
             <option value="ALL">전체</option>
+            <option value="UNRANKED">언랭크드</option>
             <option value="IRON">아이언</option>
             <option value="BRONZE">브론즈</option>
             <option value="SILVER">실버</option>

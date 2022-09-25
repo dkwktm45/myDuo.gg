@@ -2,8 +2,11 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import LinePositions from "components/LinePositions";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilValue } from "recoil";
+import { LoginState } from "atoms";
+import axios from "axios";
 
 const Overlay = styled.div`
   position: fixed;
@@ -87,6 +90,16 @@ const BoardCreateId = styled(BoardCreateContents)`
     border: 1px solid ${(props) => props.theme.lolTextColor};
     background-color: ${(props) => props.theme.lolBgColorLight};
     text-align: center;
+  }
+  label {
+    width: 70%;
+    height: 35px;
+    color: ${(props) => props.theme.lolTextColor};
+    border: 1px solid ${(props) => props.theme.lolTextColor};
+    background-color: ${(props) => props.theme.lolBgColorLight};
+    text-align: center;
+    line-height: 35px;
+    cursor: pointer;
   }
 `;
 
@@ -236,10 +249,22 @@ const ErrorMsg = styled.label`
   color: ${(props) => props.theme.lolAccentColor1};
 `;
 
-function BoardCreate({ setPopupCreate }) {
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+function BoardCreate({ setPopupCreate, setRefresh }) {
   const [myLineCheck, setMyLineCheck] = useState([]);
   const [otherLineCheck, setOtherLineCheck] = useState([]);
   const [mic, setMic] = useState(false);
+  const account = useRecoilValue(LoginState);
+  const [isLoding, setIsloding] = useState(false);
+  const [lolAccount, setLolAccount] = useState([]);
+
   const {
     register,
     handleSubmit,
@@ -247,23 +272,54 @@ function BoardCreate({ setPopupCreate }) {
     setError,
   } = useForm();
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/board/create", {
+        headers: {
+          Authorization: account.token,
+        },
+      })
+      .then(function (response) {
+        setLolAccount(response.data);
+        setIsloding(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [account]);
+
   const onValid = async (data) => {
     if (myLineCheck.length !== 2 || otherLineCheck.length !== 2) {
-      console.log("ERROR");
       setError("line", {
         message: "각 포지션 2가지 선택은 필수입니다.",
       });
     } else {
-      data["myLine"] = myLineCheck;
-      data["otherLine"] = otherLineCheck;
-      console.log(data);
-
+      data["myPositions"] = myLineCheck;
+      data["otherPositions"] = otherLineCheck;
+      data["lolPuuid"] = data.lolId;
+      await axios
+        .post("http://localhost:8080/board/create", data, {
+          headers: {
+            Authorization: account.token,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      setRefresh(false);
       overlayClose();
     }
   };
 
   const overlayClose = () => {
     setPopupCreate(false);
+  };
+
+  const addAccount = () => {
+    //유저 등록 페이지로 이동
   };
 
   return (
@@ -276,52 +332,67 @@ function BoardCreate({ setPopupCreate }) {
             <FontAwesomeIcon icon={faXmark} />
           </span>
         </BoardCreateHeader>
-        <BoardCreateId>
-          <span>롤 아이디 선택하기</span>
-          <select {...register("lolId")}>
-            <option>1번 아이디</option>
-            <option>2번 아이디</option>
-            <option>3번 아이디</option>
-          </select>
-        </BoardCreateId>
-        <GridContainer>
-          <BoardCreateMyPosition>
-            <span>내 포지션</span>
-            <LinePositions
-              useFor="createMy"
-              myLineCheck={myLineCheck}
-              setMyLineCheck={setMyLineCheck}
-            />
-          </BoardCreateMyPosition>
-          <BoardCreateOtherPosition>
-            <span>다른 사람 포지션</span>
-            <LinePositions
-              useFor="createOther"
-              otherLineCheck={otherLineCheck}
-              setOtherLineCheck={setOtherLineCheck}
-            />
-            <input type="text" {...register("line")} />
-          </BoardCreateOtherPosition>
-          <BoardCreateMic>
-            <label>마이크</label>
-            <ToggleButton
-              onClick={() => setMic(document.querySelector("#tb").checked)}
-            >
-              <input type="checkbox" id="tb" {...register("micYn")} />
-              <label htmlFor="tb"></label>
-            </ToggleButton>
-            <label className={mic ? "checked" : ""}>{mic ? "ON" : "OFF"}</label>
-          </BoardCreateMic>
-        </GridContainer>
+        {isLoding ? (
+          <Loading>loading</Loading>
+        ) : (
+          <>
+            <BoardCreateId>
+              <span>롤 아이디 선택하기</span>
+              <select {...register("lolId")}>
+                {lolAccount.map((v) => (
+                  <option key={v.puuid} value={v.puuid}>
+                    {v.name}
+                  </option>
+                ))}
+                {lolAccount.length < 5 ? (
+                  <option onClick={addAccount}>+ 롤 아이디 등록하기</option>
+                ) : (
+                  ""
+                )}
+              </select>
+            </BoardCreateId>
+            <GridContainer>
+              <BoardCreateMyPosition>
+                <span>내 포지션</span>
+                <LinePositions
+                  useFor="createMy"
+                  myLineCheck={myLineCheck}
+                  setMyLineCheck={setMyLineCheck}
+                />
+              </BoardCreateMyPosition>
+              <BoardCreateOtherPosition>
+                <span>다른 사람 포지션</span>
+                <LinePositions
+                  useFor="createOther"
+                  otherLineCheck={otherLineCheck}
+                  setOtherLineCheck={setOtherLineCheck}
+                />
+                <input type="text" {...register("line")} />
+              </BoardCreateOtherPosition>
+              <BoardCreateMic>
+                <label>마이크</label>
+                <ToggleButton
+                  onClick={() => setMic(document.querySelector("#tb").checked)}
+                >
+                  <input type="checkbox" id="tb" {...register("micEnabled")} />
+                  <label htmlFor="tb"></label>
+                </ToggleButton>
+                <label className={mic ? "checked" : ""}>
+                  {mic ? "ON" : "OFF"}
+                </label>
+              </BoardCreateMic>
+            </GridContainer>
 
-        <BoardCreateMemo>
-          <label>메모</label>
-          <textarea {...register("memo")} />
-        </BoardCreateMemo>
-        <ErrorMsg>{errors?.line?.message}</ErrorMsg>
-        <BoardCreateButtons>
-          <button>듀오 모집하기</button>
-        </BoardCreateButtons>
+            <BoardCreateMemo>
+              <label>메모</label>
+              <textarea {...register("content")} />
+            </BoardCreateMemo>
+            <ErrorMsg>{errors?.line?.message}</ErrorMsg>
+            <BoardCreateButtons>
+              <button>듀오 모집하기</button>
+            </BoardCreateButtons>
+          </>
+        )}
       </Container>
     </>
   );

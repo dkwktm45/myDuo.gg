@@ -1,5 +1,6 @@
 package com.project.MyDuo.dto;
 
+import com.project.MyDuo.dto.Board.BoardBarDto;
 import com.project.MyDuo.dto.Board.BoardCreationDto;
 import com.project.MyDuo.dto.LoL.Info.*;
 import com.project.MyDuo.dto.LoL.LoLAccountDto;
@@ -8,7 +9,11 @@ import com.project.MyDuo.entity.Board;
 import com.project.MyDuo.entity.LoLAccount.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -118,7 +123,7 @@ public class Mapper {
 
 
     public Board toBoard(Member user, BoardCreationDto creationDto) {
-        Board board = Board.builder()
+        return Board.builder()
                 .uuid(UUID.randomUUID().toString())
                 .lolPuuid(creationDto.getLolPuuid())
                 .name(user.getName())
@@ -130,24 +135,25 @@ public class Mapper {
                 .otherPositions(creationDto.getOtherPositions())
                 .member(user)
                 .build();
-        return board;
     }
 
-    /*public BoardBasicDto toBoardBasicDto(Board entity, String summonerName, String summonerRank) {
-        return new BoardBasicDto(
-                entity.getUuid(),
-                entity.getContent(),
-                new CopyOnWriteArrayList<>() {{
-                    add(entity.getMyPosition1().ordinal());
-                    add(entity.getMyPosition2().ordinal());
-                }},
-                new CopyOnWriteArrayList<>() {{
-                    add(entity.getOpponentPosition1().ordinal());
-                    add(entity.getOpponentPosition2().ordinal());
-                }},
-                summonerName,
-                summonerRank,
-                entity.isClosingStatus()
+    public Pageable toInitPageable(PageableDto pageableDto) {
+        return PageRequest.of(
+                pageableDto.getPage() == null ? 0 : pageableDto.getPage(),
+                pageableDto.getSize() == null ? 30 : pageableDto.getSize(),
+                pageableDto.getSort().equals("registrationTime,desc")
+                        ? Sort.by("registrationTime").descending() : Sort.unsorted()
         );
-    }*/
+    }
+
+    @Transactional
+    public LoLAccountInfoDto userToLoLAccountInfoDto(Member user) {
+        Optional<LoLAccount> loLAccount = user.getLolAccounts()
+                .stream()
+                .filter(l -> l.getPuuid().equals(user.getLoLRepPuuid()))
+                .findAny();
+
+        return loLAccount.isEmpty() ?
+                null : toLoLAccountInfoDto(loLAccount.get());
+    }
 }

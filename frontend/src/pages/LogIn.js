@@ -10,6 +10,7 @@ import { useRecoilState } from "recoil";
 import { LoginState } from "atoms";
 import { useForm } from "react-hook-form";
 import { accountService } from "services/apiServices";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -183,13 +184,24 @@ function LogIn() {
       email: data.email,
       password: data.password,
     });
-
     accountService("login", json)
       .then(function (response) {
         setLogInState({
-          token: response.data.grantType + response.data.accessToken,
+          token: `Bearer ${response.data.accessToken}`,
           refreshToken: response.data.refreshToken,
         });
+        console.log(`Bearer ${response.data.accessToken}`);
+
+        axios
+          .post("http://localhost:8080/account/test", null, {
+            headers: {
+              Authorization: `Bearer ${response.data.accessToken}`,
+            },
+          })
+          .then((response) => {
+            window.localStorage.setItem("myNick", response.data);
+          });
+
         navigate("/");
       })
       .catch(function (error) {

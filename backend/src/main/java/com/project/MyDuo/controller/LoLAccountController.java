@@ -14,7 +14,7 @@ import com.project.MyDuo.entity.LoLAccount.LoLAccount;
 import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.jwt.JwtTokenUtil;
 import com.project.MyDuo.security.AuthUser;
-import com.project.MyDuo.service.LoLAccoutService.LoLAccountService;
+import com.project.MyDuo.service.LoLAccountService;
 import com.project.MyDuo.service.MemberAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.time.Duration;
 import java.util.List;
@@ -48,7 +49,7 @@ public class LoLAccountController {
     private final Mapper mapper;
 
     @PostMapping("/add") @ResponseBody @Transactional
-    public String addSummoner(@AuthUser Member member, String summonerName) {// 소환사 등록 메서드.
+    public String addSummoner(@ApiIgnore @AuthUser Member member, String summonerName) {// 소환사 등록 메서드.
         //user에 대한 검증.
         if (loLAccountService.countValidLoLAccount(member.getEmail()) == 5)
             throw new noMoreLoLAccountException("한 회원당 최대 5개의 LoL계정을 등록할 수 있습니다.");

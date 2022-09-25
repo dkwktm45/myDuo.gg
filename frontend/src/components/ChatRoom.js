@@ -1,5 +1,11 @@
 import styled from "styled-components";
 import React, { useRef, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { useForm } from "react-hook-form";
+import { LoginState } from "atoms";
+import { useRecoilValue } from "recoil";
+import axios from "axios";
 
 const Wrapper = styled.div`
   width: 30vw;
@@ -22,11 +28,13 @@ const ChatHeader = styled.div`
   height: 100%;
   margin: 10px 0;
   display: grid;
-  grid-template-columns: 60px 1fr 1fr 80px;
+  grid-template-columns: 60px 1fr 1fr 120px 40px;
   color: ${(props) => props.theme.lolTextColor};
   div {
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-direction: column;
     &:nth-child(1) {
       img {
         width: 50px;
@@ -36,8 +44,6 @@ const ChatHeader = styled.div`
       }
     }
     &:nth-child(2) {
-      justify-content: center;
-      flex-direction: column;
       align-items: flex-start;
       span {
         font-size: 14px;
@@ -52,7 +58,34 @@ const ChatHeader = styled.div`
       }
     }
     &:nth-child(3) {
-      background-color: tomato;
+      background-color: transparent;
+    }
+    &:nth-child(4) {
+      div {
+        &:nth-child(2) {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          button {
+            width: 45px;
+            height: 25px;
+            padding: 5px;
+            color: ${(props) => props.theme.lolAccentColor};
+            background-color: ${(props) => props.theme.lolBgColorNormal};
+            border: none;
+            margin: 3px;
+            &:nth-child(2) {
+              color: ${(props) => props.theme.lolAccentColor1};
+              background-color: ${(props) => props.theme.lolBgColorNormal};
+            }
+          }
+        }
+      }
+    }
+    &:nth-child(5) {
+      font-size: 18px;
+      color: whitesmoke;
+      cursor: pointer;
     }
   }
 `;
@@ -67,9 +100,7 @@ const ChatBody = styled.div`
   overflow: auto;
   overflow-x: hidden;
   align-items: center;
-  /*
-  * 스크롤바 디자인
-  */
+
   &::-webkit-scrollbar {
     width: 10px;
   }
@@ -155,7 +186,7 @@ const ChatBody = styled.div`
   }
 `;
 
-const ChatController = styled.div`
+const ChatController = styled.form`
   height: 100%;
   display: flex;
   justify-content: center;
@@ -175,18 +206,84 @@ const ChatController = styled.div`
     width: 15%;
     height: 50px;
     border: none;
-    font-family: "Hanna";
-    font-size: 18px;
+    font-family: "Roboto";
+    font-size: 16px;
     background-color: ${(props) => props.theme.lolTextColor};
     cursor: pointer;
   }
 `;
+
 function ChatRoom({ ...props }) {
   const scrollRef = useRef();
+  const account = useRecoilValue(LoginState);
+  const myNickName = window.localStorage.getItem("myNick");
+  const { register, handleSubmit, reset } = useForm();
+  var ws = props.ws;
 
   useEffect(() => {
+    //채팅창 시작 시 스크롤 맨 아래에서부터 시작
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  });
+  }, [props.chats]);
+
+  const onValid = (data) => {
+    ws.send(
+      "/pub/chat/message",
+      JSON.stringify({
+        type: "TALK",
+        roomId: props.room.roomId,
+        message: data.msg,
+        sender: myNickName,
+      }),
+      {
+        Authorization: account.token,
+      }
+    );
+    reset();
+  };
+
+  const toAMPM = (date) => {
+    return new Date(date).toLocaleString("ko-KR", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+  };
+  const acceptDuo = () => {
+    //boardUuid / participantUuid 필요
+    //participants/delete
+
+    /// board-id => 보드 아이디 구해야함
+
+    console.log(props.room.participantUuid);
+    axios
+      .post("http://localhost:8080/board/one", props.room.participantUuid, {
+        headers: {
+          Authorization: account.token,
+          "Content-Type": "text/plain", // 이거 안넣으면 안됨 !!
+        },
+      })
+      .then((response) => {
+        console.log("BoardUuid =", response.data.board.boardUuid);
+        console.log("participantUuid =", props.room.participantUuid);
+
+        const body = new Map();
+        body.set("boardUuid", response.data.board.boardUuid);
+        body.set("participantUuid", props.room.participantUuid);
+
+        axios
+          .delete("http://localhost:8080/participants/delete", {
+            headers: {
+              Authorization: account.token,
+              //"Content-Type": "text/plain",
+              "Content-Type": "application/json",
+            },
+            body,
+          })
+          .then((newResponse) => {
+            console.log(newResponse);
+          });
+      });
+  };
 
   return (
     <ChatWrapper>
@@ -195,72 +292,69 @@ function ChatRoom({ ...props }) {
           <img src={`../img/emblems/Emblem_Silver.png`} alt="lolLogo" />
         </div>
         <div>
-          <span>{props.chatRoom}</span>
+          <span>{props.room.userName}</span>
           <span>유저의 롤 아이디</span>
         </div>
-        <div></div>
-        <div></div>
+        <div>
+          <button>친구 신청하기</button>
+        </div>
+        <div>
+          {myNickName === props.room.boardName ? (
+            <>
+              <div>듀오 요청</div>
+              <div>
+                <button onClick={acceptDuo}>수락</button>
+                <button>거절</button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+
+        <div>
+          <FontAwesomeIcon icon={faRightFromBracket} />
+        </div>
       </ChatHeader>
       <ChatBody ref={scrollRef}>
-        <div className="info">채팅방이 생성되었습니다.</div>
-        <div className="my">
-          <span>
-            <label>
-              안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요
-              안녕하세요 안녕하세요 안녕하세요 안녕하세요
-            </label>
-            <label>오후 3:00</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>
-              반갑습니다 반갑습니다 반갑습니다 반갑습니다 반갑습니다 반갑습니다
-              반갑습니다 반갑습니다 반갑습니다 반갑습니다
-            </label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="my">
-          <span>
-            <label>듀오 해요</label>
-            <label>오후 3:10</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>넵</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>Hi Hi Hi Hi Hi Hi</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>Hi Hi Hi Hi Hi Hi</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>Hi Hi Hi Hi Hi Hi</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
-        <div className="other">
-          <span>
-            <label>Hi Hi Hi Hi Hi Hi</label>
-            <label>오후 3:01</label>
-          </span>
-        </div>
+        {props.chats.map((msg) => {
+          if (msg.type === "ENTER") {
+            return (
+              <div className="info" key={msg.messageId}>
+                <span>
+                  <label>
+                    {msg.sender}
+                    {msg.message}
+                  </label>
+                </span>
+              </div>
+            );
+          } else {
+            if (myNickName === msg.sender) {
+              return (
+                <div className="my" key={msg.messageId}>
+                  <span>
+                    <label>{msg.message}</label>
+                    <label>{toAMPM(new Date(msg.createdAt))}</label>
+                  </span>
+                </div>
+              );
+            } else {
+              return (
+                <div className="other" key={msg.messageId}>
+                  <span>
+                    <label>{msg.message}</label>
+                    <label>{toAMPM(new Date(msg.createdAt))}</label>
+                  </span>
+                </div>
+              );
+            }
+          }
+        })}
       </ChatBody>
-      <ChatController>
-        <input type="text" />
-        <button>전송</button>
+      <ChatController onSubmit={handleSubmit(onValid)}>
+        <input type="text" {...register("msg")} autoComplete="off" />
+        <button type="submit">전송</button>
       </ChatController>
     </ChatWrapper>
   );

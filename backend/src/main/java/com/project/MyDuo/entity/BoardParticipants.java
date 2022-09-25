@@ -7,15 +7,15 @@ import javax.persistence.*;
 
 @Getter @Builder
 @AllArgsConstructor
-@Entity @Setter
+@Entity
 @NoArgsConstructor
 @Table(name = "board_participants")
 public class BoardParticipants {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long participantId; // 방번호
+	private Long participantId;
 	private String participantUuid;
-	private String userName; // 메시지 name
+	private String userName;
 	private Long userId;
 	private String roomId;
 
@@ -23,6 +23,10 @@ public class BoardParticipants {
 	@JsonBackReference
 	@JoinColumn(name = "board_id")
 	private Board board;
+
+	public void toNoBoard(){
+		this.board = null;
+	}
 }
 
 

@@ -11,10 +11,18 @@ export const LoginState = atom({
 
 export const LineFilterState = atom({
   key: "LineFilterState",
-  default: "ALL",
+  default: 0,
 });
 
 export const TierFilterState = atom({
   key: "TierFilterState",
   default: "ALL",
+});
+
+export const BoardStatus = atom({
+  key: "BoardStatus",
+  default: {
+    new: null,
+    old: null,
+  },
 });

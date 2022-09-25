@@ -1,11 +1,11 @@
 import NavBar from "components/NavBar";
 import styled from "styled-components";
-import { useResetRecoilState } from "recoil";
+import { useResetRecoilState, useRecoilValue } from "recoil";
 import { LoginState } from "atoms";
 import { useNavigate } from "react-router-dom";
 import Alarm from "components/Alarm";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { logoutService } from "services/apiServices";
+import Footer from "components/Footer";
 
 const Container = styled.div`
   width: 100vw;
@@ -111,9 +111,19 @@ const IdChange = styled.button`
 
 function Profile() {
   const navigate = useNavigate();
-  const onClickLogOut = () => {
+  const account = useRecoilValue(LoginState);
+  const logOut = useResetRecoilState(LoginState);
+  const onClickLogOut = async () => {
+    logoutService(account.token)
+      .then(function (response) {
+        logOut();
+        window.localStorage.removeItem("myNick");
+        navigate("/login");
+      })
+      .catch(function (error) {
+        console.log("Error Msg", error);
+      });
     logOut();
-    navigate("/login");
   };
 
   const logOut = useResetRecoilState(LoginState);
@@ -150,6 +160,7 @@ function Profile() {
           </InfoContainer>
           <TestButton onClick={onClickLogOut}>로그아웃</TestButton>
         </Wrapper>
+        <Footer />
       </Container>
       <Alarm />
     </>

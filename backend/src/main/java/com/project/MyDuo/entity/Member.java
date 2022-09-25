@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -46,6 +45,11 @@ public class Member {
     private Boolean valid;
 
     private Role role;
+
+    @Column(name = "user_memo")
+    private String memo;
+    @Column(name = "representative_account")
+    private String loLRepPuuid;
 
     @Builder
     public Member(String email, String name, String password) {

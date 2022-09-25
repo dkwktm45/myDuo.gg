@@ -2,7 +2,6 @@ package com.project.MyDuo.service;
 
 import com.project.MyDuo.dao.BoardParticipantsRepository;
 import com.project.MyDuo.dao.BoardRepository;
-import com.project.MyDuo.dto.BoardDto;
 import com.project.MyDuo.dto.BoardParticipantsDto;
 import com.project.MyDuo.entity.Member;
 import com.project.MyDuo.entity.Board;
@@ -31,6 +30,7 @@ public class BoardParticipantService {
 	private final BoardService boardService;
 	private final BoardRepository boardRepository;
 	private final ChatService chatService;
+	private final ChatMessageService chatMessageService;
 
 	public Map<String, Object> setChat(String boardUuid, String chatRoomId, Authentication authentication) throws Exception {
 		logger.info("setChat start");
@@ -61,10 +61,8 @@ public class BoardParticipantService {
 		}
 	}
 
-	public List<BoardParticipantsDto> myChatRoom(Authentication authentication){
+	public List<BoardParticipantsDto> myChatRoom(Member member){
 		logger.info("myChatRoom start");
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Member member = ((CustomUser) userDetails).getMember();
 
 		List<BoardParticipantsDto> boardList = participantsRepository.findByBoard(member.getId())
 				.stream().map(BoardParticipantsDto::new)
@@ -74,36 +72,40 @@ public class BoardParticipantService {
 		return boardList;
 	}
 
-	public List<BoardDto> otherChatRoom(Authentication authentication){
+	public List<BoardParticipantsDto> otherChatRoom(Member member){
 		logger.info("otherChatRoom start");
 
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Member member = ((CustomUser) userDetails).getMember();
+		List<BoardParticipantsDto> participantsList = participantsRepository.findByUserId(member.getId())
+				.get().stream().map(BoardParticipantsDto::new).collect(Collectors.toList());
 
-		List<BoardParticipants> participantsList = participantsRepository.findByUserId(member.getId()).get();
-		List<BoardDto> boardList = participantsList.stream().map(info -> info.getBoard()).map(BoardDto::new).collect(Collectors.toList());
+//		List<BoardParticipantsDto> participantsList = participantsRepository.findByMyoom(member.getId());
 		logger.info("otherChatRoom complete");
-		return boardList;
+		return participantsList;
 	}
 
-	public void deleteRoom(String boardUuid, String participantUuid) {
+	public void deleteRoom(String boardUuid, String participantUuid, Member member) {
 		logger.info("deleteRoom start");
 		Board board = boardRepository.findByUuid(boardUuid).get();
 		board.changeStatus(false);
-		List<BoardParticipants> boardParticipantsList = board.getBoardParticipantsList()
-				.stream().filter(info-> info.getParticipantUuid() !=participantUuid).collect(Collectors.toList());
 
-		boardParticipantsList.stream().forEach(info -> info.setBoard(null));
+		// 자신이 원하는 사람만 빼고
+		List<BoardParticipants> boardParticipantsList = board.getBoardParticipantsList()
+				.stream().filter(info-> !info.getParticipantUuid().equals(participantUuid)).collect(Collectors.toList());
+
+		// 나머지 분들은 채팅방 연결 해지
+		boardParticipantsList.stream().forEach(info -> info.toNoBoard());
 
 		for(BoardParticipants participants : boardParticipantsList){
-			chatService.sendChatMessage(
+			chatMessageService.sendChatMessage(
 					ChatMessage.builder()
+							.sender(board.getName())
 							.message(board.getMember().getName() + "님이 다른회원과 매칭이 되었습니다. 다음기회에 도전해주세요!")
 							.roomId(participants.getRoomId())
-							.build()
-			);
+							.build(),
+					member.getEmail());
 		}
 
+		participantsRepository.saveAll(boardParticipantsList);
 		logger.info("deleteRoom end");
 	}
 

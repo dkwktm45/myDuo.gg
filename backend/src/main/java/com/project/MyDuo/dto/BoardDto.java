@@ -44,6 +44,7 @@ public class BoardDto {
 		this.boardMicYn = board.getMicEnabled();
 		this.myPositions = board.getMyPositions();
 		this.otherPositions = board.getOtherPositions();
+
 		this.accountDto = new AccountDto(board.getMember());
 		this.boardParticipantsList = new ArrayList(board.getBoardParticipantsList());
 	}

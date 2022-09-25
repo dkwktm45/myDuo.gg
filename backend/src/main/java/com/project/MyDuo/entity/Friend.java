@@ -18,10 +18,15 @@ public class Friend {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long priendId;
 	private String priendUuid;
+	private String priendRoomId;
 	private String priendEmail;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference
 	@JoinColumn(name = "user_id")
 	private Member member;
+
+	public void toSetRoomId(String roomId) {
+		this.priendRoomId = roomId;
+	}
 }

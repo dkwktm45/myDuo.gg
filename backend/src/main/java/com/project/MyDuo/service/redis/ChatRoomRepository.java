@@ -17,17 +17,17 @@ public class ChatRoomRepository {
 
 	// Redis
 	private static final String CHAT_ROOMS = "CHAT_ROOM";
+	public static final String USER_COUNT = "USER_COUNT"; // 채팅룸에 입장한 클라이언트수 저장
+	private static final String FRIEND_ROOMS = "FRIEND_ROOMS";
+
 	@Resource(name = "redisTemplate")
 	private HashOperations<String, String, ChatRoom> opsHashChatRoom;
 
 	@Resource(name = "redisTemplate")
 	private ValueOperations<String, String> valueOps;
-	public static final String USER_COUNT = "USER_COUNT"; // 채팅룸에 입장한 클라이언트수 저장
 
-	// 모든 채팅방 조회
-	public List<ChatRoom> findAllRoom(List<String> roomIdList) {
-		return opsHashChatRoom.multiGet(CHAT_ROOMS, roomIdList);
-	}
+	@Resource(name = "redisTemplate")
+	private HashOperations<String, String, ChatRoom> opsHashFriendRoom;
 
 	// 특정 채팅방 조회
 	public ChatRoom findRoomById(String id) {
@@ -70,5 +70,9 @@ public class ChatRoomRepository {
 	}
 	public void deleteRoom(String roomId){
 		opsHashChatRoom.delete(CHAT_ROOMS,roomId);
+	}
+
+	public void save(ChatRoom chatRoom ) {
+		opsHashFriendRoom.put(FRIEND_ROOMS, chatRoom.getRoomId(), chatRoom);
 	}
 }

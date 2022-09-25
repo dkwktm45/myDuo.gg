@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 				.allowedOriginPatterns("*")
-				.allowCredentials(true)
+				.allowCredentials(false)
 				.allowedMethods(
 						HttpMethod.GET.name(),
 						HttpMethod.POST.name(),
@@ -19,6 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
 						HttpMethod.DELETE.name(),
 						HttpMethod.HEAD.name()
 				)
-				.allowedOrigins("http://127.0.0.1:3000");
+				.allowedOrigins("http://127.0.0.1:3000")
+				.allowedHeaders("Accept", "Content-Type", "Origin", 
+"Authorization", "X-Auth-Token");
 	}
 }
