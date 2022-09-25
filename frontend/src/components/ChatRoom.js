@@ -5,6 +5,7 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
 import { LoginState } from "atoms";
 import { useRecoilValue } from "recoil";
+import axios from "axios";
 
 const Wrapper = styled.div`
   width: 30vw;
@@ -247,7 +248,43 @@ function ChatRoom({ ...props }) {
       hour12: true,
     });
   };
-  console.log(props.room.boardName);
+  const acceptDuo = () => {
+    //boardUuid / participantUuid 필요
+    //participants/delete
+
+    /// board-id => 보드 아이디 구해야함
+
+    console.log(props.room.participantUuid);
+    axios
+      .post("http://localhost:8080/board/one", props.room.participantUuid, {
+        headers: {
+          Authorization: account.token,
+          "Content-Type": "text/plain", // 이거 안넣으면 안됨 !!
+        },
+      })
+      .then((response) => {
+        console.log("BoardUuid =", response.data.board.boardUuid);
+        console.log("participantUuid =", props.room.participantUuid);
+
+        const body = new Map();
+        body.set("boardUuid", response.data.board.boardUuid);
+        body.set("participantUuid", props.room.participantUuid);
+
+        axios
+          .delete("http://localhost:8080/participants/delete", {
+            headers: {
+              Authorization: account.token,
+              //"Content-Type": "text/plain",
+              "Content-Type": "application/json",
+            },
+            body,
+          })
+          .then((newResponse) => {
+            console.log(newResponse);
+          });
+      });
+  };
+
   return (
     <ChatWrapper>
       <ChatHeader>
@@ -266,7 +303,7 @@ function ChatRoom({ ...props }) {
             <>
               <div>듀오 요청</div>
               <div>
-                <button>수락</button>
+                <button onClick={acceptDuo}>수락</button>
                 <button>거절</button>
               </div>
             </>
