@@ -87,9 +87,12 @@ public class BoardParticipantService {
 		logger.info("deleteRoom start");
 		Board board = boardRepository.findByUuid(boardUuid).get();
 		board.changeStatus(false);
-		List<BoardParticipants> boardParticipantsList = board.getBoardParticipantsList()
-				.stream().filter(info-> info.getParticipantUuid() !=participantUuid).collect(Collectors.toList());
 
+		// 자신이 원하는 사람만 빼고
+		List<BoardParticipants> boardParticipantsList = board.getBoardParticipantsList()
+				.stream().filter(info-> !info.getParticipantUuid().equals(participantUuid)).collect(Collectors.toList());
+
+		// 나머지 분들은 채팅방 연결 해지
 		boardParticipantsList.stream().forEach(info -> info.toNoBoard());
 
 		for(BoardParticipants participants : boardParticipantsList){
