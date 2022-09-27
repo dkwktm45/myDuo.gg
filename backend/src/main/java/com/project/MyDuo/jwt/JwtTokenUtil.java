@@ -9,7 +9,9 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
 
@@ -56,7 +58,6 @@ public class JwtTokenUtil {
     }
 
     private Key getSigningKey(String secretKey) {
-        log.info(secretKey);
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -73,33 +74,8 @@ public class JwtTokenUtil {
         }
     }
 
-    private Claims extractAllClaims(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey(SECRET_KEY))
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e) {
-            log.error("exception msg", e);
-            throw new NotValidTokenException(ErrorCode.NOT_VALID_TOKEN);
-        }
-    }
-
-    public long getExpirationTime(String token) {
-        Date expiration = extractAllClaims(token).getExpiration();
-        Date now = new Date();
-        return expiration.getTime()-now.getTime();
-    }
-
-    private boolean isTokenExpired(String token) {
-        Date expiration = extractAllClaims(token).getExpiration();
-        return expiration.before(new Date());
-    }
-
     public void validateToken(String token) {
         try {
-            log.info(token);
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey(SECRET_KEY))
                     .build()
@@ -117,5 +93,14 @@ public class JwtTokenUtil {
             log.error("Wrong jwt token");
             throw new NotValidTokenException(ErrorCode.NOT_VALID_TOKEN);
         }
+    }
+
+    public String getToken(HttpServletRequest request) {
+
+        String headerAuth = request.getHeader("Authorization");
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
+        }
+        return null;
     }
 }

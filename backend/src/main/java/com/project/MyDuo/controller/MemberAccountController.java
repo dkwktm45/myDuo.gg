@@ -2,6 +2,7 @@ package com.project.MyDuo.controller;
 
 import com.project.MyDuo.dto.*;
 import com.project.MyDuo.entity.Member;
+import com.project.MyDuo.jwt.JwtTokenUtil;
 import com.project.MyDuo.security.AuthUser;
 import com.project.MyDuo.service.MemberAccountService;
 import com.project.MyDuo.service.MemberRepositoryService;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class MemberAccountController {
 
+    private final JwtTokenUtil jwtTokenUtil;
     private final MemberAccountService memberAccountService;
     private final MemberRepositoryService memberRepositoryService;
 
@@ -39,24 +41,19 @@ public class MemberAccountController {
     }
 
     @GetMapping("/re-issue")
-    public ResponseEntity<JwtResponseDto> reIssue(HttpServletRequest httpServletRequest) {
-        String authorizationHeader = httpServletRequest.getHeader("Authorization");
-        String refreshToken = authorizationHeader.split(" ")[1];
+    public ResponseEntity<JwtResponseDto> reIssue(HttpServletRequest request) {
+        String refreshToken = jwtTokenUtil.getToken(request);
         return ResponseEntity.ok(memberAccountService.reIssueAccessToken(refreshToken));
     }
 
     @GetMapping("/logout")
-    public void logout(HttpServletRequest httpServletRequest) {
-        String authorizationHeader = httpServletRequest.getHeader("Authorization");
-        String accessToken = authorizationHeader.split(" ")[1];
-        memberAccountService.logout(accessToken);
+    public void logout(@ApiIgnore @AuthUser Member member) {
+        memberAccountService.logout(member.getEmail());
     }
 
-    @GetMapping("/withdrawal")
-    public void withdrawal(HttpServletRequest httpServletRequest) {
-        String authorizationHeader = httpServletRequest.getHeader("Authorization");
-        String accessToken = authorizationHeader.split(" ")[1];
-        memberAccountService.Withdrawal(accessToken);
+    @DeleteMapping("/withdrawal")
+    public void withdrawal(@ApiIgnore @AuthUser Member member) {
+        memberAccountService.Withdrawal(member.getEmail());
     }
 
     @GetMapping("/profile") @Transactional
@@ -64,10 +61,15 @@ public class MemberAccountController {
         return memberAccountService.profile(member.getEmail());
     }
 
-    //테스트 용
-    @PostMapping("/test")
-    public String test(@ApiIgnore @AuthUser Member member) {
-        return member.getName();
+    @PatchMapping("/update/password")
+    public void UpdatePassword(@ApiIgnore @AuthUser Member member,
+                               @RequestBody UpdatePasswordRequestDto updatePasswordRequestDto) {
+        memberAccountService.UpdatePassword(member.getId(),updatePasswordRequestDto);
+    }
+
+    @PatchMapping("/update/name/{name}")
+    public void UpdateName(@ApiIgnore @AuthUser Member member,@PathVariable(name = "name") String name) {
+        memberAccountService.UpdateName(member.getId(),name);
     }
 }
 

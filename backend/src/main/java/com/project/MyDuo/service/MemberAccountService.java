@@ -29,9 +29,9 @@ public class MemberAccountService {
 
     public String join(MemberJoinRequestDto requestDto) throws Exception {
 
-        /*if (memberRepositoryService.findMember(requestDto.getEmail()).isPresent()){
+        if (memberRepositoryService.findMember(requestDto.getEmail())!=null){
             throw new Exception("이미 해당 이메일로 된 계정이 존재");
-        }*/
+        }
 
         Member member = requestDto.toEntity(passwordEncoder);
         memberRepositoryService.saveMember(member);
@@ -42,7 +42,9 @@ public class MemberAccountService {
     public JwtResponseDto login(MemberLoginRequestDto requestDto) throws Exception {
 
         Member member = memberRepositoryService.findMember(requestDto.getEmail());
-               // .orElseThrow(()->new NoSuchElementException("해당 이메일이 존재하지 않음"));
+        if (member == null) {
+            throw new NoSuchElementException("해당 이메일이 존재하지 않음");
+        }
 
         if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 틀림");
@@ -56,44 +58,33 @@ public class MemberAccountService {
         return JwtResponseDto.of(accessToken, refreshToken);
     }
 
-    public void logout(String accessToken) {
+    public void logout(String email) {
         //refreshToken 삭제
-        String email = jwtTokenUtil.getEmail(accessToken);
         refreshTokenService.deleteRefreshToken(email);
 
     }
 
-    public void Withdrawal(String accessToken) {
-        String email = jwtTokenUtil.getEmail(accessToken);
+    public void Withdrawal(String email) {
 
-        /*String token = refreshTokenService.findRefreshToken(email);
-        if (!accessToken.equals(token)) {
-            throw new NoSuchElementException("토큰이 불일치");
-        }*/
-
+        refreshTokenService.deleteRefreshToken(email);
         memberRepositoryService.deleteMember(email);
 
     }
 
-    public JwtResponseDto reIssueAccessToken(String refreshToken) {
+    public JwtResponseDto reIssueAccessToken(String token) {
 
-        String email = jwtTokenUtil.getEmail(refreshToken);
+        String email = jwtTokenUtil.getEmail(token);
 
         Member member = memberRepositoryService.findMember(email);
-                //.orElseThrow(()->new NoSuchElementException("해당 이메일이 존재하지 않음"));
 
-        String token = refreshTokenService.findRefreshToken(email);
-        if (!refreshToken.equals(token)) {
+        if (!token.equals(refreshTokenService.findRefreshToken(email))) {
             throw new NoSuchElementException("토큰이 불일치");
         }
 
         String accessToken = jwtTokenUtil.generateAccessToken(email, member.getRole());
+        String refreshToken = jwtTokenUtil.generateRefreshToken(email, member.getRole());
 
-        //클라이언트 refresh 토큰의 만료 시간이, 지정한 최소 refresh토큰 만료 시간보다 적을때 새로운 refresh 토큰을 발급해준다.
-        if (jwtTokenUtil.getExpirationTime(refreshToken) < REISSUE_EXPIRATION_TIME.getValue()) {
-            return JwtResponseDto.of(accessToken, refreshTokenService.saveRefreshToken(email,
-                    jwtTokenUtil.generateRefreshToken(email, member.getRole()), REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
-        }
+        refreshTokenService.saveRefreshToken(email, refreshToken, REFRESH_TOKEN_EXPIRATION_TIME.getValue());
 
         return JwtResponseDto.of(accessToken, refreshToken);
     }
@@ -129,5 +120,22 @@ public class MemberAccountService {
         String token = headers.substring("Bearer ".length());
         String email = jwtTokenUtil.getEmail(token);
         return memberRepositoryService.findMember(email);
+    }
+
+    public void UpdatePassword(Long id, UpdatePasswordRequestDto requestDto) {
+        //패스워드가 같은지 비교
+        if (!requestDto.getPassword().equals(requestDto.getRepassword())) {
+            throw new IllegalArgumentException("입력한 비밀번호가 다릅니다.");
+        }
+        //같으면 패스워드 암호화 하고 id를 db에 저장
+        String password = passwordEncoder.encode(requestDto.getPassword());
+        memberRepositoryService.updatePassword(id,password);
+    }
+
+    public void UpdateName(Long id, String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("입력한 이름이 비어있다.");
+        }
+        memberRepositoryService.updateName(id,name);
     }
 }
