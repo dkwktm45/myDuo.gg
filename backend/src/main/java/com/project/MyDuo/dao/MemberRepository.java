@@ -24,6 +24,16 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
     @Query("update Member m set m.valid = 0 where m.email = :email and m.valid = 1")
     void deleteMemberByEmail(@Param("email") String email);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Member m SET m.name = :name where m.id = :id and m.valid = 1")
+    void updateNameById(@Param(value="id")Long id, @Param(value="name")String name);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Member m SET m.password = :password where m.id = :id and m.valid = 1")
+    void updatePasswordById(@Param(value="id")Long id, @Param(value="password")String password);
+
     //Optional<Member> findById(Long aLong);
 
 	  //Member findByEmail(String name);

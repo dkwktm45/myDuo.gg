@@ -24,8 +24,6 @@ import java.util.Arrays;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig{
-
-    //private final JwtEntryPoint jwtEntryPoint;
     private final JwtTokenUtil jwtTokenUtil;
     private final CustomUserDetailService customUserDetailService;
 
@@ -45,9 +43,6 @@ public class SecurityConfig{
 
                 .and().headers().frameOptions().sameOrigin()
 
-                //.and()
-                //.exceptionHandling()
-                    //.authenticationEntryPoint(jwtEntryPoint)
                 .and().cors().configurationSource(corsConfigurationSource())
 
                 .and()
@@ -74,7 +69,6 @@ public class SecurityConfig{
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    //2개부족
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

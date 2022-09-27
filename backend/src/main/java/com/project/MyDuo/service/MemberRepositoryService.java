@@ -34,6 +34,15 @@ public class MemberRepositoryService {
 
     /*작성자: Jeong Seong Soo*/
     //public Member findByEmail(String email) { return memberRepository.findByEmail(email);}
+
+    public void updatePassword(Long id, String password) {
+        memberRepository.updatePasswordById(id,password);
+    }
+
+    public void updateName(Long id, String name) {
+        memberRepository.updateNameById(id,name);
+    }
+
     public Member findByBoardList_Uuid(String uuid) {return memberRepository.findByBoardList_Uuid(uuid);}
 
     public void heartPlus(Authentication authentication, String roomId) {
